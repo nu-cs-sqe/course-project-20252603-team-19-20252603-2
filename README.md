@@ -3,7 +3,8 @@
 
 ## Contributors
 - Mahnum Somji
-- PERSON
+- Allan Jiang
+- 
 
 ## Dependencies
 - JDK 11
