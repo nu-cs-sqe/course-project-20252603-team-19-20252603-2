@@ -4,6 +4,13 @@
 2. [done]: Updated README.md (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/3 and https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/1)
 
 
+# Week 4 (04/20/2026-04/26/2026) 
+**Planning and Progress Tracking**:
+1. [done] Decided on project form: GUI application
+2. [done] Decided the time slot to meet with instructor in week 5
+3. [Working] Created use cases analysis document
+4. [done] Created issues on project board in Github repo
+
 # Week X (XX/XX/2026-XX/XX/2026) TEMPLATE (You can change the format to whatever the team likes better)
 **Planning and Progress Tracking**:
 1. [done] Person: Task (Links to PR)
