@@ -1,42 +1,59 @@
-**Document for use cases of the project.**
+# Project Use Cases Document
 
-Player Class
-Data member: player name
-Data member: is_p_start_first: boolean
-Data member: is_p_still_in_game: boolean
-Data member: turn_order: int
-Data member: is_p_win: boolean
-Method: constructor
+## Player Class
 
-Card Class
-Data member: card name
-Data member: card description
-Example Instance: Exploding Kitten
-Example Instance: Defuse
-Example Instance: See the Future
-Example Instance: Attack
-Example Instance: Shuffle
-Example Instance: Skip
-Example Instance: Nope
-Example Instance: Cat Cards
-Example Instance: Special Combos (Two of a kind)
-Example Instance: Special Combos (Three of a kind) 
+### Data Members
+- `player_name`
+- `is_p_start_first`: boolean
+- `is_p_still_in_game`: boolean
+- `turn_order`: int
+- `is_p_win`: boolean
 
-Deck Class
-List
-Size
-Top Card
-Rest of Deck
-Shuffle Cards
-Draw Card
-Discard Pile
+### Methods
+- Constructor
 
-UI Class
-Start Screen
-End Screen
-Game Screen
-Player Screen
-Instructions Screen
+---
 
+## Card Class
 
+### Data Members
+- `card_name`
+- `card_description`
 
+### Example Instances
+- Exploding Kitten
+- Defuse
+- See the Future
+- Attack
+- Shuffle
+- Skip
+- Nope
+- Cat Cards
+- Special Combos (Two of a Kind)
+- Special Combos (Three of a Kind)
+
+---
+
+## Deck Class
+
+### Data Members / Components
+- List
+- Size
+- Top Card
+- Rest of Deck
+- Discard Pile
+
+### Methods
+- Shuffle Cards
+- Draw Card
+
+---
+
+## UI Class
+
+### Screens
+- Start Screen
+- End Screen
+- Game Screen
+- Player Screen
+- Instructions Screen
