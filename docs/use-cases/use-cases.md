@@ -17,20 +17,25 @@
 ## Card Class
 
 ### Data Members
-- `card_name`
-- `card_description`
+- `cardType`: `CardType` — immutable; set at construction.
 
-### Example Instances
-- Exploding Kitten
-- Defuse
-- See the Future
-- Attack
-- Shuffle
-- Skip
-- Nope
-- Cat Cards
-- Special Combos (Two of a Kind)
-- Special Combos (Three of a Kind)
+### Methods
+- `Card(CardType cardType)` — constructor; rejects `null`.
+- `getCardType(): CardType`
+
+
+---
+
+## CardType (enum, supporting Card)
+
+### Values
+- `EXPLODING_KITTEN`
+- `DEFUSE`
+- `ATTACK`
+- `SHUFFLE`
+- `SKIP`
+- `SEE_THE_FUTURE`
+- `NOPE`
 
 ---
 
