@@ -3,14 +3,22 @@
 ## Player Class
 
 ### Data Members
-- `player_name`
-- `is_p_start_first`: boolean
-- `is_p_still_in_game`: boolean
-- `turn_order`: int
-- `is_p_win`: boolean
+- `playerId`: int — immutable; assigned at construction.
+- `hand`: `List<Card>`
+- `isAlive`: boolean — true until this player draws an undefused Exploding Kitten.
 
 ### Methods
-- Constructor
+- `Player(int playerId)` — constructor.
+- `getPlayerId(): int`
+- `addCardToHand(Card)`
+- `removeCardFromHand(int index): Card`
+- `getHandSize(): int`
+- `getCardAt(int index): Card`
+- `hasCard(CardType): boolean`
+- `getIndexOfCard(CardType): int`
+- `isAlive(): boolean`
+- `markDead()`
+
 
 ---
 
@@ -41,16 +49,19 @@
 
 ## Deck Class
 
-### Data Members / Components
-- List
-- Size
-- Top Card
-- Rest of Deck
-- Discard Pile
+### Data Members
+- `drawPile`: `List<Card>`
+- `discardPile`: `List<Card>`
 
 ### Methods
-- Shuffle Cards
-- Draw Card
+- `Deck()` — constructor.
+- `shuffle()`
+- `drawTop(): Card`
+- `peekTop(int n): List<Card>` — supports *See the Future*.
+- `insertAt(Card, int index)` — supports *Defuse* re-inserting an Exploding Kitten anywhere in the draw pile.
+- `discard(Card)`
+- `size(): int`
+- `isEmpty(): boolean`
 
 ---
 
