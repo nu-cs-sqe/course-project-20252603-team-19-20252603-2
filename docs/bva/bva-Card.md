@@ -18,7 +18,7 @@ This file holds the BVA analysis for every public method of the `Card` class. Ea
 |              | System under test            | Expected output                                                  | Implemented? |
 |--------------|------------------------------|------------------------------------------------------------------|--------------|
 | Test Case 1  | `new Card(EXPLODING_KITTEN)` | constructor returns normally; `getCardType()` == `EXPLODING_KITTEN` | yes          |
-| Test Case 2  | `new Card(null)`             | `IllegalArgumentException` thrown; no `Card` produced            | no           |
+| Test Case 2  | `new Card(null)`             | `IllegalArgumentException` thrown; no `Card` produced            | yes          |
 
 ---
 
