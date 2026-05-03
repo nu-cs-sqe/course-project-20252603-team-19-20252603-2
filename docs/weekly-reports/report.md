@@ -11,6 +11,13 @@
 3. [Working] Created use cases analysis document
 4. [done] Created issues on project board in Github repo
 
+# Week 5 (04/27/2026-05/03/2026)
+**Planning and Progress Tracking**:
+1. [done] Kevin: Implemented `Card` class with full TDD discipline — `CardType` enum (7 base-game values), constructor with null rejection, `getCardType`. Per-test Red→Green commit pairs; all 9 BVA test cases pass (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/20)
+2. [done] Kevin: Authored BVA analysis for `Card` class at `docs/bva/bva-Card.md`, consolidated into one-file-per-class format with one section per public method
+3. [done] Kevin: Built advisory AI PR reviewer workflow (DeepSeek `deepseek-v4-pro`) that posts a severity-tagged sticky comment on every PR against `docs/STANDARDS.md` (BVA discipline, TDD ordering, sole authorship, Clean Code, i18n)
+4. [done] Kevin: Documented project standards rubric at `docs/STANDARDS.md`, added `docs/design/design-doc.md`, and rewrote `docs/use-cases/use-cases.md` into proper Actor / Preconditions / Main Flow / Alternate Flows / Postconditions format
+
 # Week X (XX/XX/2026-XX/XX/2026) TEMPLATE (You can change the format to whatever the team likes better)
 **Planning and Progress Tracking**:
 1. [done] Person: Task (Links to PR)
