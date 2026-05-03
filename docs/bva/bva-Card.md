@@ -17,7 +17,7 @@ This file holds the BVA analysis for every public method of the `Card` class. Ea
 
 |              | System under test            | Expected output                                                  | Implemented? |
 |--------------|------------------------------|------------------------------------------------------------------|--------------|
-| Test Case 1  | `new Card(EXPLODING_KITTEN)` | constructor returns normally; `getCardType()` == `EXPLODING_KITTEN` | no           |
+| Test Case 1  | `new Card(EXPLODING_KITTEN)` | constructor returns normally; `getCardType()` == `EXPLODING_KITTEN` | yes          |
 | Test Case 2  | `new Card(null)`             | `IllegalArgumentException` thrown; no `Card` produced            | no           |
 
 ---
@@ -35,13 +35,13 @@ This file holds the BVA analysis for every public method of the `Card` class. Ea
 
 |              | System under test            | Expected output    | Implemented? |
 |--------------|------------------------------|--------------------|--------------|
-| Test Case 1  | `new Card(EXPLODING_KITTEN)` | `EXPLODING_KITTEN` | no           |
-| Test Case 2  | `new Card(DEFUSE)`           | `DEFUSE`           | no           |
-| Test Case 3  | `new Card(ATTACK)`           | `ATTACK`           | no           |
-| Test Case 4  | `new Card(SHUFFLE)`          | `SHUFFLE`          | no           |
-| Test Case 5  | `new Card(SKIP)`             | `SKIP`             | no           |
-| Test Case 6  | `new Card(SEE_THE_FUTURE)`   | `SEE_THE_FUTURE`   | no           |
-| Test Case 7  | `new Card(NOPE)`             | `NOPE`             | no           |
+| Test Case 1  | `new Card(EXPLODING_KITTEN)` | `EXPLODING_KITTEN` | yes          |
+| Test Case 2  | `new Card(DEFUSE)`           | `DEFUSE`           | yes          |
+| Test Case 3  | `new Card(ATTACK)`           | `ATTACK`           | yes          |
+| Test Case 4  | `new Card(SHUFFLE)`          | `SHUFFLE`          | yes          |
+| Test Case 5  | `new Card(SKIP)`             | `SKIP`             | yes          |
+| Test Case 6  | `new Card(SEE_THE_FUTURE)`   | `SEE_THE_FUTURE`   | yes          |
+| Test Case 7  | `new Card(NOPE)`             | `NOPE`             | yes          |
 
 ---
 
