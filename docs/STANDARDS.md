@@ -10,21 +10,28 @@ enums and GUI code are excluded from coverage requirements).
 
 ---
 
-## 1. Use-cases doc as spec
+## 1. Design doc as spec
 
-`docs/use-cases/use-cases.md` is the team's binding contract for what the domain
-classes look like. The AI treats it as the source of truth.
+`docs/design/design-doc.md` is the team's binding contract for what the domain
+classes look like — data members and public methods. The AI treats it as the
+source of truth for class structure.
 
-- Every class the team implements has a `## <Name> Class` section.
+`docs/use-cases/use-cases.md` is the companion document; it captures the
+player-facing flows (Actor / Preconditions / Main Flow / Alternate Flows /
+Postconditions) that the `ui` and `domain` packages must support. It is *not*
+the structural spec — do not look there for class member lists.
+
+- Every class the team implements has a `## <Name> Class` section in
+  `design-doc.md`.
 - Each class section lists its **public** data members under `### Data Members`
   and its **public** methods under `### Methods`.
 - Method bullets are written as backticked Java signatures, e.g.
   `` - `getCardType(): CardType` `` or `` - `Card(CardType cardType)` — constructor; rejects null. ``.
 - Enum sections (heading suffix `(enum, ...)`) are out of scope for BVA / coverage,
   per the rubric.
-- Adding a method to a class section without producing the BVA file in the same
-  PR (or a previously-merged PR) is a 🔴 violation.
-- Removing or renaming a method without updating every reference (BVA file name,
+- Adding a method to a class section in `design-doc.md` without producing the
+  BVA file in the same PR (or a previously-merged PR) is a 🔴 violation.
+- Removing or renaming a method without updating every reference (BVA section,
   test name, source) is a 🔴 violation.
 
 ## 2. BVA discipline
@@ -55,19 +62,31 @@ public method inside it, following `docs/bva/bva-template.md`.
 ## 3. TDD ordering in commits
 
 The C-tier rubric requires "evidence of a TDD/BDD workflow ... in the GitHub
-commit history." The team enforces this as a per-method commit pattern:
+commit history." The team enforces this as a **per-test Red→Green** commit
+cadence:
 
 For every newly-introduced public method in a PR, the PR's commit history must
 show, **in topological order**:
 
-1. A commit that adds the BVA file (`bva-<methodName>.md` or
-   `bva-<className>.md`).
-2. A commit that adds the failing test in `src/test/java/`.
-3. A commit that adds the implementation in `src/main/java/`.
+1. A commit that adds the BVA file `bva-<className>.md` (or appends a new
+   `## Method N:` section to the existing class file). One per method.
+2. For each test (or test method) covering that public method:
+   - A **Red commit** that adds the failing test alone in `src/test/java/`.
+     The test must actually fail when run before the matching Green is written
+     — the failure is the proof the test is real.
+   - A **Green commit** that adds (or extends) the implementation in
+     `src/main/java/` so exactly that test passes, and flips the corresponding
+     `Implemented?` row(s) in the BVA file from `no` to `yes` in the same
+     commit.
 
 Equality is fine — one commit doing two of these steps at once does not violate
-ordering. Reverse order (impl committed before test, or test committed before
-BVA) is a 🔴 violation.
+ordering. Reverse order (impl committed before its test, or any test committed
+before its BVA) is a 🔴 violation.
+
+For methods whose tests are parameterized (e.g., `@ParameterizedTest` over an
+`@EnumSource`), the parameterized test counts as a single Red→Green pair; the
+multiple BVA `Implemented?` rows it covers all flip together in that pair's
+Green commit.
 
 A PR that squashed its commits at the end may legitimately have followed TDD
 during development; the AI should call it out as 🟡 ("ordering not visible in
@@ -128,10 +147,16 @@ The rubric: "code supports adding new locales without changing existing code."
 - Bundles must be loaded via `ResourceBundle.getBundle("message", locale)` —
   the standard idiom — so adding a new locale is purely a `.properties` file
   addition, no Java edits.
-- At least 2 locales must ship by the time the team submits.
-- Domain code (`Card`, `Deck`, `Player`, `Game`) does not store
-  human-readable text — that's a UI concern, lookup-keyed by `CardType` or
-  similar.
+- The repo currently ships two bundles satisfying the "≥ 2 locales" rule:
+  `message_en.properties` (English, default) and `message_zh.properties`
+  (Simplified Chinese). Adding a third locale = create
+  `message_<lang>.properties` with the same keys; **no Java changes**.
+- Domain code (`Card`, `Deck`, `Player`, `Game`) stores **i18n keys** (e.g.
+  `"card.nullType"`), not human-readable text. The UI layer is responsible
+  for resolving the key against the player's locale.
+- New keys are added by appending the same `key = value` line to **every**
+  shipped bundle. Adding a key to one bundle but not the others is a 🟡
+  suggestion (the AI should call out the missing translations).
 
 ## 8. Testing conventions
 
