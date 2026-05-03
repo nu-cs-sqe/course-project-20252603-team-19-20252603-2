@@ -29,20 +29,22 @@ classes look like. The AI treats it as the source of truth.
 
 ## 2. BVA discipline
 
-The team commits to **one BVA analysis file per public method**, following
-`docs/bva/bva-template.md`.
+The team commits to **one BVA analysis file per class**, with one section per
+public method inside it, following `docs/bva/bva-template.md`.
 
-- Filename: `docs/bva/bva-<methodName>.md`.
-- Constructors: `docs/bva/bva-<className>.md` (constructor's Java name is the
-  class name).
-- Required sections, in order:
-  1. `## Method 1: \`\`\`public <signature>\`\`\`` heading.
-  2. `### Step 1-3 Results` table with rows for Step 1 (domain),
-     Step 2 (data type from BVA Catalog), Step 3 (concrete edge values).
-  3. `### Step 4:` heading with `##### All-combination or each-choice: <decision>`
-     and a Test Case table with columns: Test Case # | System under test |
-     Expected output | Implemented?.
-  4. `## Recall the 4 steps of BVA` footer (verbatim from the template).
+- Filename: `docs/bva/bva-<className>.md` (e.g., `bva-Card.md`,
+  `bva-Player.md`, `bva-Deck.md`). Constructors are part of their class's file
+  and listed as a `## Method N:` section like any other public method.
+- Required structure, in order:
+  1. A `# BVA Analysis for <ClassName>` top-level heading.
+  2. One `## Method N: \`\`\`public <signature>\`\`\`` block per public method,
+     each containing:
+     - A `### Step 1-3 Results` table with rows for Step 1 (domain),
+       Step 2 (data type from BVA Catalog), Step 3 (concrete edge values).
+     - A `### Step 4:` heading with `##### All-combination or each-choice: <decision>`
+       and a Test Case table with columns: Test Case # | System under test |
+       Expected output | Implemented?.
+  3. A `## Recall the 4 steps of BVA` footer (verbatim from the template).
 - The **Implemented?** column starts as `no` and flips to `yes` (or
   `:white_check_mark:`) in the same commit that adds the green test for that
   case. Doc and code never drift.
