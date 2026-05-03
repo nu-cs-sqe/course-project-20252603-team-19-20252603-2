@@ -27,7 +27,6 @@ DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
 MODEL = "deepseek-v4-pro"
 MAX_PROMPT_CHARS = 100_000
 TEMPERATURE = 0.2
-MAX_TOKENS = 4096
 
 SYSTEM_PROMPT = """\
 You are an AI code reviewer for a Northwestern CS 380 (Software Quality
@@ -191,7 +190,6 @@ def call_deepseek(api_key, prompt):
             {"role": "user", "content": prompt},
         ],
         "temperature": TEMPERATURE,
-        "max_tokens": MAX_TOKENS,
         "stream": False,
     }).encode("utf-8")
     req = urllib.request.Request(
@@ -201,9 +199,15 @@ def call_deepseek(api_key, prompt):
             "Content-Type": "application/json",
         },
     )
-    with urllib.request.urlopen(req, timeout=120) as resp:
+    with urllib.request.urlopen(req, timeout=300) as resp:
         data = json.loads(resp.read().decode("utf-8"))
-    return data["choices"][0]["message"]["content"]
+    choice = data["choices"][0]
+    print(
+        f"DeepSeek finish_reason: {choice.get('finish_reason', 'unknown')}",
+        file=sys.stderr,
+    )
+    msg = choice["message"]
+    return msg.get("content") or msg.get("reasoning_content") or ""
 
 
 def find_sticky_comment(repo, pr):
