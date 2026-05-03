@@ -5,8 +5,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class CardTest {
@@ -24,7 +22,6 @@ class CardTest {
 				IllegalArgumentException.class,
 				() -> new Card(null)
 		);
-		assertNotNull(ex.getMessage());
-		assertFalse(ex.getMessage().isEmpty());
+		assertEquals("card.nullType", ex.getMessage());
 	}
 }
