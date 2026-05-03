@@ -109,6 +109,7 @@ def gather_inputs(base_sha, head_sha):
 
     return {
         "standards": read_text("docs/STANDARDS.md"),
+        "design_doc": read_text("docs/design/design-doc.md"),
         "use_cases": read_text("docs/use-cases/use-cases.md"),
         "bva_template": (
             read_text("docs/bva/bva-template.md")
@@ -143,7 +144,10 @@ def build_prompt(inputs):
     bva_inventory = "\n".join(f"- {n}" for n in inputs["bva_files"]) or "(empty)"
     base = (
         "# STANDARDS\n\n" + inputs["standards"]
-        + "\n\n# USE-CASES SPEC\n\n" + inputs["use_cases"]
+        + "\n\n# DESIGN DOC (binding spec for class data members + methods)\n\n"
+        + inputs["design_doc"]
+        + "\n\n# USE-CASES (player-facing flows; companion to the design doc, "
+        "NOT the structural spec)\n\n" + inputs["use_cases"]
         + "\n\n# BVA TEMPLATE / CONVENTION\n\n" + inputs["bva_template"]
         + "\n\n# BVA INVENTORY (files currently in docs/bva/)\n\n"
         + bva_inventory
