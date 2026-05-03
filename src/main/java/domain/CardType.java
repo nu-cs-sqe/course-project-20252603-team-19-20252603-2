@@ -3,5 +3,9 @@ package domain;
 public enum CardType {
 	EXPLODING_KITTEN,
 	DEFUSE,
-	SEE_THE_FUTURE
+	ATTACK,
+	SHUFFLE,
+	SKIP,
+	SEE_THE_FUTURE,
+	NOPE
 }
