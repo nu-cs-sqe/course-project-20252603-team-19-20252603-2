@@ -147,10 +147,16 @@ The rubric: "code supports adding new locales without changing existing code."
 - Bundles must be loaded via `ResourceBundle.getBundle("message", locale)` —
   the standard idiom — so adding a new locale is purely a `.properties` file
   addition, no Java edits.
-- At least 2 locales must ship by the time the team submits.
-- Domain code (`Card`, `Deck`, `Player`, `Game`) does not store
-  human-readable text — that's a UI concern, lookup-keyed by `CardType` or
-  similar.
+- The repo currently ships two bundles satisfying the "≥ 2 locales" rule:
+  `message_en.properties` (English, default) and `message_zh.properties`
+  (Simplified Chinese). Adding a third locale = create
+  `message_<lang>.properties` with the same keys; **no Java changes**.
+- Domain code (`Card`, `Deck`, `Player`, `Game`) stores **i18n keys** (e.g.
+  `"card.nullType"`), not human-readable text. The UI layer is responsible
+  for resolving the key against the player's locale.
+- New keys are added by appending the same `key = value` line to **every**
+  shipped bundle. Adding a key to one bundle but not the others is a 🟡
+  suggestion (the AI should call out the missing translations).
 
 ## 8. Testing conventions
 
