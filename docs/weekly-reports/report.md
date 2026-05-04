@@ -20,6 +20,8 @@
 5. [done] Kevin: Refactored `Card.java` exception messages to use i18n keys (`card.nullType`) instead of hard-coded English text, addressing 🔴 i18n violation flagged by AI reviewer (Red→Green pair on `feat/jixin-card`)
 6. [done] Kevin: Added base i18n message bundles `src/main/resources/message_en.properties` (English) and `message_zh.properties` (Simplified Chinese) — satisfies the A-tier "≥ 2 locales must ship" requirement and provides lookup targets for the `card.nullType` key
 7. [done] Kevin: Hardened the AI reviewer workflow — removed `max_tokens` cap (model was hitting it on synthetic merge-commit runs and returning empty content), added `reasoning_content` fallback, and added a `concurrency:` block to cancel stale parallel runs on the same PR
+8. [done] Mahnum: Opened draft PRs for `player-class-setup` and `player-initial-tests` branches
+9. [done] Mahnum: Created `Player.java` stub and `docs/bva/bva-player` with BVA analysis covering constructor, `addCard`, `removeCard`, `getHandSize`, `hasCard`, and `isAlive`/`setAlive` boundary cases
 
 # Week X (XX/XX/2026-XX/XX/2026) TEMPLATE (You can change the format to whatever the team likes better)
 **Planning and Progress Tracking**:
