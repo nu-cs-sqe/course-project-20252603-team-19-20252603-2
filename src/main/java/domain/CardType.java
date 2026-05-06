@@ -8,5 +8,5 @@ public enum CardType {
 	SKIP,
 	SEE_THE_FUTURE,
 	NOPE,
-	Cat
+	CAT_CARDS
 }
