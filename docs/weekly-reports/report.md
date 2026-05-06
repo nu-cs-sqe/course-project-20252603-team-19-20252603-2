@@ -23,6 +23,10 @@
 8. [done] Mahnum: Opened draft PRs for `player-class-setup` and `player-initial-tests` branches
 9. [done] Mahnum: Created `Player.java` stub and `docs/bva/bva-player` with BVA analysis covering constructor, `addCard`, `removeCard`, `getHandSize`, `hasCard`, and `isAlive`/`setAlive` boundary cases
 
+# Week 6 (05/04/2026-05/10/2026)
+**Planning and Progress Tracking**:
+1. [done] Kevin: Set up Checkstyle (Google Java Style 10.18.2 base + project overrides for tab indent, no-Javadoc-required, `MagicNumber`, severity=error) and SpotBugs (default effort + confidence, HTML reports) as strict-mode quality gates wired into `./gradlew build`. PR's CI fails until each owner refactors their files on their own branch (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/25)
+
 # Week X (XX/XX/2026-XX/XX/2026) TEMPLATE (You can change the format to whatever the team likes better)
 **Planning and Progress Tracking**:
 1. [done] Person: Task (Links to PR)
