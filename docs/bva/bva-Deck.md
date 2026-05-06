@@ -1,6 +1,6 @@
 # BVA Analysis for Deck Class
 
-## Method under test: `Deck()`
+## Method 1: ```public Deck()````
 
 ### Step 1: Input Domain
 - No input parameters (constructor)
@@ -35,7 +35,7 @@ Focus on:
     - **State of the system**: N/A
     - **Expected output**: [CardType.EXPLODING_KITTEN,...,CardType.CAT_CARDS]
 
-## Method under test: `drawTop()`
+## Method 2: ```public Card drawTop()```
 
 ### Step 1: Input Domain
 - Empty deck (0 cards)
@@ -74,7 +74,7 @@ Focus on:
     - **State of the system**: [CardType.EXPLODING_KITTEN,...,CardType.CAT_CARDS]
     - **Expected output**: [CardType.EXPLODING_KITTEN,...,CardType.CAT_CARDS] removes the last element, the deck should now be size of 55
 
-## Method under test: `shuffle()`
+## Method 3: ```public void shuffle()```
 
 ### Step 1: Input Domain
 - Empty deck
@@ -110,3 +110,9 @@ Focus on:
 - **TC4: shuffle_maxSizeDeck_preseveresElementsAndSize** (Not Implemented)
     - **State of the system**: [CardType.EXPLODING_KITTEN,...,CardType.CAT_CARDS]
     - **Expected output**: the deck should contain the same elements as before and the size should stay unchanged
+
+## Recall the 4 steps of BVA
+### Step 1: Describe the input and output in terms of the domain.
+### Step 2: Choose the data type for the input and the output from the BVA Catalog.
+### Step 3: Select concrete values along the edges for the input and the output.
+### Step 4: Determine the test cases using either all-combination or each-choice strategy.
