@@ -28,7 +28,7 @@ This file holds the BVA analysis for every public method of the `Card` class. Ea
 |--------|-----------------------------|---------------------------------|---------------------------------------------------------------------------------------|
 | Step 1 | none (instance-state query) |                                 | The `CardType` value supplied at construction                                         |
 | Step 2 | n/a                         |                                 | Enumeration (`CardType`)                                                              |
-| Step 3 | n/a                         |                                 | `EXPLODING_KITTEN`, `DEFUSE`, `ATTACK`, `SHUFFLE`, `SKIP`, `SEE_THE_FUTURE`, `NOPE`   |
+| Step 3 | n/a                         |                                 | `EXPLODING_KITTEN`, `DEFUSE`, `ATTACK`, `SHUFFLE`, `SKIP`, `SEE_THE_FUTURE`, `NOPE`, `CAT_CARDS` |
 
 ### Step 4:
 ##### All-combination or each-choice: each-choice
@@ -42,6 +42,7 @@ This file holds the BVA analysis for every public method of the `Card` class. Ea
 | Test Case 5  | `new Card(SKIP)`             | `SKIP`             | yes          |
 | Test Case 6  | `new Card(SEE_THE_FUTURE)`   | `SEE_THE_FUTURE`   | yes          |
 | Test Case 7  | `new Card(NOPE)`             | `NOPE`             | yes          |
+| Test Case 8  | `new Card(CAT_CARDS)`        | `CAT_CARDS`        | yes          |
 
 ---
 
