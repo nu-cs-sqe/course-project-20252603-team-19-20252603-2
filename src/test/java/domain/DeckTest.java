@@ -14,7 +14,7 @@ public class DeckTest {
 
         int expectedSize = 56;
 
-        List<Integer> cards = deck.getCards();
+        List<CardType> cards = deck.getCards();
 
         assertEquals(expectedSize, cards.size());
     }
