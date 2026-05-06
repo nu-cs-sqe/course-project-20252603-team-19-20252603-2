@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+		"-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+		"https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<!--
+    Per-file Checkstyle suppressions for the Exploding Kittens project.
+
+    Add entries here when a specific check needs to be silenced for a specific
+    file or pattern. Example:
+
+      <suppress checks="MagicNumber" files=".*Test\.java"/>
+
+    The file is referenced from config/checkstyle/checkstyle.xml's
+    SuppressionFilter module.
+-->
+<suppressions>
+</suppressions>
