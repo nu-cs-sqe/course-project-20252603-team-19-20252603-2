@@ -5,7 +5,7 @@
   - **State of the system**: N/A
   - **Expected output**: 56
 
-- **TC2: deck_createFullDeck_firstCardIsExplodingKitten** (Not Implemented)
+- **TC2: deck_createFullDeck_firstCardIsExplodingKitten** (Implemented)
   - **State of the system**: N/A
   - **Expected output**: CardType.EXPLODING_KITTEN
 
