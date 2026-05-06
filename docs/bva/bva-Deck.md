@@ -1,7 +1,7 @@
 # BVA Analysis for Deck Class
 
 ### Method under test: Deck
-- **TC1: deck_createFullDeck_correctSize** (Not Implemented)
+- **TC1: deck_createFullDeck_correctSize** (Implemented)
   - **State of the system**: N/A
   - **Expected output**: 56
 
