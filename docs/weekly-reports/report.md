@@ -26,6 +26,7 @@
 # Week 6 (05/04/2026-05/10/2026)
 **Planning and Progress Tracking**:
 1. [done] Kevin: Added `CAT_CARDS` to the `CardType` enum and propagated to all dependent docs (`docs/design/design-doc.md` CardType list, `docs/bva/bva-Card.md` Method 2 Step 3 + new TC8). The parameterized `getCardType` test auto-picked up `CAT_CARDS` via `@EnumSource`; all 9 tests pass (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/24)
+2. [done] Kevin: Added `FAVOR` to the `CardType` enum and propagated to `docs/design/design-doc.md` and `docs/bva/bva-Card.md` (Method 2 Step 3 + new TC9). All 10 tests pass via `@EnumSource` auto-pickup (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/24)
 
 # Week X (XX/XX/2026-XX/XX/2026) TEMPLATE (You can change the format to whatever the team likes better)
 **Planning and Progress Tracking**:
