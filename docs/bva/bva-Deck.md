@@ -37,10 +37,10 @@
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | empty deck (`[]`) | throws IllegalStateException | no |
-| TC2 | deck size = 1 | empty deck (`[]`) | no |
-| TC3 | deck size = 2 | size = 1 | no |
-| TC4 | deck size = 56 | size = 55 | no |
+| TC1 | empty drawPile (`[]`) | throws IllegalStateException with message "The draw pile is empty" | no |
+| TC2 | drawPile size = 1 | returns Card, drawPile becomes `[]` | no |
+| TC3 | drawPile size = 2 | returns Card, drawPile size becomes `1` | no |
+| TC4 | drawPile size = 56 | returns Card, drawPile size becomes `55` | no |
 
 ---
 
