@@ -17,6 +17,11 @@ public class Deck {
     private List<Card> drawPile;
     private List<Card> discardPile;
 
+    Deck(List<Card> cards){
+        drawPile = new ArrayList<>(cards);
+        discardPile = new ArrayList<>();
+    }
+
     public Deck(){
         drawPile = new ArrayList<>();
         discardPile = new ArrayList<>();
@@ -32,8 +37,12 @@ public class Deck {
         addCards(CardType.CAT_CARDS, NUMBER_OF_CAT_CARDS);
     }
 
-    private void addCards(CardType cardType, int cardCount){
-        for (int i = 0; i < cardCount; i++){
+    public Card drawTop() {
+        throw new IllegalStateException("The draw pile is empty");
+    }
+
+    private void addCards(CardType cardType, int cardCount) {
+        for (int i = 0; i < cardCount; i++) {
             Card card = new Card(cardType);
             drawPile.add(card);
         }
