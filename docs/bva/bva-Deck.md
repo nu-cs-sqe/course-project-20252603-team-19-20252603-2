@@ -14,11 +14,11 @@
 ##### each-choice
 
 | Test Case # | System under test | Expected output | Implemented? |
-|-------------|------------------|-----------------|--------------|
-| TC1 | `new Deck()` | deck size = 56 | no |
-| TC2 | `new Deck()` | first card = EXPLODING_KITTEN | no |
-| TC3 | `new Deck()` | last card = CAT_CARDS | no |
-| TC4 | `new Deck()` | correct full ordering of cards | no |
+|-------------|------------------|-----------------|-------------|
+| TC1 | `new Deck()` | deck size = 56 | yes         |
+| TC2 | `new Deck()` | first card = EXPLODING_KITTEN | no          |
+| TC3 | `new Deck()` | last card = CAT_CARDS | no          |
+| TC4 | `new Deck()` | correct full ordering of cards | no          |
 
 ---
 
