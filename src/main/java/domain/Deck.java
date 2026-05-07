@@ -14,10 +14,12 @@ public class Deck {
     private final int NUMBER_OF_FAVOR = 4;
     private final int NUMBER_OF_CAT_CARDS = 20;
 
-    private List<CardType> cards;
+    private List<Card> drawPile;
+    private List<Card> discardPile;
 
     public Deck(){
-        cards = new ArrayList<>();
+        drawPile = new ArrayList<>();
+        discardPile = new ArrayList<>();
 
         addCards(CardType.EXPLODING_KITTEN, NUMBER_OF_EXPLODING_KITTENS);
         addCards(CardType.DEFUSE, NUMBER_OF_DEFUSE);
@@ -32,11 +34,16 @@ public class Deck {
 
     private void addCards(CardType cardType, int cardCount){
         for (int i = 0;i < cardCount;i++){
-            cards.add(cardType);
+            Card card = new Card(cardType);
+            drawPile.add(card);
         }
     }
 
-    public List<CardType> getCards(){
-        return new ArrayList<>(cards);
+    public List<Card> getDrawPile(){
+        return new ArrayList<>(drawPile);
+    }
+
+    public List<Card> getDiscardPile(){
+        return new ArrayList<>(discardPile);
     }
 }

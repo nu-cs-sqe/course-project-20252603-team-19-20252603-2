@@ -14,7 +14,7 @@ public class DeckTest {
 
         int expectedSize = 56;
 
-        List<CardType> cards = deck.getCards();
+        List<Card> cards = deck.getDrawPile();
 
         assertEquals(expectedSize, cards.size());
     }
@@ -25,8 +25,8 @@ public class DeckTest {
 
         CardType expectedFirstElement = CardType.EXPLODING_KITTEN;
 
-        List<CardType> cards = deck.getCards();
+        List<Card> cards = deck.getDrawPile();
 
-        assertEquals(expectedFirstElement,cards.get(0));
+        assertEquals(expectedFirstElement,cards.get(0).getCardType());
     }
 }
