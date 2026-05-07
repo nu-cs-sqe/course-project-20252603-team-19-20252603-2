@@ -38,7 +38,10 @@ public class Deck {
     }
 
     public Card drawTop() {
-        throw new IllegalStateException("The draw pile is empty");
+        if (drawPile.isEmpty()) {
+            throw new IllegalStateException("The draw pile is empty");
+        }
+        return drawPile.remove(0);
     }
 
     private void addCards(CardType cardType, int cardCount) {
