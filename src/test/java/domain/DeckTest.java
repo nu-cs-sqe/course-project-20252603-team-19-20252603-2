@@ -139,4 +139,14 @@ public class DeckTest {
         assertEquals(CardType.EXPLODING_KITTEN, drawn.getCardType());
         assertEquals(1, deck.getDrawPile().size());
     }
+
+    @Test
+    void drawTop_fullDeck_size56_returnsCardAndBecomesSize55() {
+        Deck deck = new Deck();
+
+        Card drawn = deck.drawTop();
+
+        assertEquals(CardType.EXPLODING_KITTEN, drawn.getCardType());
+        assertEquals(55, deck.getDrawPile().size());
+    }
 }
