@@ -2,9 +2,11 @@ package domain;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DeckTest {
 
@@ -96,5 +98,18 @@ public class DeckTest {
         }
 
         assertEquals(56, cards.size());
+    }
+
+    @Test
+    void drawTop_emptyDeck_throwsException(){
+        Deck deck = new Deck(new ArrayList<>());
+
+        String expectedMsg = "The draw pile is empty";
+
+        Exception exception = assertThrows(IllegalStateException.class ,() ->{
+            deck.drawTop();
+        });
+
+        assertEquals(expectedMsg, exception.getMessage());
     }
 }
