@@ -112,4 +112,17 @@ public class DeckTest {
 
         assertEquals(expectedMsg, exception.getMessage());
     }
+
+    @Test
+    void drawTop_sizeOneDeck_returnsCardAndBecomesEmpty() {
+        List<Card> oneCardDeck = new ArrayList<>();
+        oneCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
+
+        Deck deck = new Deck(oneCardDeck);
+
+        Card drawn = deck.drawTop();
+
+        assertEquals(CardType.EXPLODING_KITTEN, drawn.getCardType());
+        assertEquals(0, deck.getDrawPile().size());
+    }
 }
