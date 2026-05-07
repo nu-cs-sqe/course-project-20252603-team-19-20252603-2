@@ -17,7 +17,7 @@
 |-------------|------------------|-----------------|-------------|
 | TC1 | `new Deck()` | deck size = 56 | yes         |
 | TC2 | `new Deck()` | first card = EXPLODING_KITTEN | yes         |
-| TC3 | `new Deck()` | last card = CAT_CARDS | no          |
+| TC3 | `new Deck()` | last card = CAT_CARDS | yes         |
 | TC4 | `new Deck()` | correct full ordering of cards | no          |
 
 ---
