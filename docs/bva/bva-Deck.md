@@ -39,7 +39,7 @@
 |-------------|------------------|-----------------|-------------|
 | TC1 | empty drawPile (`[]`) | throws IllegalStateException with message "The draw pile is empty" | yes         |
 | TC2 | drawPile size = 1 | returns Card, drawPile becomes `[]` | yes         |
-| TC3 | drawPile size = 2 | returns Card, drawPile size becomes `1` | no          |
+| TC3 | drawPile size = 2 | returns Card, drawPile size becomes `1` | yes         |
 | TC4 | drawPile size = 56 | returns Card, drawPile size becomes `55` | no          |
 
 ---
