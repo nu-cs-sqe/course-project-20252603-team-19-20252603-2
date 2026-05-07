@@ -33,7 +33,7 @@ public class Deck {
     }
 
     private void addCards(CardType cardType, int cardCount){
-        for (int i = 0;i < cardCount;i++){
+        for (int i = 0; i < cardCount; i++){
             Card card = new Card(cardType);
             drawPile.add(card);
         }

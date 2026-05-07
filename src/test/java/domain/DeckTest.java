@@ -12,11 +12,11 @@ public class DeckTest {
     void deck_createFullDeck_correctSize(){
         Deck deck = new Deck();
 
-        int expectedSize = 56;
+        final int FULL_DECK_SIZE = 56;
 
         List<Card> cards = deck.getDrawPile();
 
-        assertEquals(expectedSize, cards.size());
+        assertEquals(FULL_DECK_SIZE, cards.size());
     }
 
     @Test
