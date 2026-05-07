@@ -29,4 +29,15 @@ public class DeckTest {
 
         assertEquals(expectedFirstElement,cards.get(0).getCardType());
     }
+
+    @Test
+    void deck_createFullDeck_lastCardIsCatCards(){
+        Deck deck = new Deck();
+
+        CardType expectedLastElement = CardType.CAT_CARDS;
+
+        List<Card> cards = deck.getDrawPile();
+
+        assertEquals(expectedLastElement,cards.get(cards.size()-1).getCardType());
+    }
 }
