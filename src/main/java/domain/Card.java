@@ -1,6 +1,6 @@
 package domain;
 
-public class Card {
+public final class Card {
 
 	private static final String NULL_CARD_TYPE_KEY = "card.nullType";
 
