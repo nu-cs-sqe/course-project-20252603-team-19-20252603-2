@@ -55,7 +55,15 @@ public class Deck {
         if (n < 0) {
             throw new IllegalArgumentException(EMPTY_DECK_TYPE_KEY);
         }
-        return new ArrayList<>();
+        if (n == 0) {
+            return new ArrayList<>();
+        }
+
+        List<Card> result = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            result.add(drawPile.get(i));
+        }
+        return result;
     }
 
     private void addCards(CardType cardType, int cardCount) {
