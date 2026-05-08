@@ -72,6 +72,10 @@ public class Deck {
         return result;
     }
 
+    public void discard(Card card) {
+        discardPile.add(card);
+    }
+
     private void addCards(CardType cardType, int cardCount) {
         for (int i = 0; i < cardCount; i++) {
             Card card = new Card(cardType);
