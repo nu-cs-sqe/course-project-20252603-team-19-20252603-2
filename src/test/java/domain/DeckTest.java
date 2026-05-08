@@ -283,4 +283,15 @@ public class DeckTest {
 
         assertEquals(56, deck.getDrawPile().size());
     }
+
+    @Test
+    void peekTop_nGreaterThanDeckSize_throwsIllegalArgumentException() {
+        Deck deck = new Deck();
+
+        Exception exception = assertThrows(IllegalStateException.class ,() ->{
+            deck.peekTop(57);
+        });
+
+        assertEquals("deck.peekTop.tooManyRequested", exception.getMessage());
+    }
 }
