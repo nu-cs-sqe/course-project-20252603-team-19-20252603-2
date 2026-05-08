@@ -297,6 +297,22 @@ public class DeckTest {
         assertEquals("deck.peekTop.tooManyRequested", exception.getMessage());
     }
 
+    @Test
+    void peekTop_nExceedsCurrentSize_throwsIllegalStateException() {
+        List<Card> cards = new ArrayList<>();
+        cards.add(new Card(CardType.EXPLODING_KITTEN));
+        cards.add(new Card(CardType.DEFUSE));
+        cards.add(new Card(CardType.ATTACK));
+
+        Deck deck = new Deck(cards);
+
+        Exception exception = assertThrows(IllegalStateException.class, () ->{
+            deck.peekTop(5);
+        });
+
+        assertEquals("deck.peekTop.tooManyRequested", exception.getMessage());
+    }
+
     @ParameterizedTest
     @EnumSource(CardType.class)
     void discard_AllValidCardTypes_AddsToDiscardPile(CardType type) {
