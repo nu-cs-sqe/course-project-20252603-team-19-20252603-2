@@ -1,6 +1,8 @@
 package domain;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -293,5 +295,18 @@ public class DeckTest {
         });
 
         assertEquals("deck.peekTop.tooManyRequested", exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @EnumSource(CardType.class)
+    void discard_AllValidCardTypes_AddsToDiscardPile(CardType type) {
+        Deck deck = new Deck();
+
+        deck.discard(new Card(type));
+
+        List<Card> discardPile = deck.getDiscardPile();
+
+        assertEquals(1,discardPile.size());
+        assertEquals(type,discardPile.get(0).getCardType());
     }
 }
