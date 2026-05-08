@@ -265,4 +265,22 @@ public class DeckTest {
 
         assertEquals(56, deck.getDrawPile().size());
     }
+
+    @Test
+    void peekTop_nIs56_returnsAllCards() {
+        Deck deck = new Deck();
+
+        List<Card> result = deck.peekTop(56);
+
+        assertEquals(56, result.size());
+
+        for (int i = 0; i < 56; i++) {
+            assertEquals(
+                    deck.getDrawPile().get(i).getCardType(),
+                    result.get(i).getCardType()
+            );
+        }
+
+        assertEquals(56, deck.getDrawPile().size());
+    }
 }
