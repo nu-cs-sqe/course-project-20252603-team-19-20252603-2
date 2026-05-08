@@ -4,11 +4,11 @@
 
 ### Step 1–3 Results
 
-| Step | Input                             | Output                 |
-|------|-----------------------------------|------------------------|
+| Step | Input                             | Output                |
+|------|-----------------------------------|-----------------------|
 | Step 1 | No input parameters (constructor) | Fully initialized deck |
-| Step 2 | List<Card> construction           | List<Card>             |
-| Step 3 | Boundary sizes                    | 0 → 56 cards           |
+| Step 2 | N/A                               | `List<Card>`            |
+| Step 3 | N/A                               | 56 cards in the deck  |
 
 ### Step 4:
 ##### each-choice
@@ -26,11 +26,11 @@
 
 ### Step 1–3 Results
 
-| Step | Input                       | Output        |
-|------|-----------------------------|---------------|
-| Step 1 | Deck state (0,1,2,56 cards) | Modified deck |
-| Step 2 | List<Card>                  | List<Card>    |
-| Step 3 | Boundary values             | 0, 1, 2, 56   |
+| Step | Input                      | Output                                     |
+|------|----------------------------|--------------------------------------------|
+| Step 1 | Deck state (0,1,2,56 cards) | Modified deck                              |
+| Step 2 | deck `List<Card>`           | Card Object                                |
+| Step 3 | deck sizes: 0, 1, 2, 56    | return top Card and deck size decrease by 1 |
 
 ### Step 4:
 ##### each-choice
@@ -48,11 +48,11 @@
 
 ### Step 1–3 Results
 
-| Step | Input                  | Output                   |
-|------|------------------------|--------------------------|
-| Step 1 | Deck state             | reordered deck           |
-| Step 2 | List<Card> permutation | List<Card>               |
-| Step 3 | Boundary invariants    | same elements, same size |
+| Step | Input                      | Output                   |
+|------|----------------------------|--------------------------|
+| Step 1 | The current drawPile state. | Reordered deck state with same elements  |
+| Step 2 | deck `List<Card>`           | N/A                      |
+| Step 3 | deck sizes: 0,1,2,56       | same elements, same size |
 
 ### Step 4:
 ##### each-choice
