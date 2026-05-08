@@ -1,6 +1,7 @@
 package domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Deck {
@@ -44,6 +45,10 @@ public class Deck {
             throw new IllegalStateException(EMPTY_DECK_TYPE_KEY);
         }
         return drawPile.remove(0);
+    }
+
+    public void shuffle() {
+        Collections.shuffle(drawPile);
     }
 
     private void addCards(CardType cardType, int cardCount) {
