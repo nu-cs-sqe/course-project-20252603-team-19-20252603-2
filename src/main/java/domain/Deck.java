@@ -14,17 +14,19 @@ public class Deck {
     private final int NUMBER_OF_FAVOR = 4;
     private final int NUMBER_OF_CAT_CARDS = 20;
 
+    private static final String EMPTY_DECK_TYPE_KEY = "deck.emptyType";
+
     private List<Card> drawPile;
     private List<Card> discardPile;
 
     Deck(List<Card> cards){
-        drawPile = new ArrayList<>(cards);
-        discardPile = new ArrayList<>();
+        this.drawPile = new ArrayList<>(cards);
+        this.discardPile = new ArrayList<>();
     }
 
     public Deck(){
-        drawPile = new ArrayList<>();
-        discardPile = new ArrayList<>();
+        this.drawPile = new ArrayList<>();
+        this.discardPile = new ArrayList<>();
 
         addCards(CardType.EXPLODING_KITTEN, NUMBER_OF_EXPLODING_KITTENS);
         addCards(CardType.DEFUSE, NUMBER_OF_DEFUSE);
@@ -39,7 +41,7 @@ public class Deck {
 
     public Card drawTop() {
         if (drawPile.isEmpty()) {
-            throw new IllegalStateException("The draw pile is empty");
+            throw new IllegalStateException(EMPTY_DECK_TYPE_KEY);
         }
         return drawPile.remove(0);
     }
