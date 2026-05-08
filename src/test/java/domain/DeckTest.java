@@ -114,4 +114,13 @@ public class DeckTest {
         assertEquals(CardType.EXPLODING_KITTEN, drawn.getCardType());
         assertEquals(55, deck.getDrawPile().size());
     }
+
+    @Test
+    void shuffle_emptyDeck_remainsEmpty() {
+        Deck deck = new Deck(new ArrayList<>());
+
+        deck.shuffle();
+
+        assertEquals(0, deck.getDrawPile().size());
+    }
 }
