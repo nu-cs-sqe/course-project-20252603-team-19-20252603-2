@@ -123,4 +123,20 @@ public class DeckTest {
 
         assertEquals(0, deck.getDrawPile().size());
     }
+
+    @Test
+    void shuffle_singleCardDeck_remainsUnchanged() {
+        List<Card> oneCardDeck = new ArrayList<>();
+        oneCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
+
+        Deck deck = new Deck(oneCardDeck);
+
+        List<Card> beforeShuffle = new ArrayList<>(deck.getDrawPile());
+        deck.shuffle();
+        List<Card> afterShuffle = deck.getDrawPile();
+
+        assertEquals(1, afterShuffle.size());
+        assertEquals(beforeShuffle.get(0).getCardType(),
+                afterShuffle.get(0).getCardType());
+    }
 }
