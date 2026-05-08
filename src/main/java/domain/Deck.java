@@ -15,7 +15,10 @@ public class Deck {
     private final int NUMBER_OF_FAVOR = 4;
     private final int NUMBER_OF_CAT_CARDS = 20;
 
+    private final int DECK_SIZE = 56;
+
     private static final String EMPTY_DECK_TYPE_KEY = "deck.emptyType";
+    private static final String PEEK_TOP_TOO_MANY_KEY = "deck.peekTop.tooManyRequested";
 
     private List<Card> drawPile;
     private List<Card> discardPile;
@@ -57,6 +60,9 @@ public class Deck {
         }
         if (n == 0) {
             return new ArrayList<>();
+        }
+        if (n > DECK_SIZE) {
+            throw new IllegalStateException(PEEK_TOP_TOO_MANY_KEY);
         }
 
         List<Card> result = new ArrayList<>();
