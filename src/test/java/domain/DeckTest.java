@@ -287,7 +287,7 @@ public class DeckTest {
     }
 
     @Test
-    void peekTop_nGreaterThanDeckSize_throwsIllegalArgumentException() {
+    void peekTop_nGreaterThanDeckSize_throwsIllegalStateException() {
         Deck deck = new Deck();
 
         Exception exception = assertThrows(IllegalStateException.class ,() ->{
