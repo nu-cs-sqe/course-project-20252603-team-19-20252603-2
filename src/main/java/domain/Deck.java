@@ -51,6 +51,10 @@ public class Deck {
         Collections.shuffle(drawPile);
     }
 
+    public List<Card> peekTop(int n) {
+        throw new IllegalArgumentException(EMPTY_DECK_TYPE_KEY);
+    }
+
     private void addCards(CardType cardType, int cardCount) {
         for (int i = 0; i < cardCount; i++) {
             Card card = new Card(cardType);
