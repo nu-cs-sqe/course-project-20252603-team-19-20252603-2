@@ -232,4 +232,19 @@ public class DeckTest {
         assertEquals(expectedFirstCard.getCardType(),result.get(0).getCardType());
         assertEquals(2, deck.getDrawPile().size()); // deck unchanged
     }
+
+    @Test
+    void peekTop_nIsThree_returnsThreeCards() {
+        Deck deck = new Deck();
+
+        List<Card> result = deck.peekTop(3);
+
+        assertEquals(3, result.size());
+
+        assertEquals(deck.getDrawPile().get(0).getCardType(), result.get(0).getCardType());
+        assertEquals(deck.getDrawPile().get(1).getCardType(), result.get(1).getCardType());
+        assertEquals(deck.getDrawPile().get(2).getCardType(), result.get(2).getCardType());
+
+        assertEquals(56, deck.getDrawPile().size());
+    }
 }
