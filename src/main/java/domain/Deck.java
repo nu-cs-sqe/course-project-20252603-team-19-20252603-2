@@ -19,6 +19,7 @@ public class Deck {
 
     private static final String EMPTY_DECK_TYPE_KEY = "deck.emptyType";
     private static final String PEEK_TOP_TOO_MANY_KEY = "deck.peekTop.tooManyRequested";
+    private static final String NULL_CARD_TYPE_KEY = "card.nullType";
 
     private List<Card> drawPile;
     private List<Card> discardPile;
@@ -73,6 +74,9 @@ public class Deck {
     }
 
     public void discard(Card card) {
+        if (card == null){
+            throw new IllegalArgumentException(NULL_CARD_TYPE_KEY);
+        }
         discardPile.add(card);
     }
 

@@ -115,7 +115,7 @@
 | TC7        | Card = Card(NOPE), discard pile size = 0             | discardPile size = 1, first element = NOPE               | yes          |
 | TC8        | Card = Card(CAT_CARDS), discard pile size = 0        | discardPile size = 1, first element = CAT_CARDS          | yes          |
 | TC9        | Card = Card(FAVOR), discard pile size = 0            | discardPile size = 1, first element = FAVOR              | yes          |
-| TC10       | Card = NULL, discard pile size = 0                   | throws IllegalArgumentException and discardPile size = 0 | no           |
+| TC10       | Card = NULL, discard pile size = 0                   | throws IllegalArgumentException and discardPile size = 0 | yes          |
 
 ---
 
