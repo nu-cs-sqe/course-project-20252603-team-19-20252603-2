@@ -309,4 +309,15 @@ public class DeckTest {
         assertEquals(1,discardPile.size());
         assertEquals(type,discardPile.get(0).getCardType());
     }
+
+    @Test
+    void discard_NullCard_ThrowsIllegalArgumentException() {
+        Deck deck = new Deck();
+
+        Exception exception = assertThrows(IllegalArgumentException.class ,() ->{
+            deck.discard(null);
+        });
+
+        assertEquals("card.nullType", exception.getMessage());
+    }
 }
