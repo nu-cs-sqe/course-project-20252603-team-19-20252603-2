@@ -91,6 +91,34 @@
 
 ---
 
+## Method 5: ```public void discard(Card)```
+
+### Step 1–3 Results
+
+| Step | Input                         | Output                                               |
+|------|-------------------------------|------------------------------------------------------|
+| Step 1 | A Card object (valid or null) | discardPile is modified                              |
+| Step 2 | Reference type (Card)         | N/A                                                  |
+| Step 3 | Valid card and null reference | discardPile increases by 1 / IllegalArgumentException |
+
+### Step 4:
+##### each-choice
+
+| Test Case # | System under test                                    | Expected output                                          | Implemented? |
+|------------|------------------------------------------------------|----------------------------------------------------------|-------------|
+| TC1        | Card = Card(EXPLODING_KITTEN), discard pile size = 0 | discardPile size = 1, first element = EXPLODING_KITTEN   | no          |
+| TC2        | Card = Card(DEFUSE), discard pile size = 0           | discardPile size = 1, first element = DEFUSE             | no          |
+| TC3        | Card = Card(ATTACK), discard pile size = 0           | discardPile size = 1, first element = ATTACK             | no          |
+| TC4        | Card = Card(SHUFFLE), discard pile size = 0          | discardPile size = 1, first element = SHUFFLE            | no          |
+| TC5        | Card = Card(SKIP), discard pile size = 0             | discardPile size = 1, first element = SKIP               | no          |
+| TC6        | Card = Card(SEE_THE_FUTURE), discard pile size = 0   | discardPile size = 1, first element = SEE_THE_FUTURE     | no          |
+| TC7        | Card = Card(NOPE), discard pile size = 0             | discardPile size = 1, first element = NOPE               | no          |
+| TC8        | Card = Card(CAT_CARDS), discard pile size = 0        | discardPile size = 1, first element = CAT_CARDS          | no          |
+| TC9        | Card = Card(FAVOR), discard pile size = 0            | discardPile size = 1, first element = FAVOR              | no          |
+| TC10       | Card = NULL, discard pile size = 0                   | throws IllegalArgumentException and discardPile size = 0 | no          |
+
+---
+
 ## Recall the 4 steps of BVA
 ### Step 1: Describe the input and output in terms of the domain.
 ### Step 2: Choose the data type for the input and the output from the BVA Catalog.
