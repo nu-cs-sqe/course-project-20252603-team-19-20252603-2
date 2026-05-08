@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -162,5 +163,32 @@ public class DeckTest {
 
         assertTrue(types.contains(CardType.EXPLODING_KITTEN));
         assertTrue(types.contains(CardType.DEFUSE));
+    }
+
+    @Test
+    void shuffle_fullDeck_preservesAllCards() {
+        Deck deck = new Deck();
+
+        deck.shuffle();
+
+        List<Card> shuffledDeck = deck.getDrawPile();
+
+        assertEquals(56, shuffledDeck.size());
+
+        Map<CardType, Long> counts = shuffledDeck.stream()
+                .collect(Collectors.groupingBy(
+                        Card::getCardType,
+                        Collectors.counting()
+                ));
+
+        assertEquals(4L, counts.get(CardType.EXPLODING_KITTEN));
+        assertEquals(6L, counts.get(CardType.DEFUSE));
+        assertEquals(4L, counts.get(CardType.ATTACK));
+        assertEquals(4L, counts.get(CardType.SHUFFLE));
+        assertEquals(4L, counts.get(CardType.SKIP));
+        assertEquals(5L, counts.get(CardType.SEE_THE_FUTURE));
+        assertEquals(5L, counts.get(CardType.NOPE));
+        assertEquals(4L, counts.get(CardType.FAVOR));
+        assertEquals(20L, counts.get(CardType.CAT_CARDS));
     }
 }
