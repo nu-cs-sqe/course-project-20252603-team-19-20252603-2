@@ -215,4 +215,21 @@ public class DeckTest {
         assertEquals(0, result.size());
         assertEquals(1, deck.getDrawPile().size()); // deck unchanged
     }
+
+    @Test
+    void peekTop_nIsOne_returnsOneCardList() {
+        List<Card> twoCardDeck = new ArrayList<>();
+        twoCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
+        twoCardDeck.add(new Card(CardType.DEFUSE));
+
+        Deck deck = new Deck(twoCardDeck);
+
+        Card expectedFirstCard = new Card(CardType.EXPLODING_KITTEN);
+
+        List<Card> result = deck.peekTop(1);
+
+        assertEquals(1, result.size());
+        assertEquals(expectedFirstCard.getCardType(),result.get(0).getCardType());
+        assertEquals(2, deck.getDrawPile().size()); // deck unchanged
+    }
 }
