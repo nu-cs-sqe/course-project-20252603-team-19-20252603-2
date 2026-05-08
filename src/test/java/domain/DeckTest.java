@@ -202,4 +202,17 @@ public class DeckTest {
 
         assertEquals("deck.emptyType", exception.getMessage());
     }
+
+    @Test
+    void peekTop_nIsZero_returnsEmptyList() {
+        List<Card> oneCardDeck = new ArrayList<>();
+        oneCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
+
+        Deck deck = new Deck(oneCardDeck);
+
+        List<Card> result = deck.peekTop(0);
+
+        assertEquals(0, result.size());
+        assertEquals(1, deck.getDrawPile().size()); // deck unchanged
+    }
 }
