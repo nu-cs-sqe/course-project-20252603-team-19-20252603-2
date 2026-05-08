@@ -4,9 +4,11 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DeckTest {
 
@@ -138,5 +140,27 @@ public class DeckTest {
         assertEquals(1, afterShuffle.size());
         assertEquals(beforeShuffle.get(0).getCardType(),
                 afterShuffle.get(0).getCardType());
+    }
+
+    @Test
+    void shuffle_twoCardDeck_preservesAllCards() {
+        List<Card> twoCardDeck = new ArrayList<>();
+        twoCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
+        twoCardDeck.add(new Card(CardType.DEFUSE));
+
+        Deck deck = new Deck(twoCardDeck);
+
+        deck.shuffle();
+
+        List<Card> actual = deck.getDrawPile();
+
+        assertEquals(2, actual.size());
+
+        List<CardType> types = actual.stream()
+                .map(Card::getCardType)
+                .collect(Collectors.toList());
+
+        assertTrue(types.contains(CardType.EXPLODING_KITTEN));
+        assertTrue(types.contains(CardType.DEFUSE));
     }
 }
