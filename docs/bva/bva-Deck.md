@@ -66,6 +66,31 @@
 
 ---
 
+## Method 4: ```public List<Card> peekTop(int n)```
+
+### Step 1–3 Results
+
+| Step | Input                                                      | Output                                                        |
+|------|------------------------------------------------------------|---------------------------------------------------------------|
+| Step 1 | The current drawPile state and number of requested cards n | a list containing the top n cards from the deck               |
+| Step 2 | deck `List<Card>` and Integer n                            | List<Card> / IllegalStateException / IllegalArgumentException |
+| Step 3 | deck sizes: 0,1,2,56, int n: -1, 0, 1, 3, 55, 56, 57       | List<Card> / IllegalStateException / IllegalArgumentException |
+
+### Step 4:
+##### each-choice
+
+| Test Case # | System under test          | Expected output                                                                             | Implemented? |
+|-------------|----------------------------|---------------------------------------------------------------------------------------------|-------------|
+| TC1         | deck size = 0, int n = -1  | throws IllegalArgumentException with message "The draw pile is empty"                       | no          |
+| TC2         | deck size = 1, int n = 0   | an empty list (`[]`) and deck size = 1                                                      | no          |
+| TC3         | deck size = 2, int n = 1   | new list containing the first card with size = 1 and deck size = 2                          | no          |
+| TC4         | deck size = 56, int n = 3  | new list containing the first 3 elements with size = 3 and deck size = 56                   | no          |
+| TC5         | deck size = 56, int n = 55 | new list containing the first 55 elements with size = 55 and deck size = 56                 | no          |
+| TC6         | deck size = 56, int n = 56 | new list containing all the elements with size = 56 and deck size = 56                      | no          |
+| TC7         | deck size = 56, int n = 57 | throws IllegalStateException with message "You requested more cards than what the deck has" | no          |
+
+---
+
 ## Recall the 4 steps of BVA
 ### Step 1: Describe the input and output in terms of the domain.
 ### Step 2: Choose the data type for the input and the output from the BVA Catalog.
