@@ -61,7 +61,7 @@
 |-------------|------------------|-----------------|--------------|
 | TC1 | empty deck (`[]`) | empty deck unchanged | yes          |
 | TC2 | deck size = 1 | same single card | yes          |
-| TC3 | deck size = 2 | same elements, order may change | no           |
+| TC3 | deck size = 2 | same elements, order may change | yes          |
 | TC4 | deck size = 56 | same elements, order may change | no           |
 
 ---
