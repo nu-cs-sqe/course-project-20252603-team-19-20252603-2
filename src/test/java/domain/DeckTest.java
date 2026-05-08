@@ -319,5 +319,6 @@ public class DeckTest {
         });
 
         assertEquals("card.nullType", exception.getMessage());
+        assertEquals(0,deck.getDiscardPile().size());
     }
 }
