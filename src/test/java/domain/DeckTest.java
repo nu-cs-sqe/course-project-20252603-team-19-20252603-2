@@ -191,4 +191,15 @@ public class DeckTest {
         assertEquals(4L, counts.get(CardType.FAVOR));
         assertEquals(20L, counts.get(CardType.CAT_CARDS));
     }
+
+    @Test
+    void peekTop_negativeN_throwsIllegalArgumentException() {
+        Deck deck = new Deck(new ArrayList<>());
+
+        Exception exception = assertThrows(IllegalArgumentException.class ,() ->{
+            deck.peekTop(-1);
+        });
+
+        assertEquals("deck.emptyType", exception.getMessage());
+    }
 }
