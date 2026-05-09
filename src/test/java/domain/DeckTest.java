@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -136,7 +135,7 @@ public class DeckTest {
 	void drawTop_fullDeck_size56_returnsCardAndBecomesSize55() {
 		Deck deck = new Deck();
 
-		int expectedSize = 55;
+		final int expectedSize = 55;
 
 		Card drawn = deck.drawTop();
 
@@ -205,7 +204,7 @@ public class DeckTest {
 
 		List<Card> shuffledDeck = deck.getDrawPile();
 
-		int expectedSize = 56;
+		final int expectedSize = 56;
 
 		assertEquals(expectedSize, shuffledDeck.size());
 
@@ -250,7 +249,7 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTopNIsZeroReturnsEmptyList() {
+	void peekTopIsZeroReturnsEmptyList() {
 		List<Card> oneCardDeck = new ArrayList<>();
 		oneCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
 
@@ -268,7 +267,7 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTopNIsOneReturnsOneCardList() {
+	void peekTopIsOneReturnsOneCardList() {
 		List<Card> twoCardDeck = new ArrayList<>();
 		twoCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
 		twoCardDeck.add(new Card(CardType.DEFUSE));
@@ -289,15 +288,14 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTopNIsThreeReturnsThreeCards() {
+	void peekTopIsThreeReturnsThreeCards() {
 		Deck deck = new Deck();
 
 		final int n = 3;
-
-		int expectedDeckSize = 56;
-		int expectedResultSize = 3;
-
 		List<Card> result = deck.peekTop(n);
+
+		final int expectedDeckSize = 56;
+		final int expectedResultSize = 3;
 
 		assertEquals(expectedResultSize, result.size());
 
@@ -309,13 +307,13 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTopNIs55ReturnsFiftyFiveCards() {
+	void peekTopIs55ReturnsFiftyFiveCards() {
 		Deck deck = new Deck();
 
 		final int n = 55;
 
-		int expectedDeckSize = 56;
-		int expectedResultSize = 55;
+		final int expectedDeckSize = 56;
+		final int expectedResultSize = 55;
 
 		List<Card> result = deck.peekTop(n);
 
@@ -332,13 +330,13 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTopNIs56ReturnsAllCards() {
+	void peekTopIs56ReturnsAllCards() {
 		Deck deck = new Deck();
 
 		final int n = 56;
 
-		int expectedDeckSize = 56;
-		int expectedResultSize = 56;
+		final int expectedDeckSize = 56;
+		final int expectedResultSize = 56;
 
 		List<Card> result = deck.peekTop(n);
 
@@ -355,7 +353,7 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTopNGreaterThanDeckSizeThrowsIllegalStateException() {
+	void peekTopGreaterThanDeckSizeThrowsIllegalStateException() {
 		Deck deck = new Deck();
 
 		final int n = 57;
@@ -368,7 +366,7 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTopNExceedsCurrentSizeThrowsIllegalStateException() {
+	void peekTopExceedsCurrentSizeThrowsIllegalStateException() {
 		List<Card> cards = new ArrayList<>();
 		cards.add(new Card(CardType.EXPLODING_KITTEN));
 		cards.add(new Card(CardType.DEFUSE));
