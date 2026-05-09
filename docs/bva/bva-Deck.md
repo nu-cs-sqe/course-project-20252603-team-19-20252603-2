@@ -79,14 +79,14 @@
 ### Step 4:
 ##### each-choice
 
-| Test Case # | System under test          | Expected output                                                                             | Implemented? |
-|-------------|----------------------------|---------------------------------------------------------------------------------------------|-------------|
-| TC1         | deck size = 0, int n = -1  | throws IllegalArgumentException with message "The draw pile is empty"                       | yes         |
-| TC2         | deck size = 1, int n = 0   | an empty list (`[]`) and deck size = 1                                                      | yes         |
-| TC3         | deck size = 2, int n = 1   | new list containing the first card with size = 1 and deck size = 2                          | yes         |
-| TC4         | deck size = 56, int n = 3  | new list containing the first 3 elements with size = 3 and deck size = 56                   | yes         |
-| TC5         | deck size = 56, int n = 55 | new list containing the first 55 elements with size = 55 and deck size = 56                 | yes         |
-| TC6         | deck size = 56, int n = 56 | new list containing all the elements with size = 56 and deck size = 56                      | yes         |
+| Test Case # | System under test          | Expected output                                                                | Implemented? |
+|-------------|----------------------------|--------------------------------------------------------------------------------|-------------|
+| TC1         | deck size = 0, int n = -1  | throws IllegalArgumentException with message "The number of cards requested must be non-negative" | yes         |
+| TC2         | deck size = 1, int n = 0   | an empty list (`[]`) and deck size = 1                                         | yes         |
+| TC3         | deck size = 2, int n = 1   | new list containing the first card with size = 1 and deck size = 2             | yes         |
+| TC4         | deck size = 56, int n = 3  | new list containing the first 3 elements with size = 3 and deck size = 56      | yes         |
+| TC5         | deck size = 56, int n = 55 | new list containing the first 55 elements with size = 55 and deck size = 56    | yes         |
+| TC6         | deck size = 56, int n = 56 | new list containing all the elements with size = 56 and deck size = 56         | yes         |
 | TC7         | deck size = 56, int n = 57 | throws IllegalStateException with message "You requested more cards than what the deck has" | yes         |
 | TC8         | deck size = 3, int n = 5   | throws IllegalStateException with message "You requested more cards than what the deck has" | yes         |
 
