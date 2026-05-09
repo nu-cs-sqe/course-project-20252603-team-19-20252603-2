@@ -210,7 +210,7 @@ public class DeckTest {
 			deck.peekTop(-1);
 		});
 
-		assertEquals("deck.emptyType", exception.getMessage());
+		assertEquals("deck.peekTop.negativeN", exception.getMessage());
 	}
 
 	@Test
