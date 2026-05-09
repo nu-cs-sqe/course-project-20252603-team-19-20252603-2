@@ -5,17 +5,17 @@ import java.util.Collections;
 import java.util.List;
 
 public class Deck {
-	private final int NUMBER_OF_EXPLODING_KITTENS = 4;
-	private final int NUMBER_OF_DEFUSE = 6;
-	private final int NUMBER_OF_ATTACK = 4;
-	private final int NUMBER_OF_SHUFFLE = 4;
-	private final int NUMBER_OF_SKIP = 4;
-	private final int NUMBER_OF_SEE_THE_FUTURE = 5;
-	private final int NUMBER_OF_NOPE = 5;
-	private final int NUMBER_OF_FAVOR = 4;
-	private final int NUMBER_OF_CAT_CARDS = 20;
+	private static final int numberOfExplodingKittens = 4;
+	private static final int numberOfDefuses = 6;
+	private static final int numberOfAttacks = 4;
+	private static final int numberOfShuffles = 4;
+	private static final int numberOfSkips = 4;
+	private static final int numberOfSeeTheFutures = 5;
+	private static final int numberOfNopes = 5;
+	private static final int numberOfFavors = 4;
+	private static final int numberOfCatCards = 20;
 
-	private final int DECK_SIZE = 56;
+	private final int deckSize = 56;
 
 	private static final String EMPTY_DECK_TYPE_KEY = "deck.emptyType";
 	private static final String PEEK_TOP_TOO_MANY_KEY = "deck.peekTop.tooManyRequested";
@@ -34,15 +34,15 @@ public class Deck {
 		this.drawPile = new ArrayList<>();
 		this.discardPile = new ArrayList<>();
 
-		addCards(CardType.EXPLODING_KITTEN, NUMBER_OF_EXPLODING_KITTENS);
-		addCards(CardType.DEFUSE, NUMBER_OF_DEFUSE);
-		addCards(CardType.ATTACK, NUMBER_OF_ATTACK);
-		addCards(CardType.SHUFFLE, NUMBER_OF_SHUFFLE);
-		addCards(CardType.SKIP, NUMBER_OF_SKIP);
-		addCards(CardType.SEE_THE_FUTURE, NUMBER_OF_SEE_THE_FUTURE);
-		addCards(CardType.NOPE, NUMBER_OF_NOPE);
-		addCards(CardType.FAVOR, NUMBER_OF_FAVOR);
-		addCards(CardType.CAT_CARDS, NUMBER_OF_CAT_CARDS);
+		addCards(CardType.EXPLODING_KITTEN, numberOfExplodingKittens);
+		addCards(CardType.DEFUSE, numberOfDefuses);
+		addCards(CardType.ATTACK, numberOfAttacks);
+		addCards(CardType.SHUFFLE, numberOfShuffles);
+		addCards(CardType.SKIP, numberOfSkips);
+		addCards(CardType.SEE_THE_FUTURE, numberOfSeeTheFutures);
+		addCards(CardType.NOPE, numberOfNopes);
+		addCards(CardType.FAVOR, numberOfFavors);
+		addCards(CardType.CAT_CARDS, numberOfCatCards);
 	}
 
 	public Card drawTop() {
