@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Per-bug SpotBugs suppressions for the Exploding Kittens project.
+
+    Add a <Match> entry here when a specific finding needs to be silenced for
+    a specific class or pattern. Example:
+
+      <Match>
+        <Class name="domain.SomeClass"/>
+        <Bug pattern="EI_EXPOSE_REP"/>
+      </Match>
+
+    The file is referenced from build.gradle.kts via
+    spotbugs { excludeFilter.set(file("config/spotbugs/excludeFilter.xml")) }.
+-->
+<FindBugsFilter>
+</FindBugsFilter>
