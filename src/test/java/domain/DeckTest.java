@@ -61,23 +61,33 @@ public class DeckTest {
 
 		int index = 0;
 
-		assertCards(cards, index, CardType.EXPLODING_KITTEN, 4);
-		index += 4;
-		assertCards(cards, index, CardType.DEFUSE, 6);
-		index += 6;
-		assertCards(cards, index, CardType.ATTACK, 4);
-		index += 4;
-		assertCards(cards, index, CardType.SHUFFLE, 4);
-		index += 4;
-		assertCards(cards, index, CardType.SKIP, 4);
-		index += 4;
-		assertCards(cards, index, CardType.SEE_THE_FUTURE, 5);
-		index += 5;
-		assertCards(cards, index, CardType.NOPE, 5);
-		index += 5;
-		assertCards(cards, index, CardType.FAVOR, 4);
-		index += 4;
-		assertCards(cards, index, CardType.CAT_CARDS, 20);
+		final int numberOfExplodingKitten = 4;
+		final int numberOfDefuse = 6;
+		final int numberOfAttack = 4;
+		final int numberOfShuffle = 4;
+		final int numberOfSkip = 4;
+		final int numberOfSeeTheFuture = 5;
+		final int numberOfNope = 5;
+		final int numberOfFavor = 4;
+		final int numberOfCatCards = 20;
+
+		assertCards(cards, index, CardType.EXPLODING_KITTEN, numberOfExplodingKitten);
+		index += numberOfExplodingKitten;
+		assertCards(cards, index, CardType.DEFUSE, numberOfDefuse);
+		index += numberOfDefuse;
+		assertCards(cards, index, CardType.ATTACK, numberOfAttack);
+		index += numberOfAttack;
+		assertCards(cards, index, CardType.SHUFFLE, numberOfShuffle);
+		index += numberOfShuffle;
+		assertCards(cards, index, CardType.SKIP, numberOfSkip);
+		index += numberOfSkip;
+		assertCards(cards, index, CardType.SEE_THE_FUTURE, numberOfSeeTheFuture);
+		index += numberOfSeeTheFuture;
+		assertCards(cards, index, CardType.NOPE, numberOfNope);
+		index += numberOfNope;
+		assertCards(cards, index, CardType.FAVOR, numberOfFavor);
+		index += numberOfFavor;
+		assertCards(cards, index, CardType.CAT_CARDS, numberOfCatCards);
 	}
 
 	@Test
@@ -98,10 +108,12 @@ public class DeckTest {
 
 		Deck deck = new Deck(oneCardDeck);
 
+		int expectedSize = 0;
+
 		Card drawn = deck.drawTop();
 
 		assertEquals(CardType.EXPLODING_KITTEN, drawn.getCardType());
-		assertEquals(0, deck.getDrawPile().size());
+		assertEquals(expectedSize, deck.getDrawPile().size());
 	}
 
 	@Test
@@ -112,29 +124,35 @@ public class DeckTest {
 
 		Deck deck = new Deck(twoCardDeck);
 
+		int expectedSize = 1;
+
 		Card drawn = deck.drawTop();
 
 		assertEquals(CardType.EXPLODING_KITTEN, drawn.getCardType());
-		assertEquals(1, deck.getDrawPile().size());
+		assertEquals(expectedSize, deck.getDrawPile().size());
 	}
 
 	@Test
 	void drawTop_fullDeck_size56_returnsCardAndBecomesSize55() {
 		Deck deck = new Deck();
 
+		int expectedSize = 55;
+
 		Card drawn = deck.drawTop();
 
 		assertEquals(CardType.EXPLODING_KITTEN, drawn.getCardType());
-		assertEquals(55, deck.getDrawPile().size());
+		assertEquals(expectedSize, deck.getDrawPile().size());
 	}
 
 	@Test
 	void shuffle_emptyDeck_remainsEmpty() {
 		Deck deck = new Deck(new ArrayList<>());
 
+		int expectSize = 0;
+
 		deck.shuffle();
 
-		assertEquals(0, deck.getDrawPile().size());
+		assertEquals(expectSize, deck.getDrawPile().size());
 	}
 
 	@Test
@@ -144,11 +162,13 @@ public class DeckTest {
 
 		Deck deck = new Deck(oneCardDeck);
 
+		int expectedSize = 1;
+
 		List<Card> beforeShuffle = new ArrayList<>(deck.getDrawPile());
 		deck.shuffle();
 		List<Card> afterShuffle = deck.getDrawPile();
 
-		assertEquals(1, afterShuffle.size());
+		assertEquals(expectedSize, afterShuffle.size());
 		assertEquals(beforeShuffle.get(0).getCardType(),
 				afterShuffle.get(0).getCardType());
 	}
@@ -161,11 +181,13 @@ public class DeckTest {
 
 		Deck deck = new Deck(twoCardDeck);
 
+		int expectSize = 2;
+
 		deck.shuffle();
 
 		List<Card> actual = deck.getDrawPile();
 
-		assertEquals(2, actual.size());
+		assertEquals(expectSize, actual.size());
 
 		List<CardType> types = actual.stream()
 				.map(Card::getCardType)
@@ -183,7 +205,9 @@ public class DeckTest {
 
 		List<Card> shuffledDeck = deck.getDrawPile();
 
-		assertEquals(56, shuffledDeck.size());
+		int expectedSize = 56;
+
+		assertEquals(expectedSize, shuffledDeck.size());
 
 		Map<CardType, Long> counts = shuffledDeck.stream()
 				.collect(Collectors.groupingBy(
@@ -191,23 +215,35 @@ public class DeckTest {
 						Collectors.counting()
 				));
 
-		assertEquals(4L, counts.get(CardType.EXPLODING_KITTEN));
-		assertEquals(6L, counts.get(CardType.DEFUSE));
-		assertEquals(4L, counts.get(CardType.ATTACK));
-		assertEquals(4L, counts.get(CardType.SHUFFLE));
-		assertEquals(4L, counts.get(CardType.SKIP));
-		assertEquals(5L, counts.get(CardType.SEE_THE_FUTURE));
-		assertEquals(5L, counts.get(CardType.NOPE));
-		assertEquals(4L, counts.get(CardType.FAVOR));
-		assertEquals(20L, counts.get(CardType.CAT_CARDS));
+		final Long numberOfExplodingKitten = 4L;
+		final Long numberOfDefuse = 6L;
+		final Long numberOfAttack = 4L;
+		final Long numberOfShuffle = 4L;
+		final Long numberOfSkip = 4L;
+		final Long numberOfSeeTheFuture = 5L;
+		final Long numberOfNope = 5L;
+		final Long numberOfFavor = 4L;
+		final Long numberOfCatCards = 20L;
+
+		assertEquals(numberOfExplodingKitten, counts.get(CardType.EXPLODING_KITTEN));
+		assertEquals(numberOfDefuse, counts.get(CardType.DEFUSE));
+		assertEquals(numberOfAttack, counts.get(CardType.ATTACK));
+		assertEquals(numberOfShuffle, counts.get(CardType.SHUFFLE));
+		assertEquals(numberOfSkip, counts.get(CardType.SKIP));
+		assertEquals(numberOfSeeTheFuture, counts.get(CardType.SEE_THE_FUTURE));
+		assertEquals(numberOfNope, counts.get(CardType.NOPE));
+		assertEquals(numberOfFavor, counts.get(CardType.FAVOR));
+		assertEquals(numberOfCatCards, counts.get(CardType.CAT_CARDS));
 	}
 
 	@Test
 	void peekTop_negativeN_throwsIllegalArgumentException() {
 		Deck deck = new Deck(new ArrayList<>());
 
+		final int n = -1;
+
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-			deck.peekTop(-1);
+			deck.peekTop(n);
 		});
 
 		assertEquals("deck.peekTop.negativeN", exception.getMessage());
@@ -220,10 +256,15 @@ public class DeckTest {
 
 		Deck deck = new Deck(oneCardDeck);
 
-		List<Card> result = deck.peekTop(0);
+		final int n = 0;
 
-		assertEquals(0, result.size());
-		assertEquals(1, deck.getDrawPile().size()); // deck unchanged
+		int expectedDeckSize = 1;
+		int expectedResultSize = 0;
+
+		List<Card> result = deck.peekTop(n);
+
+		assertEquals(expectedResultSize, result.size());
+		assertEquals(expectedDeckSize, deck.getDrawPile().size()); // deck unchanged
 	}
 
 	@Test
@@ -234,72 +275,93 @@ public class DeckTest {
 
 		Deck deck = new Deck(twoCardDeck);
 
+		final int n = 1;
+
 		Card expectedFirstCard = new Card(CardType.EXPLODING_KITTEN);
+		int expectedDeckSize = 2;
+		int expectedResultSize = 1;
 
-		List<Card> result = deck.peekTop(1);
+		List<Card> result = deck.peekTop(n);
 
-		assertEquals(1, result.size());
+		assertEquals(expectedResultSize, result.size());
 		assertEquals(expectedFirstCard.getCardType(), result.get(0).getCardType());
-		assertEquals(2, deck.getDrawPile().size()); // deck unchanged
+		assertEquals(expectedDeckSize, deck.getDrawPile().size()); // deck unchanged
 	}
 
 	@Test
 	void peekTop_nIsThree_returnsThreeCards() {
 		Deck deck = new Deck();
 
-		List<Card> result = deck.peekTop(3);
+		final int n = 3;
 
-		assertEquals(3, result.size());
+		int expectedDeckSize = 56;
+		int expectedResultSize = 3;
+
+		List<Card> result = deck.peekTop(n);
+
+		assertEquals(expectedResultSize, result.size());
 
 		assertEquals(deck.getDrawPile().get(0).getCardType(), result.get(0).getCardType());
 		assertEquals(deck.getDrawPile().get(1).getCardType(), result.get(1).getCardType());
 		assertEquals(deck.getDrawPile().get(2).getCardType(), result.get(2).getCardType());
 
-		assertEquals(56, deck.getDrawPile().size());
+		assertEquals(expectedDeckSize, deck.getDrawPile().size());
 	}
 
 	@Test
 	void peekTop_nIs55_returnsFiftyFiveCards() {
 		Deck deck = new Deck();
 
-		List<Card> result = deck.peekTop(55);
+		final int n = 55;
 
-		assertEquals(55, result.size());
+		int expectedDeckSize = 56;
+		int expectedResultSize = 55;
 
-		for (int i = 0; i < 55; i++) {
+		List<Card> result = deck.peekTop(n);
+
+		assertEquals(expectedResultSize, result.size());
+
+		for (int i = 0; i < n; i++) {
 			assertEquals(
 					deck.getDrawPile().get(i).getCardType(),
 					result.get(i).getCardType()
 			);
 		}
 
-		assertEquals(56, deck.getDrawPile().size());
+		assertEquals(expectedDeckSize, deck.getDrawPile().size());
 	}
 
 	@Test
 	void peekTop_nIs56_returnsAllCards() {
 		Deck deck = new Deck();
 
-		List<Card> result = deck.peekTop(56);
+		final int n = 56;
 
-		assertEquals(56, result.size());
+		int expectedDeckSize = 56;
+		int expectedResultSize = 56;
 
-		for (int i = 0; i < 56; i++) {
+		List<Card> result = deck.peekTop(n);
+
+		assertEquals(expectedResultSize, result.size());
+
+		for (int i = 0; i < n; i++) {
 			assertEquals(
 					deck.getDrawPile().get(i).getCardType(),
 					result.get(i).getCardType()
 			);
 		}
 
-		assertEquals(56, deck.getDrawPile().size());
+		assertEquals(expectedDeckSize, deck.getDrawPile().size());
 	}
 
 	@Test
 	void peekTop_nGreaterThanDeckSize_throwsIllegalStateException() {
 		Deck deck = new Deck();
 
+		final int n = 57;
+
 		Exception exception = assertThrows(IllegalStateException.class, () -> {
-			deck.peekTop(57);
+			deck.peekTop(n);
 		});
 
 		assertEquals("deck.peekTop.tooManyRequested", exception.getMessage());
@@ -314,8 +376,10 @@ public class DeckTest {
 
 		Deck deck = new Deck(cards);
 
+		final int n = 5;
+
 		Exception exception = assertThrows(IllegalStateException.class, () -> {
-			deck.peekTop(5);
+			deck.peekTop(n);
 		});
 
 		assertEquals("deck.peekTop.tooManyRequested", exception.getMessage());
@@ -326,11 +390,13 @@ public class DeckTest {
 	void discard_AllValidCardTypes_AddsToDiscardPile(CardType type) {
 		Deck deck = new Deck();
 
+		int expectedDiscardPileSize = 1;
+
 		deck.discard(new Card(type));
 
 		List<Card> discardPile = deck.getDiscardPile();
 
-		assertEquals(1, discardPile.size());
+		assertEquals(expectedDiscardPileSize, discardPile.size());
 		assertEquals(type, discardPile.get(0).getCardType());
 	}
 
@@ -338,11 +404,13 @@ public class DeckTest {
 	void discard_NullCard_ThrowsIllegalArgumentException() {
 		Deck deck = new Deck();
 
+		int expectDiscardPileSize = 0;
+
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			deck.discard(null);
 		});
 
 		assertEquals("card.nullType", exception.getMessage());
-		assertEquals(0, deck.getDiscardPile().size());
+		assertEquals(expectDiscardPileSize, deck.getDiscardPile().size());
 	}
 }
