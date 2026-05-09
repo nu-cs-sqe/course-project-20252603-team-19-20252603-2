@@ -5,14 +5,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class Deck {
-	private static final int numberOfExplodingKitten = 4;
-	private static final int numberOfDefuse = 6;
-	private static final int numberOfAttack = 4;
-	private static final int numberOfShuffle = 4;
-	private static final int numberOfSkip = 4;
-	private static final int numberOfSeeTheFuture = 5;
-	private static final int numberOfNope = 5;
-	private static final int numberOfFavor = 4;
+	private static final int numberOfExplodingKittens = 4;
+	private static final int numberOfDefuses = 6;
+	private static final int numberOfAttacks = 4;
+	private static final int numberOfShuffles = 4;
+	private static final int numberOfSkips = 4;
+	private static final int numberOfSeeTheFutures = 5;
+	private static final int numberOfNopes = 5;
+	private static final int numberOfFavors = 4;
 	private static final int numberOfCatCards = 20;
 
 	private final int deckSize = 56;
@@ -34,14 +34,14 @@ public class Deck {
 		this.drawPile = new ArrayList<>();
 		this.discardPile = new ArrayList<>();
 
-		addCards(CardType.EXPLODING_KITTEN, numberOfExplodingKitten);
-		addCards(CardType.DEFUSE, numberOfDefuse);
-		addCards(CardType.ATTACK, numberOfAttack);
-		addCards(CardType.SHUFFLE, numberOfShuffle);
-		addCards(CardType.SKIP, numberOfSkip);
-		addCards(CardType.SEE_THE_FUTURE, numberOfSeeTheFuture);
-		addCards(CardType.NOPE, numberOfNope);
-		addCards(CardType.FAVOR, numberOfFavor);
+		addCards(CardType.EXPLODING_KITTEN, numberOfExplodingKittens);
+		addCards(CardType.DEFUSE, numberOfDefuses);
+		addCards(CardType.ATTACK, numberOfAttacks);
+		addCards(CardType.SHUFFLE, numberOfShuffles);
+		addCards(CardType.SKIP, numberOfSkips);
+		addCards(CardType.SEE_THE_FUTURE, numberOfSeeTheFutures);
+		addCards(CardType.NOPE, numberOfNopes);
+		addCards(CardType.FAVOR, numberOfFavors);
 		addCards(CardType.CAT_CARDS, numberOfCatCards);
 	}
 
