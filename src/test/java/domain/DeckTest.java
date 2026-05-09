@@ -250,7 +250,7 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTop_nIsZero_returnsEmptyList() {
+	void peekTopNIsZeroReturnsEmptyList() {
 		List<Card> oneCardDeck = new ArrayList<>();
 		oneCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
 
@@ -268,7 +268,7 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTop_nIsOne_returnsOneCardList() {
+	void peekTopNIsOneReturnsOneCardList() {
 		List<Card> twoCardDeck = new ArrayList<>();
 		twoCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
 		twoCardDeck.add(new Card(CardType.DEFUSE));
@@ -289,7 +289,7 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTop_nIsThree_returnsThreeCards() {
+	void peekTopNIsThreeReturnsThreeCards() {
 		Deck deck = new Deck();
 
 		final int n = 3;
@@ -309,7 +309,7 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTop_nIs55_returnsFiftyFiveCards() {
+	void peekTopNIs55ReturnsFiftyFiveCards() {
 		Deck deck = new Deck();
 
 		final int n = 55;
@@ -332,7 +332,7 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTop_nIs56_returnsAllCards() {
+	void peekTopNIs56ReturnsAllCards() {
 		Deck deck = new Deck();
 
 		final int n = 56;
@@ -355,7 +355,7 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTop_nGreaterThanDeckSize_throwsIllegalStateException() {
+	void peekTopNGreaterThanDeckSizeThrowsIllegalStateException() {
 		Deck deck = new Deck();
 
 		final int n = 57;
@@ -368,7 +368,7 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTop_nExceedsCurrentSize_throwsIllegalStateException() {
+	void peekTopNExceedsCurrentSizeThrowsIllegalStateException() {
 		List<Card> cards = new ArrayList<>();
 		cards.add(new Card(CardType.EXPLODING_KITTEN));
 		cards.add(new Card(CardType.DEFUSE));
@@ -387,7 +387,7 @@ public class DeckTest {
 
 	@ParameterizedTest
 	@EnumSource(CardType.class)
-	void discard_AllValidCardTypes_AddsToDiscardPile(CardType type) {
+	void discardAllValidCardTypesAddsToDiscardPile(CardType type) {
 		Deck deck = new Deck();
 
 		int expectedDiscardPileSize = 1;
@@ -401,7 +401,7 @@ public class DeckTest {
 	}
 
 	@Test
-	void discard_NullCard_ThrowsIllegalArgumentException() {
+	void discardNullCardThrowsIllegalArgumentException() {
 		Deck deck = new Deck();
 
 		int expectDiscardPileSize = 0;
