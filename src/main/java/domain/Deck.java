@@ -20,6 +20,7 @@ public class Deck {
 	private static final String EMPTY_DECK_TYPE_KEY = "deck.emptyType";
 	private static final String PEEK_TOP_TOO_MANY_KEY = "deck.peekTop.tooManyRequested";
 	private static final String NULL_CARD_TYPE_KEY = "card.nullType";
+	private static final String PEEK_TOP_NEGATIVE_N_KEY = "deck.peekTop.negativeN";
 
 	private List<Card> drawPile;
 	private List<Card> discardPile;
@@ -57,7 +58,7 @@ public class Deck {
 
 	public List<Card> peekTop(int n) {
 		if (n < 0) {
-			throw new IllegalArgumentException(EMPTY_DECK_TYPE_KEY);
+			throw new IllegalArgumentException(PEEK_TOP_NEGATIVE_N_KEY);
 		}
 		if (n == 0) {
 			return new ArrayList<>();
