@@ -5,15 +5,15 @@ import java.util.Collections;
 import java.util.List;
 
 public class Deck {
-	private final int numberOfExplodingKitten = 4;
-	private final int numberOfDefuse = 6;
-	private final int numberOfAttack = 4;
-	private final int numberOfShuffle = 4;
-	private final int numberOfSkip = 4;
-	private final int numberOfSeeTheFuture = 5;
-	private final int numberOfNope = 5;
-	private final int numberOfFavor = 4;
-	private final int numberOfCatCards = 20;
+	private static final int numberOfExplodingKitten = 4;
+	private static final int numberOfDefuse = 6;
+	private static final int numberOfAttack = 4;
+	private static final int numberOfShuffle = 4;
+	private static final int numberOfSkip = 4;
+	private static final int numberOfSeeTheFuture = 5;
+	private static final int numberOfNope = 5;
+	private static final int numberOfFavor = 4;
+	private static final int numberOfCatCards = 20;
 
 	private final int deckSize = 56;
 
