@@ -52,7 +52,10 @@ public class Deck {
     }
 
     public List<Card> peekTop(int n) {
-        throw new IllegalArgumentException(EMPTY_DECK_TYPE_KEY);
+        if (n < 0) {
+            throw new IllegalArgumentException(EMPTY_DECK_TYPE_KEY);
+        }
+        return new ArrayList<>();
     }
 
     private void addCards(CardType cardType, int cardCount) {
