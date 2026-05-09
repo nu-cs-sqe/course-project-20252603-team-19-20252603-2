@@ -29,6 +29,9 @@
 2. [done] Kevin: Added `FAVOR` to the `CardType` enum and propagated to `docs/design/design-doc.md` and `docs/bva/bva-Card.md` (Method 2 Step 3 + new TC9). All 10 tests pass via `@EnumSource` auto-pickup (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/24)
 3. [done] Kevin: Set up Checkstyle (Google Java Style 10.18.2 base + project overrides for tab indent, no-Javadoc-required, `MagicNumber`, severity=error) and SpotBugs (default effort + confidence, HTML reports) as strict-mode quality gates wired into `./gradlew build`. PR's CI fails until each owner refactors their files on their own branch (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/25)
 4. [done] Kevin: Refactored `Card.java` (marked `final` to close SpotBugs `CT_CONSTRUCTOR_THROW` finalizer-attack vector) and `CardTest.java` (moved static imports above non-static to satisfy Checkstyle `CustomImportOrder` `STATIC###THIRD_PARTY_PACKAGE`) so the `Card` source files pass the strict linters from PR #25 (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/27)
+5. [done] Vincent: Implemented `Deck` class following TDD workflow. Implemented the Deck constructor, drawTop, shuffle, peekTop, and discard. All test cases passed. (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/26)
+6. [done] Vincent: Conducted BVA analysis for `Deck` class in `docs/bva/bva-Deck.md` for Deck constructor, drawTop, shuffle, peekTop, and discard and followed the team standards for the format.
+7. [done] Vincent: Refactored `Deck.java` and `DeckTest.java` to follow checkstyle. Fixed variable names, importing, and removed all the magical numbers. (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/29)
 
 # Week X (XX/XX/2026-XX/XX/2026) TEMPLATE (You can change the format to whatever the team likes better)
 **Planning and Progress Tracking**:
