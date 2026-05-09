@@ -1,0 +1,348 @@
+package domain;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class DeckTest {
+
+	@Test
+	void deck_createFullDeck_correctSize() {
+		Deck deck = new Deck();
+
+		final int FULL_DECK_SIZE = 56;
+
+		List<Card> cards = deck.getDrawPile();
+
+		assertEquals(FULL_DECK_SIZE, cards.size());
+	}
+
+	@Test
+	void deck_createFullDeck_firstCardIsExplodingKitten() {
+		Deck deck = new Deck();
+
+		CardType expectedFirstElement = CardType.EXPLODING_KITTEN;
+
+		List<Card> cards = deck.getDrawPile();
+
+		assertEquals(expectedFirstElement, cards.get(0).getCardType());
+	}
+
+	@Test
+	void deck_createFullDeck_lastCardIsCatCards() {
+		Deck deck = new Deck();
+
+		CardType expectedLastElement = CardType.CAT_CARDS;
+
+		List<Card> cards = deck.getDrawPile();
+
+		assertEquals(expectedLastElement, cards.get(cards.size() - 1).getCardType());
+	}
+
+	private void assertCards(List<Card> cards, int startIndex, CardType type, int count) {
+		for (int i = 0; i < count; i++) {
+			assertEquals(type, cards.get(startIndex + i).getCardType());
+		}
+	}
+
+	@Test
+	void deck_createFullDeck_containsCardsInCorrectOrder() {
+		Deck deck = new Deck();
+		List<Card> cards = deck.getDrawPile();
+
+		int index = 0;
+
+		assertCards(cards, index, CardType.EXPLODING_KITTEN, 4);
+		index += 4;
+		assertCards(cards, index, CardType.DEFUSE, 6);
+		index += 6;
+		assertCards(cards, index, CardType.ATTACK, 4);
+		index += 4;
+		assertCards(cards, index, CardType.SHUFFLE, 4);
+		index += 4;
+		assertCards(cards, index, CardType.SKIP, 4);
+		index += 4;
+		assertCards(cards, index, CardType.SEE_THE_FUTURE, 5);
+		index += 5;
+		assertCards(cards, index, CardType.NOPE, 5);
+		index += 5;
+		assertCards(cards, index, CardType.FAVOR, 4);
+		index += 4;
+		assertCards(cards, index, CardType.CAT_CARDS, 20);
+	}
+
+	@Test
+	void drawTop_emptyDeck_throwsException() {
+		Deck deck = new Deck(new ArrayList<>());
+
+		Exception exception = assertThrows(IllegalStateException.class, () -> {
+			deck.drawTop();
+		});
+
+		assertEquals("deck.emptyType", exception.getMessage());
+	}
+
+	@Test
+	void drawTop_sizeOneDeck_returnsCardAndBecomesEmpty() {
+		List<Card> oneCardDeck = new ArrayList<>();
+		oneCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
+
+		Deck deck = new Deck(oneCardDeck);
+
+		Card drawn = deck.drawTop();
+
+		assertEquals(CardType.EXPLODING_KITTEN, drawn.getCardType());
+		assertEquals(0, deck.getDrawPile().size());
+	}
+
+	@Test
+	void drawTop_sizeTwoDeck_returnsCardAndBecomesSizeOne() {
+		List<Card> twoCardDeck = new ArrayList<>();
+		twoCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
+		twoCardDeck.add(new Card(CardType.DEFUSE));
+
+		Deck deck = new Deck(twoCardDeck);
+
+		Card drawn = deck.drawTop();
+
+		assertEquals(CardType.EXPLODING_KITTEN, drawn.getCardType());
+		assertEquals(1, deck.getDrawPile().size());
+	}
+
+	@Test
+	void drawTop_fullDeck_size56_returnsCardAndBecomesSize55() {
+		Deck deck = new Deck();
+
+		Card drawn = deck.drawTop();
+
+		assertEquals(CardType.EXPLODING_KITTEN, drawn.getCardType());
+		assertEquals(55, deck.getDrawPile().size());
+	}
+
+	@Test
+	void shuffle_emptyDeck_remainsEmpty() {
+		Deck deck = new Deck(new ArrayList<>());
+
+		deck.shuffle();
+
+		assertEquals(0, deck.getDrawPile().size());
+	}
+
+	@Test
+	void shuffle_singleCardDeck_remainsUnchanged() {
+		List<Card> oneCardDeck = new ArrayList<>();
+		oneCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
+
+		Deck deck = new Deck(oneCardDeck);
+
+		List<Card> beforeShuffle = new ArrayList<>(deck.getDrawPile());
+		deck.shuffle();
+		List<Card> afterShuffle = deck.getDrawPile();
+
+		assertEquals(1, afterShuffle.size());
+		assertEquals(beforeShuffle.get(0).getCardType(),
+				afterShuffle.get(0).getCardType());
+	}
+
+	@Test
+	void shuffle_twoCardDeck_preservesAllCards() {
+		List<Card> twoCardDeck = new ArrayList<>();
+		twoCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
+		twoCardDeck.add(new Card(CardType.DEFUSE));
+
+		Deck deck = new Deck(twoCardDeck);
+
+		deck.shuffle();
+
+		List<Card> actual = deck.getDrawPile();
+
+		assertEquals(2, actual.size());
+
+		List<CardType> types = actual.stream()
+				.map(Card::getCardType)
+				.collect(Collectors.toList());
+
+		assertTrue(types.contains(CardType.EXPLODING_KITTEN));
+		assertTrue(types.contains(CardType.DEFUSE));
+	}
+
+	@Test
+	void shuffle_fullDeck_preservesAllCards() {
+		Deck deck = new Deck();
+
+		deck.shuffle();
+
+		List<Card> shuffledDeck = deck.getDrawPile();
+
+		assertEquals(56, shuffledDeck.size());
+
+		Map<CardType, Long> counts = shuffledDeck.stream()
+				.collect(Collectors.groupingBy(
+						Card::getCardType,
+						Collectors.counting()
+				));
+
+		assertEquals(4L, counts.get(CardType.EXPLODING_KITTEN));
+		assertEquals(6L, counts.get(CardType.DEFUSE));
+		assertEquals(4L, counts.get(CardType.ATTACK));
+		assertEquals(4L, counts.get(CardType.SHUFFLE));
+		assertEquals(4L, counts.get(CardType.SKIP));
+		assertEquals(5L, counts.get(CardType.SEE_THE_FUTURE));
+		assertEquals(5L, counts.get(CardType.NOPE));
+		assertEquals(4L, counts.get(CardType.FAVOR));
+		assertEquals(20L, counts.get(CardType.CAT_CARDS));
+	}
+
+	@Test
+	void peekTop_negativeN_throwsIllegalArgumentException() {
+		Deck deck = new Deck(new ArrayList<>());
+
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			deck.peekTop(-1);
+		});
+
+		assertEquals("deck.peekTop.negativeN", exception.getMessage());
+	}
+
+	@Test
+	void peekTop_nIsZero_returnsEmptyList() {
+		List<Card> oneCardDeck = new ArrayList<>();
+		oneCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
+
+		Deck deck = new Deck(oneCardDeck);
+
+		List<Card> result = deck.peekTop(0);
+
+		assertEquals(0, result.size());
+		assertEquals(1, deck.getDrawPile().size()); // deck unchanged
+	}
+
+	@Test
+	void peekTop_nIsOne_returnsOneCardList() {
+		List<Card> twoCardDeck = new ArrayList<>();
+		twoCardDeck.add(new Card(CardType.EXPLODING_KITTEN));
+		twoCardDeck.add(new Card(CardType.DEFUSE));
+
+		Deck deck = new Deck(twoCardDeck);
+
+		Card expectedFirstCard = new Card(CardType.EXPLODING_KITTEN);
+
+		List<Card> result = deck.peekTop(1);
+
+		assertEquals(1, result.size());
+		assertEquals(expectedFirstCard.getCardType(), result.get(0).getCardType());
+		assertEquals(2, deck.getDrawPile().size()); // deck unchanged
+	}
+
+	@Test
+	void peekTop_nIsThree_returnsThreeCards() {
+		Deck deck = new Deck();
+
+		List<Card> result = deck.peekTop(3);
+
+		assertEquals(3, result.size());
+
+		assertEquals(deck.getDrawPile().get(0).getCardType(), result.get(0).getCardType());
+		assertEquals(deck.getDrawPile().get(1).getCardType(), result.get(1).getCardType());
+		assertEquals(deck.getDrawPile().get(2).getCardType(), result.get(2).getCardType());
+
+		assertEquals(56, deck.getDrawPile().size());
+	}
+
+	@Test
+	void peekTop_nIs55_returnsFiftyFiveCards() {
+		Deck deck = new Deck();
+
+		List<Card> result = deck.peekTop(55);
+
+		assertEquals(55, result.size());
+
+		for (int i = 0; i < 55; i++) {
+			assertEquals(
+					deck.getDrawPile().get(i).getCardType(),
+					result.get(i).getCardType()
+			);
+		}
+
+		assertEquals(56, deck.getDrawPile().size());
+	}
+
+	@Test
+	void peekTop_nIs56_returnsAllCards() {
+		Deck deck = new Deck();
+
+		List<Card> result = deck.peekTop(56);
+
+		assertEquals(56, result.size());
+
+		for (int i = 0; i < 56; i++) {
+			assertEquals(
+					deck.getDrawPile().get(i).getCardType(),
+					result.get(i).getCardType()
+			);
+		}
+
+		assertEquals(56, deck.getDrawPile().size());
+	}
+
+	@Test
+	void peekTop_nGreaterThanDeckSize_throwsIllegalStateException() {
+		Deck deck = new Deck();
+
+		Exception exception = assertThrows(IllegalStateException.class, () -> {
+			deck.peekTop(57);
+		});
+
+		assertEquals("deck.peekTop.tooManyRequested", exception.getMessage());
+	}
+
+	@Test
+	void peekTop_nExceedsCurrentSize_throwsIllegalStateException() {
+		List<Card> cards = new ArrayList<>();
+		cards.add(new Card(CardType.EXPLODING_KITTEN));
+		cards.add(new Card(CardType.DEFUSE));
+		cards.add(new Card(CardType.ATTACK));
+
+		Deck deck = new Deck(cards);
+
+		Exception exception = assertThrows(IllegalStateException.class, () -> {
+			deck.peekTop(5);
+		});
+
+		assertEquals("deck.peekTop.tooManyRequested", exception.getMessage());
+	}
+
+	@ParameterizedTest
+	@EnumSource(CardType.class)
+	void discard_AllValidCardTypes_AddsToDiscardPile(CardType type) {
+		Deck deck = new Deck();
+
+		deck.discard(new Card(type));
+
+		List<Card> discardPile = deck.getDiscardPile();
+
+		assertEquals(1, discardPile.size());
+		assertEquals(type, discardPile.get(0).getCardType());
+	}
+
+	@Test
+	void discard_NullCard_ThrowsIllegalArgumentException() {
+		Deck deck = new Deck();
+
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			deck.discard(null);
+		});
+
+		assertEquals("card.nullType", exception.getMessage());
+		assertEquals(0, deck.getDiscardPile().size());
+	}
+}
