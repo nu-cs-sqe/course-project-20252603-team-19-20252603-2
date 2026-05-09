@@ -23,6 +23,13 @@
 8. [done] Mahnum: Opened draft PRs for `player-class-setup` and `player-initial-tests` branches
 9. [done] Mahnum: Created `Player.java` stub and `docs/bva/bva-player` with BVA analysis covering constructor, `addCard`, `removeCard`, `getHandSize`, `hasCard`, and `isAlive`/`setAlive` boundary cases
 
+# Week 6 (05/04/2026-05/10/2026)
+**Planning and Progress Tracking**:
+1. [done] Kevin: Added `CAT_CARDS` to the `CardType` enum and propagated to all dependent docs (`docs/design/design-doc.md` CardType list, `docs/bva/bva-Card.md` Method 2 Step 3 + new TC8). The parameterized `getCardType` test auto-picked up `CAT_CARDS` via `@EnumSource`; all 9 tests pass (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/24)
+2. [done] Kevin: Added `FAVOR` to the `CardType` enum and propagated to `docs/design/design-doc.md` and `docs/bva/bva-Card.md` (Method 2 Step 3 + new TC9). All 10 tests pass via `@EnumSource` auto-pickup (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/24)
+3. [done] Kevin: Set up Checkstyle (Google Java Style 10.18.2 base + project overrides for tab indent, no-Javadoc-required, `MagicNumber`, severity=error) and SpotBugs (default effort + confidence, HTML reports) as strict-mode quality gates wired into `./gradlew build`. PR's CI fails until each owner refactors their files on their own branch (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/25)
+4. [done] Kevin: Refactored `Card.java` (marked `final` to close SpotBugs `CT_CONSTRUCTOR_THROW` finalizer-attack vector) and `CardTest.java` (moved static imports above non-static to satisfy Checkstyle `CustomImportOrder` `STATIC###THIRD_PARTY_PACKAGE`) so the `Card` source files pass the strict linters from PR #25 (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/27)
+
 # Week X (XX/XX/2026-XX/XX/2026) TEMPLATE (You can change the format to whatever the team likes better)
 **Planning and Progress Tracking**:
 1. [done] Person: Task (Links to PR)

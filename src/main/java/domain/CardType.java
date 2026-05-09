@@ -7,5 +7,7 @@ public enum CardType {
 	SHUFFLE,
 	SKIP,
 	SEE_THE_FUTURE,
-	NOPE
+	NOPE,
+	CAT_CARDS,
+	FAVOR
 }

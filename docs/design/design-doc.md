@@ -44,6 +44,8 @@
 - `SKIP`
 - `SEE_THE_FUTURE`
 - `NOPE`
+- `CAT_CARDS`
+- `FAVOR`
 
 ---
 
