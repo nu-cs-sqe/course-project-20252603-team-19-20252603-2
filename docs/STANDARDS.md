@@ -167,8 +167,8 @@ The rubric: "code supports adding new locales without changing existing code."
   also assert on the exception's message.
 - Test method names are descriptive English clauses (matching the example
   repo's convention: `addNonDefuseToPlayerWhenShouldBeDefuse`,
-  `getIndexOfCardSecond`). No `methodUnderTest_state_expectedBehavior` snake
-  case is required.
+  `getIndexOfCardSecond`).
+- Method names can also be in the format methodName_stateUnderTest_expectedBehavior because this is what we learned in class.
 - Tests do not share mutable state (no `static` test fixtures).
 - BVA test cases in the doc should map 1:1 to test methods (or to rows in a
   parameterized test); a mismatch is a 🟡 suggestion.
