@@ -411,4 +411,16 @@ public class DeckTest {
 		assertEquals("card.nullType", exception.getMessage());
 		assertEquals(expectDiscardPileSize, deck.getDiscardPile().size());
 	}
+
+
+	@Test
+	void getSize_EmptyDeck_ReturnsDeckSize() {
+		Deck deck = new Deck();
+
+		final int fullDeckSize = 56;
+		int expectedDeckSize = fullDeckSize;
+		int actualDeckSize = deck.getSize();
+
+		assertEquals(expectedDeckSize, actualDeckSize);
+	}
 }

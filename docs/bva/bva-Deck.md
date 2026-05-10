@@ -118,6 +118,17 @@
 | TC9        | Card = Card(FAVOR), discard pile size = 0            | discardPile size = 1, first element = FAVOR                                           | yes          |
 | TC10       | Card = NULL, discard pile size = 0                   | throws IllegalArgumentException with message "card.nullType" and discardPile size = 0 | yes          |
 
+
+## 6. Method under test getSize()
+- input: void
+- output: int
+- TC 1.1: getSize_EmptyDeck_Returns56
+    - State of the system: Deck with list of 56 cards
+    - Expected output: returns 56
+    - Implemented: yes
+
+
+
 ---
 
 ## Recall the 4 steps of BVA
