@@ -126,14 +126,7 @@
     - State of the system: Deck with list of 56 cards
     - Expected output: returns 56
     - Implemented: yes
-- TC 1.2: getSize_DeckSize1_Returns1
-    - State of the system: Deck with list of 1 card
-    - Expected output: returns 1
-    - Implemented: no
-- TC 1.3: getSize_DeckSize9_Returns9
-    - State of the system: Deck with list of 9 cards
-    - Expected output: returns 9
-    - Implemented: no
+
 
 
 ---
