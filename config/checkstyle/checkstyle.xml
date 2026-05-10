@@ -364,7 +364,7 @@
          existing Javadoc (InvalidJavadocPosition, JavadocParagraph, SummaryJavadoc,
          AtclauseOrder, etc.) are kept so Javadoc that IS written must be well-formed. -->
     <module name="MethodName">
-      <property name="format" value="^[a-z][a-z0-9][a-zA-Z0-9]*$"/>
+      <property name="format" value="^[a-z][a-z0-9_][a-zA-Z0-9_]*$"/>
       <message key="name.invalidPattern"
              value="Method name ''{0}'' must match pattern ''{1}''."/>
     </module>
