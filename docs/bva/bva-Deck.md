@@ -119,13 +119,13 @@
 | TC10       | Card = NULL, discard pile size = 0                   | throws IllegalArgumentException with message "card.nullType" and discardPile size = 0 | yes          |
 
 
-## 1. Method under test getSize()
+## 6. Method under test getSize()
 - input: void
 - output: int
-- TC 1.1: getSize_EmptyDeck_Returns0
-    - State of the system: Deck with list of 0 cards
-    - Expected output: returns 0
-    - Implemented: no
+- TC 1.1: getSize_EmptyDeck_Returns56
+    - State of the system: Deck with list of 56 cards
+    - Expected output: returns 56
+    - Implemented: yes
 - TC 1.2: getSize_DeckSize1_Returns1
     - State of the system: Deck with list of 1 card
     - Expected output: returns 1
