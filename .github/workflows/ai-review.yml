@@ -11,12 +11,6 @@ permissions:
   contents: read
   pull-requests: write
 
-# Cancel any in-flight run on the same PR when a new push arrives, so we don't
-# waste compute on stale SHAs and don't race two runs over the same sticky.
-concurrency:
-  group: ai-review-pr-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
-
 jobs:
   ai-review:
     runs-on: ubuntu-latest
