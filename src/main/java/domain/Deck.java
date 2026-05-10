@@ -88,6 +88,12 @@ public class Deck {
 		}
 	}
 
+
+	public int getSize() {
+		return drawPile.size();
+	}
+
+
 	public List<Card> getDrawPile() {
 		return new ArrayList<>(drawPile);
 	}
