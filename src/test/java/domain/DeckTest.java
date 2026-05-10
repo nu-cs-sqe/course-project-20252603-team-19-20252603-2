@@ -414,7 +414,7 @@ public class DeckTest {
 
 
 	@Test
-	void getSize_EmptyDeck_Returns0() {
+	void getSize_EmptyDeck_Returns56() {
 		Deck deck = new Deck();
 
 		int expectedDeckSize = 56;
