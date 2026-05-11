@@ -424,8 +424,14 @@ public class DeckTest {
 		assertEquals(expectedDeckSize, actualDeckSize);
 	}
 
+	@Test
 	void getSize_EmptyDeck_ReturnsZero() {
 		Deck deck = new Deck();
+
+		final int fullDeckSize = deck.getSize();
+		for (int i = 0; i < fullDeckSize; i++) {
+			deck.drawTop();
+		}
 
 		final int expectedDeckSize = 0;
 		int actualDeckSize = deck.getSize();
