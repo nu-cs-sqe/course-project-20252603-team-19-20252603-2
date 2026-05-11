@@ -94,6 +94,11 @@ public class Deck {
 	}
 
 
+	public boolean isEmpty() {
+		return getSize() == 0;
+	}
+
+
 	public List<Card> getDrawPile() {
 		return new ArrayList<>(drawPile);
 	}

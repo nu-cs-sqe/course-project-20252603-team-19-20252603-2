@@ -414,7 +414,7 @@ public class DeckTest {
 
 
 	@Test
-	void getSize_EmptyDeck_ReturnsDeckSize() {
+	void getSize_InitialDeck_ReturnsDeckSize() {
 		Deck deck = new Deck();
 
 		final int fullDeckSize = 56;
@@ -422,5 +422,48 @@ public class DeckTest {
 		int actualDeckSize = deck.getSize();
 
 		assertEquals(expectedDeckSize, actualDeckSize);
+	}
+
+
+	@Test
+	void getSize_EmptyDeck_ReturnsZero() {
+		Deck deck = new Deck();
+
+		final int fullDeckSize = deck.getSize();
+		for (int i = 0; i < fullDeckSize; i++) {
+			deck.drawTop();
+		}
+
+		final int expectedDeckSize = 0;
+		int actualDeckSize = deck.getSize();
+
+		assertEquals(expectedDeckSize, actualDeckSize);
+	}
+
+
+	@Test
+	void isEmpty_InitialDeck_ReturnsFalse() {
+		Deck deck = new Deck();
+
+		boolean expectedIsEmpty = false;
+		boolean actualIsEmpty = deck.isEmpty();
+
+		assertEquals(expectedIsEmpty, actualIsEmpty);
+	}
+
+
+	@Test
+	void isEmpty_EmptyDeck_ReturnsTrue() {
+		Deck deck = new Deck();
+
+		final int fullDeckSize = deck.getSize();
+		for (int i = 0; i < fullDeckSize; i++) {
+			deck.drawTop();
+		}
+
+		boolean expectedIsEmpty = true;
+		boolean actualIsEmpty = deck.isEmpty();
+
+		assertEquals(expectedIsEmpty, actualIsEmpty);
 	}
 }

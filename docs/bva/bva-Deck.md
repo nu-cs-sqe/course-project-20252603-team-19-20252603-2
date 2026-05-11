@@ -122,11 +122,27 @@
 ## 6. Method under test getSize()
 - input: void
 - output: int
-- TC 1.1: getSize_EmptyDeck_Returns56
+- TC 6.1: getSize_InitialDeck_ReturnsDeckSize
     - State of the system: Deck with list of 56 cards
     - Expected output: returns 56
     - Implemented: yes
+- TC 6.2: getSize_EmptyDeck_ReturnsZero
+  - State of the system: Deck with list of 0 cards
+  - Expected output: returns 0
+  - Implemented: yes
 
+
+## 7. Method under test isEmpty()
+- input: void
+- output: boolean
+- TC 7.1: isEmpty_InitialDeck_ReturnsFalse
+  - State of the system: Deck with list of 56 cards
+  - Expected output: returns false
+  - Implemented: yes
+- TC 7.2: isEmpty_EmptyDeck_ReturnsTrue
+  - State of the system: Deck with list of 0 cards
+  - Expected output: returns true
+  - Implemented: yes
 
 
 ---
