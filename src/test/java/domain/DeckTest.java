@@ -523,6 +523,8 @@ public class DeckTest {
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			deck.insertAt(cardToInsert, insertIndex);
 		});
+
+		assertEquals("deck.insertAt.indexLargerSize", exception.getMessage());
 	}
 
 
@@ -536,6 +538,8 @@ public class DeckTest {
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			deck.insertAt(cardToInsert, insertIndex);
 		});
+
+		assertEquals("deck.insertAt.negativeIndex", exception.getMessage());
 	}
 
 }
