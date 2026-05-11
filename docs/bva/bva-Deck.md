@@ -158,8 +158,8 @@
   - State of the system: Deck with list of 56 cards
   - Expected output: returns true
   - Implemented: yes
-- TC 8.3: insertAt_InitialDeckIndex55_ReturnsTrue
-  - input: Card EXPLODING_KITTEN, int 55
+- TC 8.3: insertAt_InitialDeckIndex56_ReturnsTrue
+  - input: Card EXPLODING_KITTEN, int 56
   - State of the system: Deck with list of 56 cards
   - Expected output: returns true
   - Implemented: no
