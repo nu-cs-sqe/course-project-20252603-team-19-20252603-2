@@ -137,9 +137,12 @@
 - output: boolean
 - TC 7.1: isEmpty_InitialDeck_ReturnsFalse
   - State of the system: Deck with list of 56 cards
-  - Expected output: returns 56
+  - Expected output: returns false
+  - Implemented: yes
+- TC 7.2: isEmpty_EmptyDeck_ReturnsTrue
+  - State of the system: Deck with list of 0 cards
+  - Expected output: returns true
   - Implemented: no
-
 
 
 ---
