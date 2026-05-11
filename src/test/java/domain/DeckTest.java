@@ -450,4 +450,20 @@ public class DeckTest {
 
 		assertEquals(expectedIsEmpty, actualIsEmpty);
 	}
+
+
+	@Test
+	void isEmpty_EmptyDeck_ReturnsTrue() {
+		Deck deck = new Deck();
+
+		final int fullDeckSize = deck.getSize();
+		for (int i = 0; i < fullDeckSize; i++) {
+			deck.drawTop();
+		}
+
+		boolean expectedIsEmpty = true;
+		boolean actualIsEmpty = deck.isEmpty();
+
+		assertEquals(expectedIsEmpty, actualIsEmpty);
+	}
 }
