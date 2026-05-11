@@ -163,12 +163,12 @@
   - State of the system: Deck with list of 56 cards
   - Expected output: returns true
   - Implemented: yes
-- TC 8.4: insertAt_InitialDeckIndex57_ReturnsFalse
+- TC 8.4: insertAt_InitialDeckIndex57_ThrowsException
   - input: Card EXPLODING_KITTEN, int 57
   - State of the system: Deck with list of 56 cards
   - Expected output: throws IllegalArgumentException error
   - Implemented: yes
-- TC 8.5: insertAt_InitialDeckIndexNeg1_ReturnsFalse
+- TC 8.5: insertAt_InitialDeckIndexNeg1_ThrowsException
   - input: Card EXPLODING_KITTEN, int -1
   - State of the system: Deck with list of 56 cards
   - Expected output: throws IllegalArgumentException error
