@@ -514,7 +514,7 @@ public class DeckTest {
 
 
 	@Test
-	void insertAt_InitialDeckIndex57_ReturnsTrue() {
+	void insertAt_InitialDeckIndex57_ThrowsException() {
 		Deck deck = new Deck();
 		Card cardToInsert = new Card(CardType.EXPLODING_KITTEN);
 
