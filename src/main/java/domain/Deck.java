@@ -94,6 +94,11 @@ public class Deck {
 	}
 
 
+	public boolean isEmpty() {
+		return false; // Incorrect Code for TDD purposes
+	}
+
+
 	public List<Card> getDrawPile() {
 		return new ArrayList<>(drawPile);
 	}
