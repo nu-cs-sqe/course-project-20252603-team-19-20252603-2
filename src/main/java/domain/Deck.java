@@ -100,7 +100,7 @@ public class Deck {
 
 	// Incorrect code for TDD purposes
 	public boolean insertAt(Card card, int index) {
-		drawPile.add(0, card);
+		drawPile.add(index, card);
 		return true;
 	}
 
