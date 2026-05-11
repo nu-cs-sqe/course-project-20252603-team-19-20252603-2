@@ -146,12 +146,13 @@
 
 
 ## 8. Method under test insertAt()
-- input: Card EXPLODING_KITTEN, int 0
+- input: Card of playing card, int of list index
 - output: boolean
 - TC 8.1: insertAt_InitialDeck_ReturnsTrue
+  - input: Card EXPLODING_KITTEN, int 0
   - State of the system: Deck with list of 56 cards
   - Expected output: returns true
-  - Implemented: no
+  - Implemented: yes
 
 ---
 
