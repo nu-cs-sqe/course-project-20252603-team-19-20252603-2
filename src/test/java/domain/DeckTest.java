@@ -471,13 +471,15 @@ public class DeckTest {
 	@Test
 	void insertAt_InitialDeck_ReturnsTrue() {
 		Deck deck = new Deck();
+		Card cardToInsert = new Card(CardType.EXPLODING_KITTEN);
 
 		final int insertIndex = 0;
 
 		boolean expectedIsSuccess = true;
-		boolean actualIsSuccess = deck.insertAt(new Card(CardType.EXPLODING_KITTEN), insertIndex);
+		boolean actualIsSuccess = deck.insertAt(cardToInsert, insertIndex);
 
 		assertEquals(expectedIsSuccess, actualIsSuccess);
+		assertTrue(deck.getDrawPile().get(0) == cardToInsert);
 	}
 
 }
