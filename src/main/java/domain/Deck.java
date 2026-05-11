@@ -95,7 +95,7 @@ public class Deck {
 
 
 	public boolean isEmpty() {
-		return false; // Incorrect Code for TDD purposes
+		return getSize() == 0;
 	}
 
 
