@@ -479,7 +479,7 @@ public class DeckTest {
 		boolean actualIsSuccess = deck.insertAt(cardToInsert, insertIndex);
 
 		assertEquals(expectedIsSuccess, actualIsSuccess);
-		assertTrue(deck.getDrawPile().get(0) == cardToInsert);
+		assertTrue(deck.getDrawPile().get(insertIndex) == cardToInsert);
 	}
 
 }
