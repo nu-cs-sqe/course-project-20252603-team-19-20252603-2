@@ -497,4 +497,19 @@ public class DeckTest {
 		assertTrue(deck.getDrawPile().get(insertIndex) == cardToInsert);
 	}
 
+
+	@Test
+	void insertAt_InitialDeckIndex55_ReturnsTrue() {
+		Deck deck = new Deck();
+		Card cardToInsert = new Card(CardType.EXPLODING_KITTEN);
+
+		final int insertIndex = 56;
+
+		boolean expectedIsSuccess = true;
+		boolean actualIsSuccess = deck.insertAt(cardToInsert, insertIndex);
+
+		assertEquals(expectedIsSuccess, actualIsSuccess);
+		assertTrue(deck.getDrawPile().get(insertIndex) == cardToInsert);
+	}
+
 }
