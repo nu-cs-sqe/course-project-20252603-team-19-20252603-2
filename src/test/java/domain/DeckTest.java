@@ -424,6 +424,7 @@ public class DeckTest {
 		assertEquals(expectedDeckSize, actualDeckSize);
 	}
 
+
 	@Test
 	void getSize_EmptyDeck_ReturnsZero() {
 		Deck deck = new Deck();
@@ -437,5 +438,16 @@ public class DeckTest {
 		int actualDeckSize = deck.getSize();
 
 		assertEquals(expectedDeckSize, actualDeckSize);
+	}
+
+
+	@Test
+	void isEmpty_InitialDeck_ReturnsFalse() {
+		Deck deck = new Deck();
+
+		boolean expectedIsEmpty = false;
+		boolean actualIsEmpty = deck.isEmpty();
+
+		assertEquals(expectedIsEmpty, actualIsEmpty);
 	}
 }
