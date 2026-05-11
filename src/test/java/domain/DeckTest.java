@@ -524,7 +524,7 @@ public class DeckTest {
 			deck.insertAt(cardToInsert, insertIndex);
 		});
 
-		assertEquals("deck.insertAt.indexLargerSize", exception.getMessage());
+		assertEquals("deck.insertAt.indexTooLarge", exception.getMessage());
 	}
 
 

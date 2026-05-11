@@ -21,7 +21,7 @@ public class Deck {
 	private static final String PEEK_TOP_TOO_MANY_KEY = "deck.peekTop.tooManyRequested";
 	private static final String NULL_CARD_TYPE_KEY = "card.nullType";
 	private static final String PEEK_TOP_NEGATIVE_N_KEY = "deck.peekTop.negativeN";
-	private static final String INSERT_AT_INDEX_LARGER_THAN_KEY = "deck.insertAt.indexLargerSize";
+	private static final String INSERT_AT_INDEX_TOO_LARGE_KEY = "deck.insertAt.indexTooLarge";
 	private static final String INSERT_AT_NEGATIVE_INDEX_KEY = "deck.insertAt.negativeIndex";
 
 	private List<Card> drawPile;
@@ -106,7 +106,7 @@ public class Deck {
 			throw new IllegalArgumentException(INSERT_AT_NEGATIVE_INDEX_KEY);
 		}
 		if (index > getSize()) {
-			throw new IllegalArgumentException(INSERT_AT_INDEX_LARGER_THAN_KEY);
+			throw new IllegalArgumentException(INSERT_AT_INDEX_TOO_LARGE_KEY);
 		}
 		drawPile.add(index, card);
 		return true;
