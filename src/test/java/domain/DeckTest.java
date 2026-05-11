@@ -525,4 +525,17 @@ public class DeckTest {
 		});
 	}
 
+
+	@Test
+	void insertAt_InitialDeckIndexNeg1_ThrowsException() {
+		Deck deck = new Deck();
+		Card cardToInsert = new Card(CardType.EXPLODING_KITTEN);
+
+		final int insertIndex = -1;
+
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			deck.insertAt(cardToInsert, insertIndex);
+		});
+	}
+
 }
