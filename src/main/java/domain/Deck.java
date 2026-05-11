@@ -22,6 +22,7 @@ public class Deck {
 	private static final String NULL_CARD_TYPE_KEY = "card.nullType";
 	private static final String PEEK_TOP_NEGATIVE_N_KEY = "deck.peekTop.negativeN";
 	private static final String INSERT_AT_INDEX_LARGER_THAN_SIZE_KEY = "deck.insertAt.indexLargerThanSize";
+	private static final String INSERT_AT_NEGATIVE_INDEX_KEY = "deck.insertAt.negativeIndex";
 
 	private List<Card> drawPile;
 	private List<Card> discardPile;
@@ -99,8 +100,11 @@ public class Deck {
 		return getSize() == 0;
 	}
 
-	// Incorrect code for TDD purposes
+
 	public boolean insertAt(Card card, int index) {
+		if (index < 0) {
+			throw new IllegalArgumentException(INSERT_AT_NEGATIVE_INDEX_KEY);
+		}
 		if (index > getSize()) {
 			throw new IllegalArgumentException(INSERT_AT_INDEX_LARGER_THAN_SIZE_KEY);
 		}
