@@ -59,6 +59,18 @@ public method inside it, following `docs/bva/bva-template.md`.
   domain — that is the whole point of BVA. Skipping the null edge for a
   reference-typed input is a 🟡 suggestion (the AI should call it out).
 
+The following is also an acceptable version of the BVA Analysis.
+## Method under test: `methodName()`
+- TC1.1: NAME OF THE TEST CASE
+  - State of the system: 
+  - Expected output: 
+  - Implemented: yes/no
+
+- TC1.2: NAME OF THE TEST CASE
+  - State of the system: 
+  - Expected output: 
+  - Implemented: yes/no
+
 ## 3. TDD ordering in commits
 
 The C-tier rubric requires "evidence of a TDD/BDD workflow ... in the GitHub
