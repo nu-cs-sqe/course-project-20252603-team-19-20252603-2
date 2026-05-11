@@ -499,7 +499,7 @@ public class DeckTest {
 
 
 	@Test
-	void insertAt_InitialDeckIndex55_ReturnsTrue() {
+	void insertAt_InitialDeckIndex56_ReturnsTrue() {
 		Deck deck = new Deck();
 		Card cardToInsert = new Card(CardType.EXPLODING_KITTEN);
 
@@ -510,6 +510,19 @@ public class DeckTest {
 
 		assertEquals(expectedIsSuccess, actualIsSuccess);
 		assertTrue(deck.getDrawPile().get(insertIndex) == cardToInsert);
+	}
+
+
+	@Test
+	void insertAt_InitialDeckIndex57_ReturnsTrue() {
+		Deck deck = new Deck();
+		Card cardToInsert = new Card(CardType.EXPLODING_KITTEN);
+
+		final int insertIndex = 57;
+
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			deck.insertAt(cardToInsert, insertIndex);
+		});
 	}
 
 }
