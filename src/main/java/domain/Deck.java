@@ -98,6 +98,12 @@ public class Deck {
 		return getSize() == 0;
 	}
 
+	// Incorrect code for TDD purposes
+	public boolean insertAt(Card card, int index) {
+		drawPile.add(0, card);
+		return true;
+	}
+
 
 	public List<Card> getDrawPile() {
 		return new ArrayList<>(drawPile);
