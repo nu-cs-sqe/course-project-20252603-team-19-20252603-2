@@ -177,8 +177,12 @@
   - input: Card null, int 1
   - State of the system: Deck with list of 56 cards
   - Expected output: throws IllegalArgumentException error
+  - Implemented: yes
+- TC 8.7: insertAt_InitialDeckNullCardNeg1_ThrowsException
+  - input: Card null, int -1
+  - State of the system: Deck with list of 56 cards
+  - Expected output: throws IllegalArgumentException error
   - Implemented: no
-
 
 
 ---
