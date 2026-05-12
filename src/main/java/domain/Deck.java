@@ -102,6 +102,9 @@ public class Deck {
 
 
 	public boolean insertAt(Card card, int index) {
+		if (card == null) {
+			throw new IllegalArgumentException(NULL_CARD_TYPE_KEY);
+		}
 		if (index < 0) {
 			throw new IllegalArgumentException(INSERT_AT_NEGATIVE_INDEX_KEY);
 		}
