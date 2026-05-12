@@ -555,8 +555,21 @@ public class DeckTest {
 		});
 
 		assertEquals("card.nullType", exception.getMessage());
+	}
 
 
+	@Test
+	void insertAt_InitialDeckNullCardNeg1_ThrowsException() {
+		Deck deck = new Deck();
+		Card cardToInsert = null;
+
+		final int insertIndex = -1;
+
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			deck.insertAt(cardToInsert, insertIndex);
+		});
+
+		assertEquals("card.nullType", exception.getMessage());
 	}
 
 }
