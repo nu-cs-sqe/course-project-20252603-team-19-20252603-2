@@ -60,7 +60,7 @@
 - `shuffle()`
 - `drawTop(): Card`
 - `peekTop(int n): List<Card>` — supports *See the Future*.
-- `insertAt(Card, int index)` — supports *Defuse* re-inserting an Exploding Kitten anywhere in the draw pile.
+- `insertAt(Card, int index): boolean` — supports *Defuse* re-inserting an Exploding Kitten anywhere in the draw pile.
 - `discard(Card)`
 - `getSize(): int`
 - `isEmpty(): boolean`
