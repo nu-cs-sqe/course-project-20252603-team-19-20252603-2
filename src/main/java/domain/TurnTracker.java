@@ -9,7 +9,7 @@ public class TurnTracker {
         return this.numTotalPlayers;
     }
 
-    private void setNumTotalPlayers(int numTotalPlayers) {
+    void setNumTotalPlayers(int numTotalPlayers) {
         this.numTotalPlayers = numTotalPlayers;
     }
 
@@ -17,7 +17,7 @@ public class TurnTracker {
         return this.currentPlayer;
     }
 
-    private void setCurrentPlayer(int currentPlayer) {
+    void setCurrentPlayer(int currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 
@@ -25,7 +25,7 @@ public class TurnTracker {
         return this.currentDirection;
     }
 
-    public void setCurrentDirection(int currentDirection) {
+    void setCurrentDirection(int currentDirection) {
         this.currentDirection = currentDirection;
     }
 
