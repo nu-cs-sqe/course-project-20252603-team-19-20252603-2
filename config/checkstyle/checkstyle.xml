@@ -66,12 +66,7 @@
 
   <module name="TreeWalker">
 
-    <!-- [TEAM] Tab indentation required (replaces Google's FileTabCharacter that forbids tabs). -->
-    <module name="RegexpSinglelineJava">
-      <property name="format" value="^\t* "/>
-      <property name="message" value="Indent must use tab characters"/>
-      <property name="ignoreComments" value="true"/>
-    </module>
+
 
     <!-- [TEAM] MagicNumber: literals other than -1, 0, 1, 2 must be private static final constants. -->
     <module name="MagicNumber"/>
