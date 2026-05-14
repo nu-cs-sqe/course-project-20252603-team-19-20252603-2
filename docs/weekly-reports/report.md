@@ -37,7 +37,8 @@
 # Week 7 (05/11/2026-05/17/2026)
 **Planning and Progress Tracking**:
 1. [done] Allan: added methods in Deck class (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/37)
-
+2. [done] Allan: started game implementation (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/39)
+3. [in progress] Allan: started TurnTracker class
 
 # Week X (XX/XX/2026-XX/XX/2026) TEMPLATE (You can change the format to whatever the team likes better)
 **Planning and Progress Tracking**:
