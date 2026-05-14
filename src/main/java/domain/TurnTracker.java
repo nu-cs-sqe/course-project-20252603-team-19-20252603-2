@@ -30,7 +30,7 @@ public class TurnTracker {
     }
 
     public void turnGoesToNextPlayer() {
-        setCurrentPlayer(1);
+        setCurrentPlayer((getCurrentPlayer() + 1) % getNumTotalPlayers());
     }
 
 
