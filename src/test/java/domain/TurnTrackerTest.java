@@ -138,4 +138,27 @@ public class TurnTrackerTest {
     }
 
 
+    @ParameterizedTest
+    @CsvSource({
+            "0, 1, 2", "1, 1, 0", "2, 1, 1",
+            "0, -1, 1", "1, -1, 2", "2, -1, 0"
+    })
+    public void turnSkipsNextPlayer_3TotalPlayers_shouldSkipNextPlayer(
+            int currentPlayer,
+            int currentDirection,
+            int nextPlayer) {
+        TurnTracker turnTracker = new TurnTracker();
+        final int numTotalPlayers = 3;
+        turnTracker.setNumTotalPlayers(numTotalPlayers);
+        turnTracker.setCurrentPlayer(currentPlayer);
+        turnTracker.setCurrentDirection(currentDirection);
+
+        turnTracker.turnSkipsNextPlayer();
+
+        final int expectedPlayer = nextPlayer;
+        final int actualPlayer = turnTracker.getCurrentPlayer();
+        assertEquals(expectedPlayer, actualPlayer);
+    }
+
+
 }
