@@ -3,6 +3,8 @@ package domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 public class TurnTrackerTest {
 
@@ -37,6 +39,31 @@ public class TurnTrackerTest {
         turnTracker.turnGoesToNextPlayer();
 
         final int expectedPlayer = 0;
+        final int actualPlayer = turnTracker.getCurrentPlayer();
+        assertEquals(expectedPlayer, actualPlayer);
+    }
+
+
+    @ParameterizedTest
+    @CsvSource({
+            "0, 1, 1", "1, 1, 2", "2, 1, 3", "3, 1, 4", "4, 1, 5",
+            "5, 1, 6", "6, 1, 7", "7, 1, 8", "8, 1, 9", "9, 1, 0",
+            "0, -1, 9", "1, -1, 0", "2, -1, 1", "3, -1, 2", "4, -1, 3",
+            "5, -1, 4", "6, -1, 5", "7, -1, 6", "8, -1, 7", "9, -1, 8",
+    })
+    public void turnGoesToNextPlayer_10TotalPlayers_shouldAdvanceToNextPlayer(
+            int currentPlayer,
+            int currentDirection,
+            int nextPlayer) {
+        TurnTracker turnTracker = new TurnTracker();
+        final int numTotalPlayers = 10;
+        turnTracker.setNumTotalPlayers(numTotalPlayers);
+        turnTracker.setCurrentPlayer(currentPlayer);
+        turnTracker.setCurrentDirection(currentDirection);
+
+        turnTracker.turnGoesToNextPlayer();
+
+        final int expectedPlayer = nextPlayer;
         final int actualPlayer = turnTracker.getCurrentPlayer();
         assertEquals(expectedPlayer, actualPlayer);
     }
