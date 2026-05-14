@@ -8,10 +8,13 @@ This file holds the BVA analysis for every public method of the `TurnTracker` cl
 - input: void
 - output: none
 - TC 7.1: turnGoesToNextPlayer_player0_player1
-    - State of the system: total players is 3, currentPlayer is 0
-    - Expected output: currentPlayer is 1
+    - State of the system: numTotalPlayers is 3, currentPlayer is 0, currentDirection is 1
+      - Expected output: currentPlayer is 1
     - Implemented: yes
-
+- TC 7.2: turnGoesToNextPlayer_player2_player0
+  - State of the system: numTotalPlayers is 3, currentPlayer is 2, currentDirection is 1
+    - Expected output: currentPlayer is 0
+  - Implemented: no
 
 ---
 
