@@ -7,11 +7,11 @@ public class TurnTracker {
 
     private static final String NUM_TOTAL_PLAYERS_LESS_THAN_TWO = "turnTracker.numPlayers.tooSmall";
 
-    int getNumTotalPlayers() {
+    public int getNumTotalPlayers() {
         return this.numTotalPlayers;
     }
 
-    void setNumTotalPlayers(int numTotalPlayers) {
+    public void setNumTotalPlayers(int numTotalPlayers) {
         if (numTotalPlayers < 2) {
             throw new IllegalArgumentException(NUM_TOTAL_PLAYERS_LESS_THAN_TWO);
         } else {
@@ -19,7 +19,7 @@ public class TurnTracker {
         }
     }
 
-    int getCurrentPlayer() {
+    public int getCurrentPlayer() {
         return this.currentPlayer;
     }
 
@@ -27,12 +27,12 @@ public class TurnTracker {
         this.currentPlayer = currentPlayer;
     }
 
-    int getCurrentDirection() {
+    public int getCurrentDirection() {
         return this.currentDirection;
     }
 
-    void setCurrentDirection(int currentDirection) {
-        this.currentDirection = currentDirection;
+    public void changeCurrentDirection() {
+        this.currentDirection *= -1;
     }
 
     public void turnGoesToNextPlayer() {

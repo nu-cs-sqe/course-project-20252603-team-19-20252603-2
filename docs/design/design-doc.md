@@ -92,6 +92,11 @@
 
 ### Methods
 
+- `getNumTotalPlayers()`: `int`
+- `setNumTotalPlayers()`
+- `getCurrentPlayer()`: `int`
+- `getCurrentDirection()`: `int`
+- `changeCurrentDirection()`
 - `turnGoesToNextPlayer()`
 - `turnSkipsNextPlayer()`
 - `turnGoesToCurrentPlayerAgain()`
