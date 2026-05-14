@@ -1,11 +1,16 @@
 package domain;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerTest {
 
+    private static final int THREE_CARDS = 3;
     private Player player;
 
     @BeforeEach
@@ -44,13 +49,15 @@ public class PlayerTest {
         player.addCard(CardType.DEFUSE);
         player.addCard(CardType.ATTACK);
         player.addCard(CardType.NOPE);
-        assertEquals(3, player.getHand().size());
+        assertEquals(THREE_CARDS, player.getHand().size());
     }
 
     // BVA: add null card (invalid)
     @Test
     void testAddNullCardThrowsException() {
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> player.addCard(null));
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> player.addCard(null));
         assertEquals("Card cannot be null", exception.getMessage());
     }
 
@@ -66,7 +73,9 @@ public class PlayerTest {
     @Test
     void testRemoveCardNotInHandThrowsException() {
         IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> player.removeCard(CardType.ATTACK));
+                assertThrows(
+                        IllegalArgumentException.class,
+                        () -> player.removeCard(CardType.ATTACK));
         assertEquals("Card not in hand: ATTACK", exception.getMessage());
     }
 
@@ -74,7 +83,9 @@ public class PlayerTest {
     @Test
     void testRemoveFromEmptyHandThrowsException() {
         IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> player.removeCard(CardType.DEFUSE));
+                assertThrows(
+                        IllegalArgumentException.class,
+                        () -> player.removeCard(CardType.DEFUSE));
         assertEquals("Card not in hand: DEFUSE", exception.getMessage());
     }
 
@@ -97,7 +108,9 @@ public class PlayerTest {
     @Test
     void testExplodeAlreadyDeadPlayerThrowsException() {
         player.explode();
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> player.explode());
+        IllegalStateException exception = assertThrows(
+                IllegalStateException.class,
+                () -> player.explode());
         assertEquals("Player is already dead", exception.getMessage());
     }
 
@@ -118,6 +131,8 @@ public class PlayerTest {
     @Test
     void testGetHandReturnsUnmodifiableView() {
         player.addCard(CardType.DEFUSE);
-        assertThrows(UnsupportedOperationException.class, () -> player.getHand().add(CardType.ATTACK));
+        assertThrows(
+                UnsupportedOperationException.class,
+                () -> player.getHand().add(CardType.ATTACK));
     }
 }
