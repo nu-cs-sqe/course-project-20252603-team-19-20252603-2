@@ -18,7 +18,13 @@ This file holds the BVA analysis for every public method of the `TurnTracker` cl
 - TC 7.3: turnGoesToNextPlayer_10TotalPlayers_shouldAdvanceToNextPlayer
   - State of the system: numTotalPlayers is 10, currentPlayer is INPUT, currentDirection is INPUT
     - Expected output: currentPlayer is the next player
+  - Implemented: yes
+- TC 7.4: turnGoesToNextPlayer_2TotalPlayers_shouldAdvanceToNextPlayer
+  - State of the system: numTotalPlayers is 2, currentPlayer is INPUT, currentDirection is INPUT
+    - Expected output: currentPlayer is the next player
   - Implemented: no
+
+
 
 ---
 
