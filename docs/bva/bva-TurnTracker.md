@@ -4,7 +4,13 @@ This file holds the BVA analysis for every public method of the `TurnTracker` cl
 
 ---
 
-
+## 1. Method under test turnGoesToNextPlayer()
+- input: void
+- output: none
+- TC 7.1: turnGoesToNextPlayer_player0_player1
+    - State of the system: currentPlayer is 0
+    - Expected output: currentPlayer is 1
+    - Implemented: no
 
 
 ---
