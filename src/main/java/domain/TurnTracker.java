@@ -2,6 +2,7 @@ package domain;
 
 public class TurnTracker {
     private int numTotalPlayers = 1;
+    private static final int MIN_TOTAL_PLAYERS = 2;
     private int currentPlayer = 0;
     private int currentDirection = 1;
 
@@ -12,7 +13,7 @@ public class TurnTracker {
     }
 
     public void setNumTotalPlayers(int numTotalPlayers) {
-        if (numTotalPlayers < 2) {
+        if (numTotalPlayers < MIN_TOTAL_PLAYERS) {
             throw new IllegalArgumentException(NUM_TOTAL_PLAYERS_LESS_THAN_TWO);
         } else {
             this.numTotalPlayers = numTotalPlayers;
@@ -44,6 +45,13 @@ public class TurnTracker {
                             + getCurrentDirection()
                             + getNumTotalPlayers())
                         % getNumTotalPlayers());
+    }
+
+    public void turnSkipsNextPlayer() {
+        setCurrentPlayer((getCurrentPlayer()
+                + getCurrentDirection() * 2
+                + getNumTotalPlayers())
+                % getNumTotalPlayers());
     }
 
 
