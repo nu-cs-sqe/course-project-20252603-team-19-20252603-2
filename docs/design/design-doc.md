@@ -84,6 +84,19 @@
 
 ## TurnTracker Class
 
+### Data Members
+
+- `numTotalPlayers`: `int`
+- `currentPlayer`: `int`
+- `currentDirection`: `int`
+
+### Methods
+
+- `turnGoesToNextPlayer()`
+- `turnSkipsNextPlayer()`
+- `turnGoesToCurrentPlayerAgain()`
+- `turnReversesDirection()`
+
 
 ---
 
