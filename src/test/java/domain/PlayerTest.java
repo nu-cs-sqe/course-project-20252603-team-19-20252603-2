@@ -50,7 +50,8 @@ public class PlayerTest {
     // BVA: add null card (invalid)
     @Test
     void testAddNullCardThrowsException() {
-        assertThrows(IllegalArgumentException.class, () -> player.addCard(null));
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> player.addCard(null));
+        assertEquals("Card cannot be null", exception.getMessage());
     }
 
     // BVA: remove a card that exists
@@ -64,13 +65,25 @@ public class PlayerTest {
     // BVA: remove a card not in hand
     @Test
     void testRemoveCardNotInHandThrowsException() {
-        assertThrows(IllegalArgumentException.class, () -> player.removeCard(CardType.ATTACK));
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> player.removeCard(CardType.ATTACK));
+        assertEquals("Card not in hand: ATTACK", exception.getMessage());
     }
 
     // BVA: remove from empty hand
     @Test
     void testRemoveFromEmptyHandThrowsException() {
-        assertThrows(IllegalArgumentException.class, () -> player.removeCard(CardType.DEFUSE));
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> player.removeCard(CardType.DEFUSE));
+        assertEquals("Card not in hand: DEFUSE", exception.getMessage());
+    }
+
+    // BVA: remove null card (invalid)
+    @Test
+    void testRemoveNullCardThrowsException() {
+        IllegalArgumentException exception =
+                assertThrows(IllegalArgumentException.class, () -> player.removeCard(null));
+        assertEquals("Card not in hand: null", exception.getMessage());
     }
 
     // Explode sets player to dead
@@ -84,7 +97,8 @@ public class PlayerTest {
     @Test
     void testExplodeAlreadyDeadPlayerThrowsException() {
         player.explode();
-        assertThrows(IllegalStateException.class, () -> player.explode());
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> player.explode());
+        assertEquals("Player is already dead", exception.getMessage());
     }
 
     // hasCard returns true if card in hand
@@ -98,5 +112,12 @@ public class PlayerTest {
     @Test
     void testHasCardReturnsFalseIfAbsent() {
         assertFalse(player.hasCard(CardType.DEFUSE));
+    }
+
+    // BVA: getHand is read-only
+    @Test
+    void testGetHandReturnsUnmodifiableView() {
+        player.addCard(CardType.DEFUSE);
+        assertThrows(UnsupportedOperationException.class, () -> player.getHand().add(CardType.ATTACK));
     }
 }

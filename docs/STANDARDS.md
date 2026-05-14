@@ -50,6 +50,18 @@ The team commits to **one BVA analysis file per public method**, following
   domain — that is the whole point of BVA. Skipping the null edge for a
   reference-typed input is a 🟡 suggestion (the AI should call it out).
 
+The following is also an acceptable version of the BVA Analysis.
+## Method under test: `methodName()`
+- TC1.1: NAME OF THE TEST CASE
+  - State of the system: 
+  - Expected output: 
+  - Implemented: yes/no
+
+- TC1.2: NAME OF THE TEST CASE
+  - State of the system: 
+  - Expected output: 
+  - Implemented: yes/no
+
 ## 3. TDD ordering in commits
 
 The C-tier rubric requires "evidence of a TDD/BDD workflow ... in the GitHub
@@ -140,8 +152,8 @@ The rubric: "code supports adding new locales without changing existing code."
   also assert on the exception's message.
 - Test method names are descriptive English clauses (matching the example
   repo's convention: `addNonDefuseToPlayerWhenShouldBeDefuse`,
-  `getIndexOfCardSecond`). No `methodUnderTest_state_expectedBehavior` snake
-  case is required.
+  `getIndexOfCardSecond`).
+- Method names can also be in the format methodName_stateUnderTest_expectedBehavior because this is what we learned in class.
 - Tests do not share mutable state (no `static` test fixtures).
 - BVA test cases in the doc should map 1:1 to test methods (or to rows in a
   parameterized test); a mismatch is a 🟡 suggestion.

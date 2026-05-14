@@ -13,8 +13,33 @@
 
 |              | System under test            | Expected output                                                  | Implemented? |
 |--------------|------------------------------|------------------------------------------------------------------|--------------|
-| Test Case 1  | `new Card(EXPLODING_KITTEN)` | constructor returns normally; `getCardType()` == `EXPLODING_KITTEN` | no           |
-| Test Case 2  | `new Card(null)`             | `IllegalArgumentException` thrown; no `Card` produced            | no           |
+| Test Case 1  | `new Card(EXPLODING_KITTEN)` | constructor returns normally; `getCardType()` == `EXPLODING_KITTEN` | yes          |
+| Test Case 2  | `new Card(null)`             | `IllegalArgumentException` thrown; no `Card` produced            | yes          |
+
+---
+
+## Method 2: ```public CardType getCardType()```
+### Step 1-3 Results
+|        | Input                       | (if more to consider for input) | Output                                                                                |
+|--------|-----------------------------|---------------------------------|---------------------------------------------------------------------------------------|
+| Step 1 | none (instance-state query) |                                 | The `CardType` value supplied at construction                                         |
+| Step 2 | n/a                         |                                 | Enumeration (`CardType`)                                                              |
+| Step 3 | n/a                         |                                 | `EXPLODING_KITTEN`, `DEFUSE`, `ATTACK`, `SHUFFLE`, `SKIP`, `SEE_THE_FUTURE`, `NOPE`, `CAT_CARDS`, `FAVOR` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+|              | System under test            | Expected output    | Implemented? |
+|--------------|------------------------------|--------------------|--------------|
+| Test Case 1  | `new Card(EXPLODING_KITTEN)` | `EXPLODING_KITTEN` | yes          |
+| Test Case 2  | `new Card(DEFUSE)`           | `DEFUSE`           | yes          |
+| Test Case 3  | `new Card(ATTACK)`           | `ATTACK`           | yes          |
+| Test Case 4  | `new Card(SHUFFLE)`          | `SHUFFLE`          | yes          |
+| Test Case 5  | `new Card(SKIP)`             | `SKIP`             | yes          |
+| Test Case 6  | `new Card(SEE_THE_FUTURE)`   | `SEE_THE_FUTURE`   | yes          |
+| Test Case 7  | `new Card(NOPE)`             | `NOPE`             | yes          |
+| Test Case 8  | `new Card(CAT_CARDS)`        | `CAT_CARDS`        | yes          |
+| Test Case 9  | `new Card(FAVOR)`            | `FAVOR`            | yes          |
 
 ---
 
