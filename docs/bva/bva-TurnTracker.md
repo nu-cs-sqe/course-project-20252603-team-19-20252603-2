@@ -44,6 +44,16 @@ This file holds the BVA analysis for every public method of the `TurnTracker` cl
 - TC 2.3: turnSkipsNextPlayer_10TotalPlayers_shouldSkipNextPlayer
   - State of the system: numTotalPlayers is 10, currentPlayer is INPUT, currentDirection is INPUT
     - Expected output: currentPlayer is next next player
+  - Implemented: yes
+
+---
+
+## 3. Method under test turnGoesToCurrentPlayerAgain()
+- input: void
+- output: none
+- TC 2.1: turnGoesToCurrentPlayerAgain_2TotalPlayers_shouldRepeatTurnAgain
+  - State of the system: numTotalPlayers is 2, currentPlayer is INPUT, currentDirection is INPUT
+    - Expected output: currentPlayer is next next player
   - Implemented: no
 
 ---
