@@ -4,6 +4,7 @@ import com.github.spotbugs.snom.Effort
 plugins {
     id("java")
     checkstyle
+    jacoco
     id("com.github.spotbugs") version "6.0.25"
 }
 
@@ -17,6 +18,12 @@ repositories {
 dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+
+    // cucumber
+    testImplementation(platform("io.cucumber:cucumber-bom:7.20.1"))
+    testImplementation("io.cucumber:cucumber-java")
+    testImplementation("io.cucumber:cucumber-junit-platform-engine")
+
 }
 
 java {
@@ -75,5 +82,35 @@ tasks.spotbugsTest {
         required = true
         outputLocation = layout.buildDirectory.file("reports/spotbugs/spotbugs-test.html")
         setStylesheet("fancy-hist.xsl")
+    }
+}
+
+val cucumberRuntime by configurations.creating {
+    extendsFrom(configurations["testImplementation"])
+}
+
+task("cucumber") {
+    dependsOn("assemble", "compileTestJava")
+    doLast {
+        javaexec {
+            mainClass.set("io.cucumber.core.cli.Main")
+            classpath = cucumberRuntime + sourceSets.main.get().output + sourceSets.test.get().output
+            args = listOf("--plugin", "pretty",
+                "--glue", "domain",  // where the step definitions are.
+                "src/test/resources")                    // where the feature files are.
+            // Configure jacoco agent for the test coverage.
+            val jacocoAgent = zipTree(configurations.jacocoAgent.get().singleFile)
+                .filter { it.name == "jacocoagent.jar" }
+                .singleFile
+            jvmArgs = listOf("-javaagent:$jacocoAgent=destfile=$buildDir/results/jacoco/cucumber.exec,append=false")
+        }
+    }
+}
+
+tasks.jacocoTestReport {
+    // Give jacoco the file generated with the cucumber tests for the coverage.
+    executionData(files("$buildDir/jacoco/test.exec", "$buildDir/results/jacoco/cucumber.exec"))
+    reports {
+        xml.required.set(true)
     }
 }

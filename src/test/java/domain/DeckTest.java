@@ -466,4 +466,110 @@ public class DeckTest {
 
 		assertEquals(expectedIsEmpty, actualIsEmpty);
 	}
+
+
+	@Test
+	void insertAt_InitialDeck_ReturnsTrue() {
+		Deck deck = new Deck();
+		Card cardToInsert = new Card(CardType.EXPLODING_KITTEN);
+
+		final int insertIndex = 0;
+
+		boolean expectedIsSuccess = true;
+		boolean actualIsSuccess = deck.insertAt(cardToInsert, insertIndex);
+
+		assertEquals(expectedIsSuccess, actualIsSuccess);
+		assertTrue(deck.getDrawPile().get(insertIndex) == cardToInsert);
+	}
+
+
+	@Test
+	void insertAt_InitialDeckIndex1_ReturnsTrue() {
+		Deck deck = new Deck();
+		Card cardToInsert = new Card(CardType.EXPLODING_KITTEN);
+
+		final int insertIndex = 1;
+
+		boolean expectedIsSuccess = true;
+		boolean actualIsSuccess = deck.insertAt(cardToInsert, insertIndex);
+
+		assertEquals(expectedIsSuccess, actualIsSuccess);
+		assertTrue(deck.getDrawPile().get(insertIndex) == cardToInsert);
+	}
+
+
+	@Test
+	void insertAt_InitialDeckIndex56_ReturnsTrue() {
+		Deck deck = new Deck();
+		Card cardToInsert = new Card(CardType.EXPLODING_KITTEN);
+
+		final int insertIndex = 56;
+
+		boolean expectedIsSuccess = true;
+		boolean actualIsSuccess = deck.insertAt(cardToInsert, insertIndex);
+
+		assertEquals(expectedIsSuccess, actualIsSuccess);
+		assertTrue(deck.getDrawPile().get(insertIndex) == cardToInsert);
+	}
+
+
+	@Test
+	void insertAt_InitialDeckIndex57_ThrowsException() {
+		Deck deck = new Deck();
+		Card cardToInsert = new Card(CardType.EXPLODING_KITTEN);
+
+		final int insertIndex = 57;
+
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			deck.insertAt(cardToInsert, insertIndex);
+		});
+
+		assertEquals("deck.insertAt.indexTooLarge", exception.getMessage());
+	}
+
+
+	@Test
+	void insertAt_InitialDeckIndexNeg1_ThrowsException() {
+		Deck deck = new Deck();
+		Card cardToInsert = new Card(CardType.EXPLODING_KITTEN);
+
+		final int insertIndex = -1;
+
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			deck.insertAt(cardToInsert, insertIndex);
+		});
+
+		assertEquals("deck.insertAt.negativeIndex", exception.getMessage());
+	}
+
+
+	@Test
+	void insertAt_InitialDeckNullCard_ThrowsException() {
+		Deck deck = new Deck();
+		Card cardToInsert = null;
+
+		final int insertIndex = 1;
+
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			deck.insertAt(cardToInsert, insertIndex);
+		});
+
+		assertEquals("card.nullType", exception.getMessage());
+	}
+
+
+	@Test
+	void insertAt_InitialDeckNullCardNeg1_ThrowsException() {
+		Deck deck = new Deck();
+		Card cardToInsert = null;
+
+		final int insertIndex = -1;
+
+		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+			deck.insertAt(cardToInsert, insertIndex);
+		});
+
+		assertEquals("card.nullType", exception.getMessage());
+	}
+
 }

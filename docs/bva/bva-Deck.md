@@ -145,6 +145,46 @@
   - Implemented: yes
 
 
+## 8. Method under test insertAt()
+- input: Card of playing card, int of list index
+- output: boolean
+- TC 8.1: insertAt_InitialDeck_ReturnsTrue
+  - input: Card EXPLODING_KITTEN, int 0
+  - State of the system: Deck with list of 56 cards
+  - Expected output: returns true
+  - Implemented: yes
+- TC 8.2: insertAt_InitialDeckIndex1_ReturnsTrue
+  - input: Card EXPLODING_KITTEN, int 1
+  - State of the system: Deck with list of 56 cards
+  - Expected output: returns true
+  - Implemented: yes
+- TC 8.3: insertAt_InitialDeckIndex56_ReturnsTrue
+  - input: Card EXPLODING_KITTEN, int 56
+  - State of the system: Deck with list of 56 cards
+  - Expected output: returns true
+  - Implemented: yes
+- TC 8.4: insertAt_InitialDeckIndex57_ThrowsException
+  - input: Card EXPLODING_KITTEN, int 57
+  - State of the system: Deck with list of 56 cards
+  - Expected output: throws IllegalArgumentException error
+  - Implemented: yes
+- TC 8.5: insertAt_InitialDeckIndexNeg1_ThrowsException
+  - input: Card EXPLODING_KITTEN, int -1
+  - State of the system: Deck with list of 56 cards
+  - Expected output: throws IllegalArgumentException error
+  - Implemented: yes
+- TC 8.6: insertAt_InitialDeckNullCard_ThrowsException
+  - input: Card null, int 1
+  - State of the system: Deck with list of 56 cards
+  - Expected output: throws IllegalArgumentException error
+  - Implemented: yes
+- TC 8.7: insertAt_InitialDeckNullCardNeg1_ThrowsException
+  - input: Card null, int -1
+  - State of the system: Deck with list of 56 cards
+  - Expected output: throws IllegalArgumentException error
+  - Implemented: yes
+
+
 ---
 
 ## Recall the 4 steps of BVA

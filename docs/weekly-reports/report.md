@@ -33,6 +33,12 @@
 6. [done] Vincent: Conducted BVA analysis for `Deck` class in `docs/bva/bva-Deck.md` for Deck constructor, drawTop, shuffle, peekTop, and discard and followed the team standards for the format.
 7. [done] Vincent: Refactored `Deck.java` and `DeckTest.java` to follow checkstyle. Fixed variable names, importing, and removed all the magical numbers. (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/29)
 
+
+# Week 7 (05/11/2026-05/17/2026)
+**Planning and Progress Tracking**:
+1. [done] Allan: added methods in Deck class (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/37)
+
+
 # Week X (XX/XX/2026-XX/XX/2026) TEMPLATE (You can change the format to whatever the team likes better)
 **Planning and Progress Tracking**:
 1. [done] Person: Task (Links to PR)
