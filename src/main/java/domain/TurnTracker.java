@@ -31,6 +31,10 @@ public class TurnTracker {
         return this.currentDirection;
     }
 
+    void setCurrentDirection(int currentDirection) {
+        this.currentDirection = currentDirection;
+    }
+
     public void changeCurrentDirection() {
         this.currentDirection *= -1;
     }
