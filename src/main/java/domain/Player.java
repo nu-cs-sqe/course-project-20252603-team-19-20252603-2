@@ -45,4 +45,13 @@ public final class Player {
         }
         return hand.remove(index);
     }
+
+    public boolean hasCard(CardType type) {
+        for (Card card : hand) {
+            if (card.getCardType() == type) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

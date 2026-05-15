@@ -138,9 +138,9 @@
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | hand has DEFUSE, query DEFUSE | `true` | no |
-| TC2 | hand has DEFUSE, query ATTACK | `false` | no |
-| TC3 | empty hand, query DEFUSE | `false` | no |
+| TC1 | hand has DEFUSE, query DEFUSE | `true` | yes |
+| TC2 | hand has DEFUSE, query ATTACK | `false` | yes |
+| TC3 | empty hand, query DEFUSE | `false` | yes |
 
 ---
 

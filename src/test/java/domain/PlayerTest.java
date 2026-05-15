@@ -1,8 +1,10 @@
 package domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -129,5 +131,25 @@ class PlayerTest {
                     player.removeCardFromHand(0);
                 });
         assertEquals("player.removeCardFromHand.invalidIndex", ex.getMessage());
+    }
+
+    @Test
+    void hasCard_returnsTrue_whenCardOfTypeIsPresent() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        assertTrue(player.hasCard(CardType.DEFUSE));
+    }
+
+    @Test
+    void hasCard_returnsFalse_whenCardOfTypeIsAbsent() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        assertFalse(player.hasCard(CardType.ATTACK));
+    }
+
+    @Test
+    void hasCard_returnsFalse_onEmptyHand() {
+        Player player = new Player(0);
+        assertFalse(player.hasCard(CardType.DEFUSE));
     }
 }
