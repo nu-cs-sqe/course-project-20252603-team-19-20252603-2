@@ -19,12 +19,12 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `new GameEngine(2)` | constructs without exception | no |
-| TC2 | `new GameEngine(5)` | constructs without exception | no |
-| TC3 | `new GameEngine(1)` | throws `IllegalArgumentException` with message `"gameEngine.numPlayers.outOfRange"` | no |
-| TC4 | `new GameEngine(6)` | throws `IllegalArgumentException` with message `"gameEngine.numPlayers.outOfRange"` | no |
-| TC5 | `new GameEngine(0)` | throws `IllegalArgumentException` with message `"gameEngine.numPlayers.outOfRange"` | no |
-| TC6 | `new GameEngine(-1)` | throws `IllegalArgumentException` with message `"gameEngine.numPlayers.outOfRange"` | no |
+| TC1 | `new GameEngine(2)` | constructs without exception | yes |
+| TC2 | `new GameEngine(5)` | constructs without exception | yes |
+| TC3 | `new GameEngine(1)` | throws `IllegalArgumentException` with message `"gameEngine.numPlayers.outOfRange"` | yes |
+| TC4 | `new GameEngine(6)` | throws `IllegalArgumentException` with message `"gameEngine.numPlayers.outOfRange"` | yes |
+| TC5 | `new GameEngine(0)` | throws `IllegalArgumentException` with message `"gameEngine.numPlayers.outOfRange"` | yes |
+| TC6 | `new GameEngine(-1)` | throws `IllegalArgumentException` with message `"gameEngine.numPlayers.outOfRange"` | yes |
 | TC7 | `new GameEngine(2)` post-state | each player has 5 cards in hand (1 Defuse + 4 others, no Exploding Kitten) | no |
 | TC8 | `new GameEngine(2)` post-state | draw pile size is `43` (38 non-EK non-Defuse + (6-n) Defuses + (n-1) EK = 38 + 4 + 1) | no |
 | TC9 | `new GameEngine(5)` post-state | draw pile size is `31` (26 + 1 + 4) | no |
@@ -46,8 +46,8 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `new GameEngine(2).getNumPlayers()` | `2` | no |
-| TC2 | `new GameEngine(5).getNumPlayers()` | `5` | no |
+| TC1 | `new GameEngine(2).getNumPlayers()` | `2` | yes |
+| TC2 | `new GameEngine(5).getNumPlayers()` | `5` | yes |
 
 ---
 
