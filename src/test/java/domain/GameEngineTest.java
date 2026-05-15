@@ -55,4 +55,38 @@ class GameEngineTest {
                 () -> new GameEngine(-1));
         assertEquals("gameEngine.numPlayers.outOfRange", ex.getMessage());
     }
+
+    @Test
+    void getPlayer_returnsPlayerWithRequestedId_first() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        assertEquals(0, engine.getPlayer(0).getPlayerId());
+    }
+
+    @Test
+    void getPlayer_returnsPlayerWithRequestedId_last() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        assertEquals(1, engine.getPlayer(1).getPlayerId());
+    }
+
+    @Test
+    void getPlayer_negativeId_throwsIllegalArgumentException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                    engine.getPlayer(-1);
+                });
+        assertEquals("gameEngine.getPlayer.invalidId", ex.getMessage());
+    }
+
+    @Test
+    void getPlayer_idEqualToNumPlayers_throwsIllegalArgumentException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                    engine.getPlayer(MIN_PLAYERS);
+                });
+        assertEquals("gameEngine.getPlayer.invalidId", ex.getMessage());
+    }
 }

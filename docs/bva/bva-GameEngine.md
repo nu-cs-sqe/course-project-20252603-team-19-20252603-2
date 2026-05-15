@@ -66,10 +66,10 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `new GameEngine(2).getPlayer(0).getPlayerId()` | `0` | no |
-| TC2 | `new GameEngine(2).getPlayer(1).getPlayerId()` | `1` | no |
-| TC3 | `new GameEngine(2).getPlayer(-1)` | throws `IllegalArgumentException` with message `"gameEngine.getPlayer.invalidId"` | no |
-| TC4 | `new GameEngine(2).getPlayer(2)` | throws `IllegalArgumentException` with message `"gameEngine.getPlayer.invalidId"` | no |
+| TC1 | `new GameEngine(2).getPlayer(0).getPlayerId()` | `0` | yes |
+| TC2 | `new GameEngine(2).getPlayer(1).getPlayerId()` | `1` | yes |
+| TC3 | `new GameEngine(2).getPlayer(-1)` | throws `IllegalArgumentException` with message `"gameEngine.getPlayer.invalidId"` | yes |
+| TC4 | `new GameEngine(2).getPlayer(2)` | throws `IllegalArgumentException` with message `"gameEngine.getPlayer.invalidId"` | yes |
 
 ---
 
