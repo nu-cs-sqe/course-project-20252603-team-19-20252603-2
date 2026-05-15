@@ -88,8 +88,8 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `new GameEngine(2).getCurrentPlayerId()` | `0` | no |
-| TC2 | `new GameEngine(5).getCurrentPlayerId()` | `0` | no |
+| TC1 | `new GameEngine(2).getCurrentPlayerId()` | `0` | yes |
+| TC2 | `new GameEngine(5).getCurrentPlayerId()` | `0` | yes |
 
 ---
 

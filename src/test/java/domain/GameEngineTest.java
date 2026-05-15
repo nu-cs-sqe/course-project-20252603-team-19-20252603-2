@@ -89,4 +89,16 @@ class GameEngineTest {
                 });
         assertEquals("gameEngine.getPlayer.invalidId", ex.getMessage());
     }
+
+    @Test
+    void getCurrentPlayerId_atGameStart_minPlayers_returnsZero() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        assertEquals(0, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void getCurrentPlayerId_atGameStart_maxPlayers_returnsZero() {
+        GameEngine engine = new GameEngine(MAX_PLAYERS);
+        assertEquals(0, engine.getCurrentPlayerId());
+    }
 }

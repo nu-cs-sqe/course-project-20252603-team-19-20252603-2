@@ -13,6 +13,7 @@ public final class GameEngine {
 
     private final int numPlayers;
     private final List<Player> players;
+    private final TurnTracker turnTracker;
 
     public GameEngine(int numPlayers) {
         if (numPlayers < MIN_PLAYERS || numPlayers > MAX_PLAYERS) {
@@ -23,6 +24,8 @@ public final class GameEngine {
         for (int id = 0; id < numPlayers; id++) {
             this.players.add(new Player(id));
         }
+        this.turnTracker = new TurnTracker();
+        this.turnTracker.setNumTotalPlayers(numPlayers);
     }
 
     public int getNumPlayers() {
@@ -34,5 +37,9 @@ public final class GameEngine {
             throw new IllegalArgumentException(INVALID_PLAYER_ID_KEY);
         }
         return players.get(playerId);
+    }
+
+    public int getCurrentPlayerId() {
+        return turnTracker.getCurrentPlayer();
     }
 }
