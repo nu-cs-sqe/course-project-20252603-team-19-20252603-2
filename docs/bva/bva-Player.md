@@ -15,7 +15,7 @@
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `new Player(0)` | `getPlayerId()==0`, `isAlive()==true`, `getHandSize()==0` | no |
+| TC1 | `new Player(0)` | `getPlayerId()==0`, `isAlive()==true`, `getHandSize()==0` | yes |
 
 ---
 
@@ -34,8 +34,8 @@
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `new Player(0).getPlayerId()` | `0` | no |
-| TC2 | `new Player(1).getPlayerId()` | `1` | no |
+| TC1 | `new Player(0).getPlayerId()` | `0` | yes |
+| TC2 | `new Player(1).getPlayerId()` | `1` | yes |
 
 ---
 
