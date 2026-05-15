@@ -95,10 +95,10 @@
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `getCardAt(0)` on hand of 1 | the card | no |
-| TC2 | `getCardAt(-1)` on hand of 1 | throws `IndexOutOfBoundsException` with message `"player.getCardAt.invalidIndex"` | no |
-| TC3 | `getCardAt(1)` on hand of 1 | throws `IndexOutOfBoundsException` with message `"player.getCardAt.invalidIndex"` | no |
-| TC4 | `getCardAt(0)` on empty hand | throws `IndexOutOfBoundsException` with message `"player.getCardAt.invalidIndex"` | no |
+| TC1 | `getCardAt(0)` on hand of 1 | the card | yes |
+| TC2 | `getCardAt(-1)` on hand of 1 | throws `IndexOutOfBoundsException` with message `"player.getCardAt.invalidIndex"` | yes |
+| TC3 | `getCardAt(1)` on hand of 1 | throws `IndexOutOfBoundsException` with message `"player.getCardAt.invalidIndex"` | yes |
+| TC4 | `getCardAt(0)` on empty hand | throws `IndexOutOfBoundsException` with message `"player.getCardAt.invalidIndex"` | yes |
 
 ---
 

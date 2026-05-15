@@ -1,6 +1,7 @@
 package domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -46,5 +47,48 @@ class PlayerTest {
                 IllegalArgumentException.class,
                 () -> player.addCardToHand(null));
         assertEquals("player.addCardToHand.nullCard", ex.getMessage());
+    }
+
+    @Test
+    void getCardAt_returnsCardAtIndex() {
+        Player player = new Player(0);
+        Card defuse = new Card(CardType.DEFUSE);
+        player.addCardToHand(defuse);
+        assertSame(defuse, player.getCardAt(0));
+    }
+
+    @Test
+    void getCardAt_negativeIndex_throwsIndexOutOfBoundsException() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        IndexOutOfBoundsException ex = assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> {
+                    player.getCardAt(-1);
+                });
+        assertEquals("player.getCardAt.invalidIndex", ex.getMessage());
+    }
+
+    @Test
+    void getCardAt_indexEqualToSize_throwsIndexOutOfBoundsException() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        IndexOutOfBoundsException ex = assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> {
+                    player.getCardAt(1);
+                });
+        assertEquals("player.getCardAt.invalidIndex", ex.getMessage());
+    }
+
+    @Test
+    void getCardAt_emptyHand_throwsIndexOutOfBoundsException() {
+        Player player = new Player(0);
+        IndexOutOfBoundsException ex = assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> {
+                    player.getCardAt(0);
+                });
+        assertEquals("player.getCardAt.invalidIndex", ex.getMessage());
     }
 }

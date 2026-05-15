@@ -6,6 +6,7 @@ import java.util.List;
 public final class Player {
 
     private static final String NULL_CARD_KEY = "player.addCardToHand.nullCard";
+    private static final String CARD_AT_INVALID_INDEX_KEY = "player.getCardAt.invalidIndex";
 
     private final int playerId;
     private final List<Card> hand;
@@ -28,5 +29,12 @@ public final class Player {
 
     public int getHandSize() {
         return hand.size();
+    }
+
+    public Card getCardAt(int index) {
+        if (index < 0 || index >= hand.size()) {
+            throw new IndexOutOfBoundsException(CARD_AT_INVALID_INDEX_KEY);
+        }
+        return hand.get(index);
     }
 }
