@@ -54,8 +54,8 @@
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `addCardToHand(new Card(DEFUSE))` on empty hand | `getHandSize()==1` | no |
-| TC2 | `addCardToHand(null)` | throws `IllegalArgumentException` with message `"player.addCardToHand.nullCard"` | no |
+| TC1 | `addCardToHand(new Card(DEFUSE))` on empty hand | `getHandSize()==1` | yes |
+| TC2 | `addCardToHand(null)` | throws `IllegalArgumentException` with message `"player.addCardToHand.nullCard"` | yes |
 
 ---
 
@@ -74,9 +74,9 @@
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | new player | `0` | no |
-| TC2 | after one `addCardToHand` | `1` | no |
-| TC3 | after two `addCardToHand` | `2` | no |
+| TC1 | new player | `0` | yes |
+| TC2 | after one `addCardToHand` | `1` | yes |
+| TC3 | after two `addCardToHand` | `2` | yes |
 
 ---
 
