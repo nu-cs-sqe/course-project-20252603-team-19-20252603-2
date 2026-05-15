@@ -16,27 +16,26 @@ Main Flow:
 
 1. Player clicks "Start Game".
 2. System asks for the total number of players.
-3. Player enters the number of players.
-   (Your team can also add "asking for player name" feature, etc.)
-4. System shuffles the deck.
-5. System removes all Exploding Kitten cards.
-6. System deals 7 cards to each player.
-7. System gives each player 1 Defuse card.
-8. System returns the correct number of Exploding Kitten cards to the deck (1 less than the number of players).
-9. System shuffles the deck again.
-10. System sets the initial turn order.
+3. Player enters the number of players (2–5).
+4. System creates one player seat per requested player, numbered 0..N-1.
+5. System sets aside all 4 Exploding Kittens and all 6 Defuses from the full deck.
+6. System shuffles the remaining 46 non-Exploding-Kitten, non-Defuse cards.
+7. System deals each player 4 cards from that shuffled pool plus 1 Defuse, for a starting hand of 5 cards.
+8. System returns the unused (6 − N) Defuses and (N − 1) Exploding Kittens to the draw pile.
+9. System shuffles the draw pile.
+10. System sets the initial turn to player 0, direction = forward (+1).
 
 Alternate Flows:
 
-3.a The number of players entered is invalid (not in range 2–4).
-  3.a.1 System displays an "invalid player count" message.
+3.a The number of players entered is outside the range 2–5.
+  3.a.1 System displays the i18n-keyed "invalid player count" message (`gameEngine.numPlayers.outOfRange`).
   3.a.2 Resumes at step 2.
 
 Postconditions:
 
-- Each player has 8 cards (7 random + 1 Defuse).
-- The deck contains the correct number of Exploding Kittens (players − 1).
-- The game is ready for the first turn.
+- Each of the N players has exactly 5 cards in hand, including a Defuse and no Exploding Kitten.
+- The draw pile holds (46 − 4·N) random cards + (6 − N) Defuses + (N − 1) Exploding Kittens, shuffled — 43 cards for 2 players, 31 cards for 5 players.
+- The game is ready for the first turn, starting with player 0.
 
 ---
 
