@@ -54,4 +54,13 @@ public final class Player {
         }
         return false;
     }
+
+    public int getIndexOfCard(CardType type) {
+        for (int i = 0; i < hand.size(); i++) {
+            if (hand.get(i).getCardType() == type) {
+                return i;
+            }
+        }
+        return -1;
+    }
 }

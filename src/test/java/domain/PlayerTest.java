@@ -152,4 +152,33 @@ class PlayerTest {
         Player player = new Player(0);
         assertFalse(player.hasCard(CardType.DEFUSE));
     }
+
+    @Test
+    void getIndexOfCard_returnsIndex_whenCardOfTypeIsPresent() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        player.addCardToHand(new Card(CardType.ATTACK));
+        assertEquals(1, player.getIndexOfCard(CardType.ATTACK));
+    }
+
+    @Test
+    void getIndexOfCard_returnsNegativeOne_whenCardOfTypeIsAbsent() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        assertEquals(-1, player.getIndexOfCard(CardType.ATTACK));
+    }
+
+    @Test
+    void getIndexOfCard_returnsFirstIndex_whenDuplicatesPresent() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        assertEquals(0, player.getIndexOfCard(CardType.DEFUSE));
+    }
+
+    @Test
+    void getIndexOfCard_returnsNegativeOne_onEmptyHand() {
+        Player player = new Player(0);
+        assertEquals(-1, player.getIndexOfCard(CardType.DEFUSE));
+    }
 }

@@ -159,10 +159,10 @@
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | hand `[DEFUSE, ATTACK]`, query ATTACK | `1` | no |
-| TC2 | hand `[DEFUSE]`, query ATTACK | `-1` | no |
-| TC3 | hand `[DEFUSE, DEFUSE]`, query DEFUSE | `0` | no |
-| TC4 | empty hand, query DEFUSE | `-1` | no |
+| TC1 | hand `[DEFUSE, ATTACK]`, query ATTACK | `1` | yes |
+| TC2 | hand `[DEFUSE]`, query ATTACK | `-1` | yes |
+| TC3 | hand `[DEFUSE, DEFUSE]`, query DEFUSE | `0` | yes |
+| TC4 | empty hand, query DEFUSE | `-1` | yes |
 
 ---
 
