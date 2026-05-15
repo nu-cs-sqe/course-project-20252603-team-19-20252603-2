@@ -74,6 +74,24 @@
 
 ## GameEngine Class
 
+### Data Members
+- `numPlayers`: `int` — immutable; supplied at construction; must be in `[2, 5]`.
+- `players`: `List<Player>` — one `Player` per id `0..numPlayers-1`.
+- `deck`: `Deck` — draw and discard piles; rigged during setup with
+  `(numPlayers - 1)` Exploding Kittens and `(6 - numPlayers)` remaining Defuses.
+- `turnTracker`: `TurnTracker` — tracks whose turn it is.
+
+### Methods
+- `GameEngine(int numPlayers)` — constructor; throws `IllegalArgumentException` if
+  `numPlayers` is outside `[2, 5]`. Performs the full setup: builds a deck with
+  no Exploding Kittens and only `(6 - numPlayers)` Defuses initially, deals
+  `1 Defuse + 4 random` cards to each player, inserts `(numPlayers - 1)`
+  Exploding Kittens back into the draw pile, then shuffles.
+- `getNumPlayers(): int`
+- `getPlayer(int playerId): Player` — throws `IllegalArgumentException` if id
+  is outside `[0, numPlayers)`.
+- `getCurrentPlayerId(): int`
+- `getDrawPileSize(): int`
 
 ---
 
