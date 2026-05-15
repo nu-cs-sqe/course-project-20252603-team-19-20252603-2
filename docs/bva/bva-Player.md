@@ -117,9 +117,9 @@
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `removeCardFromHand(0)` on hand of 1 | returns the card, `getHandSize()==0` | no |
-| TC2 | `removeCardFromHand(-1)` on hand of 1 | throws `IndexOutOfBoundsException` with message `"player.removeCardFromHand.invalidIndex"` | no |
-| TC3 | `removeCardFromHand(0)` on empty hand | throws `IndexOutOfBoundsException` with message `"player.removeCardFromHand.invalidIndex"` | no |
+| TC1 | `removeCardFromHand(0)` on hand of 1 | returns the card, `getHandSize()==0` | yes |
+| TC2 | `removeCardFromHand(-1)` on hand of 1 | throws `IndexOutOfBoundsException` with message `"player.removeCardFromHand.invalidIndex"` | yes |
+| TC3 | `removeCardFromHand(0)` on empty hand | throws `IndexOutOfBoundsException` with message `"player.removeCardFromHand.invalidIndex"` | yes |
 
 ---
 

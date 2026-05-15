@@ -7,6 +7,7 @@ public final class Player {
 
     private static final String NULL_CARD_KEY = "player.addCardToHand.nullCard";
     private static final String CARD_AT_INVALID_INDEX_KEY = "player.getCardAt.invalidIndex";
+    private static final String REMOVE_INVALID_INDEX_KEY = "player.removeCardFromHand.invalidIndex";
 
     private final int playerId;
     private final List<Card> hand;
@@ -36,5 +37,12 @@ public final class Player {
             throw new IndexOutOfBoundsException(CARD_AT_INVALID_INDEX_KEY);
         }
         return hand.get(index);
+    }
+
+    public Card removeCardFromHand(int index) {
+        if (index < 0 || index >= hand.size()) {
+            throw new IndexOutOfBoundsException(REMOVE_INVALID_INDEX_KEY);
+        }
+        return hand.remove(index);
     }
 }

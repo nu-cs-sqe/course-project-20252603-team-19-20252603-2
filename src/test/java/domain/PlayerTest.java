@@ -91,4 +91,43 @@ class PlayerTest {
                 });
         assertEquals("player.getCardAt.invalidIndex", ex.getMessage());
     }
+
+    @Test
+    void removeCardFromHand_returnsRemovedCard() {
+        Player player = new Player(0);
+        Card defuse = new Card(CardType.DEFUSE);
+        player.addCardToHand(defuse);
+        assertSame(defuse, player.removeCardFromHand(0));
+    }
+
+    @Test
+    void removeCardFromHand_decrementsHandSize() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        player.removeCardFromHand(0);
+        assertEquals(0, player.getHandSize());
+    }
+
+    @Test
+    void removeCardFromHand_negativeIndex_throwsIndexOutOfBoundsException() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        IndexOutOfBoundsException ex = assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> {
+                    player.removeCardFromHand(-1);
+                });
+        assertEquals("player.removeCardFromHand.invalidIndex", ex.getMessage());
+    }
+
+    @Test
+    void removeCardFromHand_emptyHand_throwsIndexOutOfBoundsException() {
+        Player player = new Player(0);
+        IndexOutOfBoundsException ex = assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> {
+                    player.removeCardFromHand(0);
+                });
+        assertEquals("player.removeCardFromHand.invalidIndex", ex.getMessage());
+    }
 }
