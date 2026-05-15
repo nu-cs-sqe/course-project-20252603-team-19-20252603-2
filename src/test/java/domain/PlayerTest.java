@@ -181,4 +181,26 @@ class PlayerTest {
         Player player = new Player(0);
         assertEquals(-1, player.getIndexOfCard(CardType.DEFUSE));
     }
+
+    @Test
+    void isAlive_newPlayer_returnsTrue() {
+        assertTrue(new Player(0).isAlive());
+    }
+
+    @Test
+    void isAlive_afterMarkDead_returnsFalse() {
+        Player player = new Player(0);
+        player.markDead();
+        assertFalse(player.isAlive());
+    }
+
+    @Test
+    void markDead_alreadyDead_throwsIllegalStateException() {
+        Player player = new Player(0);
+        player.markDead();
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> player.markDead());
+        assertEquals("player.markDead.alreadyDead", ex.getMessage());
+    }
 }

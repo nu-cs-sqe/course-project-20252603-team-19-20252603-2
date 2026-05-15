@@ -181,8 +181,8 @@
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | new player | `true` | no |
-| TC2 | player after `markDead()` | `false` | no |
+| TC1 | new player | `true` | yes |
+| TC2 | player after `markDead()` | `false` | yes |
 
 ---
 
@@ -201,8 +201,8 @@
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `markDead()` on alive player | `isAlive()==false` | no |
-| TC2 | `markDead()` on already-dead player | throws `IllegalStateException` with message `"player.markDead.alreadyDead"` | no |
+| TC1 | `markDead()` on alive player | `isAlive()==false` | yes |
+| TC2 | `markDead()` on already-dead player | throws `IllegalStateException` with message `"player.markDead.alreadyDead"` | yes |
 
 ---
 

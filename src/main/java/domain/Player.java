@@ -8,13 +8,16 @@ public final class Player {
     private static final String NULL_CARD_KEY = "player.addCardToHand.nullCard";
     private static final String CARD_AT_INVALID_INDEX_KEY = "player.getCardAt.invalidIndex";
     private static final String REMOVE_INVALID_INDEX_KEY = "player.removeCardFromHand.invalidIndex";
+    private static final String ALREADY_DEAD_KEY = "player.markDead.alreadyDead";
 
     private final int playerId;
     private final List<Card> hand;
+    private boolean alive;
 
     public Player(int playerId) {
         this.playerId = playerId;
         this.hand = new ArrayList<>();
+        this.alive = true;
     }
 
     public int getPlayerId() {
@@ -62,5 +65,16 @@ public final class Player {
             }
         }
         return -1;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void markDead() {
+        if (!alive) {
+            throw new IllegalStateException(ALREADY_DEAD_KEY);
+        }
+        alive = false;
     }
 }
