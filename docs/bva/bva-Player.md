@@ -1,150 +1,208 @@
 # BVA Analysis for Player Class
 
-## Method 1: ```public Player(String name)```
+## Method 1: ```public Player(int playerId)```
+
 ### Step 1-3 Results
-|        | Input                            | (if more to consider for input) | Output                                |
-|--------|----------------------------------|---------------------------------|---------------------------------------|
-| Step 1 | Player name as a `String` value  |                                 | New player starts alive with empty hand |
-| Step 2 | Reference type (`String`)        |                                 | `Player` instance                     |
-| Step 3 | `"Alice"` (representative value) |                                 | `Player` with `name="Alice"`          |
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | Integer player id | New player starts alive with empty hand |
+| Step 2 | `int` | `Player` instance |
+| Step 3 | id `0`, `1` (representative) | `Player` with that id, `isAlive()==true`, `getHandSize()==0` |
 
 ### Step 4:
 ##### All-combination or each-choice: each-choice
 
-| Test Case # | System under test      | Expected output                              | Implemented? |
-|-------------|------------------------|----------------------------------------------|--------------|
-| TC1         | `new Player("Alice")`  | `getName()` returns `"Alice"`                 | yes          |
-| TC2         | `new Player("Alice")`  | `isAlive()` is `true`, `getHand().size()==0` | yes          |
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `new Player(0)` | `getPlayerId()==0`, `isAlive()==true`, `getHandSize()==0` | no |
 
 ---
 
-## Method 2: ```public String getName()```
+## Method 2: ```public int getPlayerId()```
+
 ### Step 1-3 Results
-|        | Input                   | (if more to consider for input) | Output        |
-|--------|-------------------------|---------------------------------|---------------|
-| Step 1 | none (instance query)   |                                 | Player name   |
-| Step 2 | n/a                     |                                 | `String`      |
-| Step 3 | instance named `"Alice"`|                                 | `"Alice"`     |
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | none (instance query) | Constructor-supplied id |
+| Step 2 | n/a | `int` |
+| Step 3 | id `0`, `1` | same `int` returned |
 
 ### Step 4:
 ##### All-combination or each-choice: each-choice
 
-| Test Case # | System under test      | Expected output | Implemented? |
-|-------------|------------------------|-----------------|--------------|
-| TC1         | `new Player("Alice")`  | `"Alice"`       | yes          |
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `new Player(0).getPlayerId()` | `0` | no |
+| TC2 | `new Player(1).getPlayerId()` | `1` | no |
 
 ---
 
-## Method 3: ```public boolean isAlive()```
+## Method 3: ```public void addCardToHand(Card card)```
+
 ### Step 1-3 Results
-|        | Input                                   | (if more to consider for input) | Output    |
-|--------|-----------------------------------------|---------------------------------|-----------|
-| Step 1 | none (instance query over alive status) |                                 | alive flag |
-| Step 2 | n/a                                     |                                 | `boolean` |
-| Step 3 | before and after `explode()`            |                                 | `true` / `false` |
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | Card to add (or `null`) | Hand grows by one, or `IllegalArgumentException` |
+| Step 2 | Reference type (`Card`, possibly `null`) | mutated hand / exception |
+| Step 3 | valid `Card`, `null` | size +1 / `IllegalArgumentException` with i18n key `player.addCardToHand.nullCard` |
 
 ### Step 4:
 ##### All-combination or each-choice: each-choice
 
-| Test Case # | System under test                         | Expected output | Implemented? |
-|-------------|-------------------------------------------|-----------------|--------------|
-| TC1         | new player before `explode()`             | `true`          | yes          |
-| TC2         | player after one `explode()`              | `false`         | yes          |
-| TC3         | second `explode()` on already-dead player | throws `IllegalStateException` with message `"Player is already dead"` | yes |
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `addCardToHand(new Card(DEFUSE))` on empty hand | `getHandSize()==1` | no |
+| TC2 | `addCardToHand(null)` | throws `IllegalArgumentException` with message `"player.addCardToHand.nullCard"` | no |
 
 ---
 
-## Method 4: ```public List<CardType> getHand()```
+## Method 4: ```public int getHandSize()```
+
 ### Step 1-3 Results
-|        | Input                         | (if more to consider for input) | Output                                      |
-|--------|-------------------------------|---------------------------------|---------------------------------------------|
-| Step 1 | none (instance query)         |                                 | Current hand contents as read-only list      |
-| Step 2 | n/a                           |                                 | `List<CardType>`                             |
-| Step 3 | empty hand, one card in hand  |                                 | size `0` / size `1`; list is unmodifiable    |
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | none (instance query) | Number of cards in hand |
+| Step 2 | n/a | `int` |
+| Step 3 | empty hand, hand of size 1, hand of size 2 | `0`, `1`, `2` |
 
 ### Step 4:
 ##### All-combination or each-choice: each-choice
 
-| Test Case # | System under test                      | Expected output                         | Implemented? |
-|-------------|----------------------------------------|-----------------------------------------|--------------|
-| TC1         | new player                             | `getHand().size()==0`                   | yes          |
-| TC2         | after `addCard(DEFUSE)`                | `getHand().size()==1`                   | yes          |
-| TC3         | attempt `getHand().add(ATTACK)`        | throws `UnsupportedOperationException`  | yes          |
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | new player | `0` | no |
+| TC2 | after one `addCardToHand` | `1` | no |
+| TC3 | after two `addCardToHand` | `2` | no |
 
 ---
 
-## Method 5: ```public void addCard(CardType card)```
+## Method 5: ```public Card getCardAt(int index)```
+
 ### Step 1-3 Results
-|        | Input                               | (if more to consider for input) | Output                                                 |
-|--------|-------------------------------------|---------------------------------|--------------------------------------------------------|
-| Step 1 | Card to add, including invalid null |                                 | Hand size increments or exception                      |
-| Step 2 | Enum reference (`CardType` / `null`) |                                | Mutated hand / `IllegalArgumentException`              |
-| Step 3 | `DEFUSE`, `ATTACK`, `NOPE`, `null`  |                                 | size +1 per valid input / exception on null            |
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | hand index | `Card` at that index, or exception |
+| Step 2 | `int`, hand `List<Card>` | `Card` / `IndexOutOfBoundsException` |
+| Step 3 | index `-1`, `0`, `size-1`, `size`, on empty hand | exception / `Card` / `Card` / exception / exception |
 
 ### Step 4:
 ##### All-combination or each-choice: each-choice
 
-| Test Case # | System under test                             | Expected output                                            | Implemented? |
-|-------------|-----------------------------------------------|------------------------------------------------------------|--------------|
-| TC1         | add one valid card (`DEFUSE`)                 | hand size becomes `1`                                      | yes          |
-| TC2         | add multiple valid cards (`DEFUSE`, `ATTACK`, `NOPE`) | hand size becomes `3`                         | yes          |
-| TC3         | `addCard(null)`                               | throws `IllegalArgumentException` with message `"Card cannot be null"` | yes |
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `getCardAt(0)` on hand of 1 | the card | no |
+| TC2 | `getCardAt(-1)` on hand of 1 | throws `IndexOutOfBoundsException` with message `"player.getCardAt.invalidIndex"` | no |
+| TC3 | `getCardAt(1)` on hand of 1 | throws `IndexOutOfBoundsException` with message `"player.getCardAt.invalidIndex"` | no |
+| TC4 | `getCardAt(0)` on empty hand | throws `IndexOutOfBoundsException` with message `"player.getCardAt.invalidIndex"` | no |
 
 ---
 
-## Method 6: ```public void removeCard(CardType card)```
+## Method 6: ```public Card removeCardFromHand(int index)```
+
 ### Step 1-3 Results
-|        | Input                                       | (if more to consider for input) | Output                                                |
-|--------|---------------------------------------------|---------------------------------|-------------------------------------------------------|
-| Step 1 | Card to remove from current hand             |                                 | Hand size decrements or exception                     |
-| Step 2 | Enum reference (`CardType` / `null`)         |                                 | Mutated hand / `IllegalArgumentException`             |
-| Step 3 | present card, absent card, empty hand, null  |                                 | size -1 / exception                                   |
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | hand index | `Card` removed, or exception |
+| Step 2 | `int`, hand `List<Card>` | `Card` / `IndexOutOfBoundsException` |
+| Step 3 | index `-1`, `0`, `size-1`, `size`, on empty hand | exception / `Card` / `Card` / exception / exception |
 
 ### Step 4:
 ##### All-combination or each-choice: each-choice
 
-| Test Case # | System under test                   | Expected output                                                      | Implemented? |
-|-------------|-------------------------------------|----------------------------------------------------------------------|--------------|
-| TC1         | remove card that exists             | card removed; hand size decreases                                   | yes          |
-| TC2         | remove card not in hand             | `IllegalArgumentException` with message `"Card not in hand: ATTACK"` | yes          |
-| TC3         | remove from empty hand              | `IllegalArgumentException` with message `"Card not in hand: DEFUSE"` | yes          |
-| TC4         | `removeCard(null)`                  | `IllegalArgumentException` with message `"Card not in hand: null"`   | yes          |
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `removeCardFromHand(0)` on hand of 1 | returns the card, `getHandSize()==0` | no |
+| TC2 | `removeCardFromHand(-1)` on hand of 1 | throws `IndexOutOfBoundsException` with message `"player.removeCardFromHand.invalidIndex"` | no |
+| TC3 | `removeCardFromHand(0)` on empty hand | throws `IndexOutOfBoundsException` with message `"player.removeCardFromHand.invalidIndex"` | no |
 
 ---
 
-## Method 7: ```public boolean hasCard(CardType card)```
+## Method 7: ```public boolean hasCard(CardType type)```
+
 ### Step 1-3 Results
-|        | Input                        | (if more to consider for input) | Output     |
-|--------|------------------------------|---------------------------------|------------|
-| Step 1 | Card to check for containment |                                 | Presence flag |
-| Step 2 | Enum reference (`CardType`)  |                                 | `boolean`  |
-| Step 3 | present card, absent card    |                                 | `true` / `false` |
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | CardType to look for | Boolean presence in hand |
+| Step 2 | Enum reference (`CardType`) | `boolean` |
+| Step 3 | type present, type absent, empty hand | `true` / `false` / `false` |
 
 ### Step 4:
 ##### All-combination or each-choice: each-choice
 
-| Test Case # | System under test          | Expected output | Implemented? |
-|-------------|----------------------------|-----------------|--------------|
-| TC1         | card exists in hand         | `true`          | yes          |
-| TC2         | card absent from hand       | `false`         | yes          |
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | hand has DEFUSE, query DEFUSE | `true` | no |
+| TC2 | hand has DEFUSE, query ATTACK | `false` | no |
+| TC3 | empty hand, query DEFUSE | `false` | no |
 
 ---
 
-## Method 8: ```public void explode()```
+## Method 8: ```public int getIndexOfCard(CardType type)```
+
 ### Step 1-3 Results
-|        | Input                                     | (if more to consider for input) | Output                                                   |
-|--------|-------------------------------------------|---------------------------------|----------------------------------------------------------|
-| Step 1 | none; depends on current `alive` state    |                                 | player marked dead or exception                          |
-| Step 2 | n/a                                       |                                 | state mutation / `IllegalStateException`                 |
-| Step 3 | player alive, player already dead         |                                 | `alive=false` / exception with dead-state message        |
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | CardType to find | First index of card of that type, or `-1` |
+| Step 2 | Enum reference (`CardType`) | `int` |
+| Step 3 | type at index 0, type at index 1, type absent, duplicates of type, empty hand | `0` / `1` / `-1` / first index / `-1` |
 
 ### Step 4:
 ##### All-combination or each-choice: each-choice
 
-| Test Case # | System under test                  | Expected output                                                  | Implemented? |
-|-------------|------------------------------------|------------------------------------------------------------------|--------------|
-| TC1         | first `explode()` on alive player  | `isAlive()` becomes `false`                                      | yes          |
-| TC2         | second `explode()` call            | throws `IllegalStateException` with message `"Player is already dead"` | yes |
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | hand `[DEFUSE, ATTACK]`, query ATTACK | `1` | no |
+| TC2 | hand `[DEFUSE]`, query ATTACK | `-1` | no |
+| TC3 | hand `[DEFUSE, DEFUSE]`, query DEFUSE | `0` | no |
+| TC4 | empty hand, query DEFUSE | `-1` | no |
+
+---
+
+## Method 9: ```public boolean isAlive()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | none (instance query) | Alive flag |
+| Step 2 | n/a | `boolean` |
+| Step 3 | new player, after `markDead()` | `true` / `false` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | new player | `true` | no |
+| TC2 | player after `markDead()` | `false` | no |
+
+---
+
+## Method 10: ```public void markDead()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | none; depends on alive state | player set dead, or exception |
+| Step 2 | n/a | state mutation / `IllegalStateException` |
+| Step 3 | alive player, already dead player | `isAlive()==false` / `IllegalStateException` with key `player.markDead.alreadyDead` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `markDead()` on alive player | `isAlive()==false` | no |
+| TC2 | `markDead()` on already-dead player | throws `IllegalStateException` with message `"player.markDead.alreadyDead"` | no |
 
 ---
 
