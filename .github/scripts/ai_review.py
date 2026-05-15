@@ -27,6 +27,7 @@ DEEPSEEK_URL = "https://api.deepseek.com/chat/completions"
 MODEL = "deepseek-v4-pro"
 MAX_PROMPT_CHARS = 100_000
 TEMPERATURE = 0.2
+MAX_TOKENS = 4096
 
 SYSTEM_PROMPT = """\
 You are an AI code reviewer for a Northwestern CS 380 (Software Quality
@@ -108,7 +109,6 @@ def gather_inputs(base_sha, head_sha):
 
     return {
         "standards": read_text("docs/STANDARDS.md"),
-        "design_doc": read_text("docs/design/design-doc.md"),
         "use_cases": read_text("docs/use-cases/use-cases.md"),
         "bva_template": (
             read_text("docs/bva/bva-template.md")
@@ -143,10 +143,7 @@ def build_prompt(inputs):
     bva_inventory = "\n".join(f"- {n}" for n in inputs["bva_files"]) or "(empty)"
     base = (
         "# STANDARDS\n\n" + inputs["standards"]
-        + "\n\n# DESIGN DOC (binding spec for class data members + methods)\n\n"
-        + inputs["design_doc"]
-        + "\n\n# USE-CASES (player-facing flows; companion to the design doc, "
-        "NOT the structural spec)\n\n" + inputs["use_cases"]
+        + "\n\n# USE-CASES SPEC\n\n" + inputs["use_cases"]
         + "\n\n# BVA TEMPLATE / CONVENTION\n\n" + inputs["bva_template"]
         + "\n\n# BVA INVENTORY (files currently in docs/bva/)\n\n"
         + bva_inventory
@@ -190,6 +187,7 @@ def call_deepseek(api_key, prompt):
             {"role": "user", "content": prompt},
         ],
         "temperature": TEMPERATURE,
+        "max_tokens": MAX_TOKENS,
         "stream": False,
     }).encode("utf-8")
     req = urllib.request.Request(
@@ -199,15 +197,9 @@ def call_deepseek(api_key, prompt):
             "Content-Type": "application/json",
         },
     )
-    with urllib.request.urlopen(req, timeout=300) as resp:
+    with urllib.request.urlopen(req, timeout=120) as resp:
         data = json.loads(resp.read().decode("utf-8"))
-    choice = data["choices"][0]
-    print(
-        f"DeepSeek finish_reason: {choice.get('finish_reason', 'unknown')}",
-        file=sys.stderr,
-    )
-    msg = choice["message"]
-    return msg.get("content") or msg.get("reasoning_content") or ""
+    return data["choices"][0]["message"]["content"]
 
 
 def find_sticky_comment(repo, pr):

@@ -1,8 +1,4 @@
-# BVA Analysis for `Card`
-
-This file holds the BVA analysis for every public method of the `Card` class. Each public method has its own `## Method N:` section; new methods append a new section as the class grows.
-
----
+# BVA Analysis for Card constructor
 
 ## Method 1: ```public Card(CardType cardType)```
 ### Step 1-3 Results
