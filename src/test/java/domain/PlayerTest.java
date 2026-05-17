@@ -2,137 +2,205 @@ package domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class PlayerTest {
+class PlayerTest {
 
-    private static final int THREE_CARDS = 3;
-    private Player player;
-
-    @BeforeEach
-    void setUp() {
-        player = new Player("Alice");
+    @Test
+    void getPlayerId_returnsIdPassedAtConstruction_zero() {
+        Player player = new Player(0);
+        assertEquals(0, player.getPlayerId());
     }
 
-    // Name
     @Test
-    void testPlayerHasName() {
-        assertEquals("Alice", player.getName());
+    void getPlayerId_returnsIdPassedAtConstruction_one() {
+        Player player = new Player(1);
+        assertEquals(1, player.getPlayerId());
     }
 
-    // Alive by default
     @Test
-    void testPlayerIsAliveByDefault() {
-        assertTrue(player.isAlive());
+    void newPlayer_handIsEmpty() {
+        assertEquals(0, new Player(0).getHandSize());
     }
 
-    // Hand starts empty
     @Test
-    void testHandIsEmptyAtStart() {
-        assertEquals(0, player.getHand().size());
+    void addCardToHand_increasesHandSize_byOne() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        assertEquals(1, player.getHandSize());
     }
 
-    // BVA: add 1 card
     @Test
-    void testAddOneCard() {
-        player.addCard(CardType.DEFUSE);
-        assertEquals(1, player.getHand().size());
+    void addCardToHand_increasesHandSize_byTwo() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        player.addCardToHand(new Card(CardType.ATTACK));
+        assertEquals(2, player.getHandSize());
     }
 
-    // BVA: add multiple cards
     @Test
-    void testAddMultipleCards() {
-        player.addCard(CardType.DEFUSE);
-        player.addCard(CardType.ATTACK);
-        player.addCard(CardType.NOPE);
-        assertEquals(THREE_CARDS, player.getHand().size());
-    }
-
-    // BVA: add null card (invalid)
-    @Test
-    void testAddNullCardThrowsException() {
-        IllegalArgumentException exception = assertThrows(
+    void addCardToHand_null_throwsIllegalArgumentException() {
+        Player player = new Player(0);
+        IllegalArgumentException ex = assertThrows(
                 IllegalArgumentException.class,
-                () -> player.addCard(null));
-        assertEquals("Card cannot be null", exception.getMessage());
+                () -> player.addCardToHand(null));
+        assertEquals("player.addCardToHand.nullCard", ex.getMessage());
     }
 
-    // BVA: remove a card that exists
     @Test
-    void testRemoveCardThatExists() {
-        player.addCard(CardType.DEFUSE);
-        player.removeCard(CardType.DEFUSE);
-        assertEquals(0, player.getHand().size());
+    void getCardAt_returnsCardAtIndex() {
+        Player player = new Player(0);
+        Card defuse = new Card(CardType.DEFUSE);
+        player.addCardToHand(defuse);
+        assertSame(defuse, player.getCardAt(0));
     }
 
-    // BVA: remove a card not in hand
     @Test
-    void testRemoveCardNotInHandThrowsException() {
-        IllegalArgumentException exception =
-                assertThrows(
-                        IllegalArgumentException.class,
-                        () -> player.removeCard(CardType.ATTACK));
-        assertEquals("Card not in hand: ATTACK", exception.getMessage());
+    void getCardAt_negativeIndex_throwsIndexOutOfBoundsException() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        IndexOutOfBoundsException ex = assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> {
+                    player.getCardAt(-1);
+                });
+        assertEquals("player.getCardAt.invalidIndex", ex.getMessage());
     }
 
-    // BVA: remove from empty hand
     @Test
-    void testRemoveFromEmptyHandThrowsException() {
-        IllegalArgumentException exception =
-                assertThrows(
-                        IllegalArgumentException.class,
-                        () -> player.removeCard(CardType.DEFUSE));
-        assertEquals("Card not in hand: DEFUSE", exception.getMessage());
+    void getCardAt_indexEqualToSize_throwsIndexOutOfBoundsException() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        IndexOutOfBoundsException ex = assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> {
+                    player.getCardAt(1);
+                });
+        assertEquals("player.getCardAt.invalidIndex", ex.getMessage());
     }
 
-    // BVA: remove null card (invalid)
     @Test
-    void testRemoveNullCardThrowsException() {
-        IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> player.removeCard(null));
-        assertEquals("Card not in hand: null", exception.getMessage());
+    void getCardAt_emptyHand_throwsIndexOutOfBoundsException() {
+        Player player = new Player(0);
+        IndexOutOfBoundsException ex = assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> {
+                    player.getCardAt(0);
+                });
+        assertEquals("player.getCardAt.invalidIndex", ex.getMessage());
     }
 
-    // Explode sets player to dead
     @Test
-    void testExplodeKillsPlayer() {
-        player.explode();
-        assertFalse(player.isAlive());
+    void removeCardFromHand_returnsRemovedCard() {
+        Player player = new Player(0);
+        Card defuse = new Card(CardType.DEFUSE);
+        player.addCardToHand(defuse);
+        assertSame(defuse, player.removeCardFromHand(0));
     }
 
-    // BVA: exploding a dead player throws exception
     @Test
-    void testExplodeAlreadyDeadPlayerThrowsException() {
-        player.explode();
-        IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
-                () -> player.explode());
-        assertEquals("Player is already dead", exception.getMessage());
+    void removeCardFromHand_decrementsHandSize() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        player.removeCardFromHand(0);
+        assertEquals(0, player.getHandSize());
     }
 
-    // hasCard returns true if card in hand
     @Test
-    void testHasCardReturnsTrueIfPresent() {
-        player.addCard(CardType.DEFUSE);
+    void removeCardFromHand_negativeIndex_throwsIndexOutOfBoundsException() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        IndexOutOfBoundsException ex = assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> {
+                    player.removeCardFromHand(-1);
+                });
+        assertEquals("player.removeCardFromHand.invalidIndex", ex.getMessage());
+    }
+
+    @Test
+    void removeCardFromHand_emptyHand_throwsIndexOutOfBoundsException() {
+        Player player = new Player(0);
+        IndexOutOfBoundsException ex = assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> {
+                    player.removeCardFromHand(0);
+                });
+        assertEquals("player.removeCardFromHand.invalidIndex", ex.getMessage());
+    }
+
+    @Test
+    void hasCard_returnsTrue_whenCardOfTypeIsPresent() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
         assertTrue(player.hasCard(CardType.DEFUSE));
     }
 
-    // hasCard returns false if card not in hand
     @Test
-    void testHasCardReturnsFalseIfAbsent() {
+    void hasCard_returnsFalse_whenCardOfTypeIsAbsent() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        assertFalse(player.hasCard(CardType.ATTACK));
+    }
+
+    @Test
+    void hasCard_returnsFalse_onEmptyHand() {
+        Player player = new Player(0);
         assertFalse(player.hasCard(CardType.DEFUSE));
     }
 
-    // BVA: getHand is read-only
     @Test
-    void testGetHandReturnsUnmodifiableView() {
-        player.addCard(CardType.DEFUSE);
-        assertThrows(
-                UnsupportedOperationException.class,
-                () -> player.getHand().add(CardType.ATTACK));
+    void getIndexOfCard_returnsIndex_whenCardOfTypeIsPresent() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        player.addCardToHand(new Card(CardType.ATTACK));
+        assertEquals(1, player.getIndexOfCard(CardType.ATTACK));
+    }
+
+    @Test
+    void getIndexOfCard_returnsNegativeOne_whenCardOfTypeIsAbsent() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        assertEquals(-1, player.getIndexOfCard(CardType.ATTACK));
+    }
+
+    @Test
+    void getIndexOfCard_returnsFirstIndex_whenDuplicatesPresent() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        assertEquals(0, player.getIndexOfCard(CardType.DEFUSE));
+    }
+
+    @Test
+    void getIndexOfCard_returnsNegativeOne_onEmptyHand() {
+        Player player = new Player(0);
+        assertEquals(-1, player.getIndexOfCard(CardType.DEFUSE));
+    }
+
+    @Test
+    void isAlive_newPlayer_returnsTrue() {
+        assertTrue(new Player(0).isAlive());
+    }
+
+    @Test
+    void isAlive_afterMarkDead_returnsFalse() {
+        Player player = new Player(0);
+        player.markDead();
+        assertFalse(player.isAlive());
+    }
+
+    @Test
+    void markDead_alreadyDead_throwsIllegalStateException() {
+        Player player = new Player(0);
+        player.markDead();
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> player.markDead());
+        assertEquals("player.markDead.alreadyDead", ex.getMessage());
     }
 }

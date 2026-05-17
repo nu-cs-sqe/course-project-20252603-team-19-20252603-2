@@ -14,4 +14,14 @@
     spotbugs { excludeFilter.set(file("config/spotbugs/excludeFilter.xml")) }.
 -->
 <FindBugsFilter>
+    <!--
+        assertThrows(..., () -> obj.method()) intentionally ignores the return
+        value of a non-void method that is expected to throw before producing
+        a value. SpotBugs flags this as RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT
+        on pure getters, so suppress for test classes only.
+    -->
+    <Match>
+        <Class name="~.*Test"/>
+        <Bug pattern="RV_RETURN_VALUE_IGNORED_NO_SIDE_EFFECT"/>
+    </Match>
 </FindBugsFilter>

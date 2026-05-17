@@ -1,54 +1,79 @@
 package domain;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class Player {
+public final class Player {
 
-    private final String name;
-    private final List<CardType> hand;
+    private static final String NULL_CARD_KEY = "player.addCardToHand.nullCard";
+    private static final String CARD_AT_INVALID_INDEX_KEY = "player.getCardAt.invalidIndex";
+    private static final String REMOVE_INVALID_INDEX_KEY = "player.removeCardFromHand.invalidIndex";
+    private static final String ALREADY_DEAD_KEY = "player.markDead.alreadyDead";
+
+    private final int playerId;
+    private final List<Card> hand;
     private boolean alive;
 
-    public Player(String name) {
-        this.name = name;
+    public Player(int playerId) {
+        this.playerId = playerId;
         this.hand = new ArrayList<>();
         this.alive = true;
     }
 
-    public String getName() {
-        return name;
+    public int getPlayerId() {
+        return playerId;
+    }
+
+    public void addCardToHand(Card card) {
+        if (card == null) {
+            throw new IllegalArgumentException(NULL_CARD_KEY);
+        }
+        hand.add(card);
+    }
+
+    public int getHandSize() {
+        return hand.size();
+    }
+
+    public Card getCardAt(int index) {
+        if (index < 0 || index >= hand.size()) {
+            throw new IndexOutOfBoundsException(CARD_AT_INVALID_INDEX_KEY);
+        }
+        return hand.get(index);
+    }
+
+    public Card removeCardFromHand(int index) {
+        if (index < 0 || index >= hand.size()) {
+            throw new IndexOutOfBoundsException(REMOVE_INVALID_INDEX_KEY);
+        }
+        return hand.remove(index);
+    }
+
+    public boolean hasCard(CardType type) {
+        for (Card card : hand) {
+            if (card.getCardType() == type) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int getIndexOfCard(CardType type) {
+        for (int i = 0; i < hand.size(); i++) {
+            if (hand.get(i).getCardType() == type) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public boolean isAlive() {
         return alive;
     }
 
-    public List<CardType> getHand() {
-        return Collections.unmodifiableList(hand);
-    }
-
-    public void addCard(CardType card) {
-        if (card == null) {
-            throw new IllegalArgumentException("Card cannot be null");
-        }
-        hand.add(card);
-    }
-
-    public void removeCard(CardType card) {
-        if (!hand.contains(card)) {
-            throw new IllegalArgumentException("Card not in hand: " + card);
-        }
-        hand.remove(card);
-    }
-
-    public boolean hasCard(CardType card) {
-        return hand.contains(card);
-    }
-
-    public void explode() {
+    public void markDead() {
         if (!alive) {
-            throw new IllegalStateException("Player is already dead");
+            throw new IllegalStateException(ALREADY_DEAD_KEY);
         }
         alive = false;
     }
