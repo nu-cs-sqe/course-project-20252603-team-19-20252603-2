@@ -6,6 +6,8 @@ plugins {
     checkstyle
     jacoco
     id("com.github.spotbugs") version "6.0.25"
+    id("org.openjfx.javafxplugin") version "0.1.0"
+    application
 }
 
 group = "nu.csse.sqe"
@@ -13,6 +15,11 @@ version = "1.0"
 
 repositories {
     mavenCentral()
+}
+
+javafx {
+    version = "17.0.10" // Highly stable version that fully supports Java 11
+    modules = listOf("javafx.controls") // Pulls in critical UI components like Button, Scene, and Stage
 }
 
 dependencies {
@@ -113,4 +120,8 @@ tasks.jacocoTestReport {
     reports {
         xml.required.set(true)
     }
+}
+
+application {
+    mainClass.set("ui.MainApp") // 👈 Points Gradle to your main class
 }
