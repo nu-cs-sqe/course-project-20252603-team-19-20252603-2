@@ -325,36 +325,36 @@
     -fx-border-radius: 10px;
     -fx-border-color: #000000;
     -fx-border-width: 4px;
-    -fx-min-width: 144px;
-    -fx-min-height: 201px;
-    -fx-max-width: 144px;
-    -fx-max-height: 201px;
-    -fx-padding: 8px; /* Balanced card border spacing */
-    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 4, 4);
+
+    -fx-min-width: 180px;
+    -fx-min-height: 260px;
+    -fx-max-width: 180px;
+    -fx-max-height: 260px;
+
+    -fx-padding: 10px 10px 0 10px;
+    -fx-alignment: bottom-center; /* Aligned to bottom-center as requested */
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 6, 6);
 }
 
-/* Card image inner box frame */
-.discard-card-inner-frame {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #000000;
-    -fx-border-width: 3px;
-    -fx-border-radius: 8px;
-    -fx-background-radius: 8px;
-}
-
-/* Bottom banner at the bottom of the discard card */
 .discard-footer-banner {
     -fx-background-color: #000000;
     -fx-padding: 8px 0;
-    -fx-background-insets: 0 -8px -8px -8px; /* Pulled safely to outer borders */
     -fx-alignment: center;
+
+    -fx-min-width: 180px;
+    -fx-max-width: 180px;
+
+    -fx-background-radius: 0 0 6px 6px;
+
+    -fx-translate-y: 4px;
 }
 
 .discard-footer-text {
     -fx-fill: #ffffff;
-    -fx-font-family: "Impact";
-    -fx-font-size: 11px;
+    -fx-font-family: "Arial Black", sans-serif;
+    -fx-font-size: 14px; /* Matches requested size */
     -fx-font-weight: bold;
+    -fx-alignment: center;
 }
 
 /* --------------------------------------------------------------------------

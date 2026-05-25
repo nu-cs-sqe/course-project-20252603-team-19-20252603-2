@@ -3,6 +3,8 @@ package ui.view;
 
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Stack;
+
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -33,6 +35,7 @@ public class GameView extends StackPane {
 	private Text deckTitleText;
 	private Text turnIndicatorText;
 	private Text tableChatterTitle;
+	private Text discardPileFooterText;
 	private Label deckCountLabel;
 	private Label localHandLabel;
 
@@ -338,10 +341,30 @@ public class GameView extends StackPane {
 		return tableChatter;
 	}
 
-	private VBox createDiscardDeck() {
-		VBox discardDeck = new VBox();
-		discardDeck.getStyleClass().add("discard-card");
-		return discardDeck;
+	private StackPane createDiscardPile() {
+		StackPane discardPileSection = new StackPane();
+		discardPileSection.setAlignment(Pos.CENTER);
+
+		VBox discardPile = new VBox();
+		discardPile.getStyleClass().add("discard-card");
+
+		VBox discardPileFooterBanner = new VBox();
+		discardPileFooterBanner.getStyleClass().add("discard-footer-banner");
+
+		this.discardPileFooterText = new Text();
+		this.discardPileFooterText.getStyleClass().add("discard-footer-text");
+		discardPileFooterBanner.getChildren().add(this.discardPileFooterText);
+		discardPileFooterBanner.setAlignment(Pos.BOTTOM_CENTER);
+
+		discardPile.getChildren().add(
+				discardPileFooterBanner
+		);
+
+		discardPileSection.getChildren().add(
+				discardPile
+		);
+
+		return discardPileSection;
 	}
 
 	private HBox createGamePlaySection() {
@@ -350,12 +373,12 @@ public class GameView extends StackPane {
 
 		VBox drawDeck = createDrawDeck();
 		StackPane tableChatter = createTablechatter();
-		VBox discardDeck = createDiscardDeck();
+		StackPane discardPile = createDiscardPile();
 
 		gamePlaySection.getChildren().addAll(
 				drawDeck,
 				tableChatter,
-				discardDeck
+				discardPile
 		);
 		return gamePlaySection;
 	}
@@ -376,6 +399,7 @@ public class GameView extends StackPane {
 		deckTitleText.setText(bundle.getString("gameView.deck"));
 		drawCard.setText(bundle.getString("gameView.drawCard"));
 		tableChatterTitle.setText(bundle.getString("gameView.tableChatter"));
+		discardPileFooterText.setText(bundle.getString("gameView.discardPile"));
 		cardCountText = bundle.getString("gameView.cardCount");
 		cardsText = bundle.getString("gameView.cards");
 		myTurnText = bundle.getString("gameView.myTurn");
