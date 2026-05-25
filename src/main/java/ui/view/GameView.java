@@ -3,8 +3,6 @@ package ui.view;
 
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Stack;
-
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -22,7 +20,6 @@ import ui.model.PlayerDisplayInfo;
 public class GameView extends StackPane {
 	private String cardCountText = "";
 	private String cardsText = "";
-	private String myTurnText = "";
 
 	private BorderPane topBar;
 	private HBox playerBar;
@@ -390,7 +387,7 @@ public class GameView extends StackPane {
 		HBox cardSection = new HBox();
 		cardSection.setAlignment(Pos.CENTER);
 		cardSection.getChildren().add(localHandLabel);
-		return new HBox();
+		return cardSection;
 	}
 
 	public void updateDisplay(ResourceBundle bundle) {
@@ -402,7 +399,6 @@ public class GameView extends StackPane {
 		discardPileFooterText.setText(bundle.getString("gameView.discardPile"));
 		cardCountText = bundle.getString("gameView.cardCount");
 		cardsText = bundle.getString("gameView.cards");
-		myTurnText = bundle.getString("gameView.myTurn");
 	}
 
 	public void showOpponents(List<PlayerDisplayInfo> opponents) {
@@ -417,28 +413,11 @@ public class GameView extends StackPane {
 		deckCountLabel.setText(cards);
 	}
 
-	public void updateTurnIndicator(boolean isLocalPlayerTurn) {
-		List<String> styleClasses = turnIndicatorText.getStyleClass();
-
-		if (isLocalPlayerTurn) {
-			turnIndicatorText.setText(myTurnText);
-			styleClasses.remove("turn-indicator-inactive");
-		} else {
-			turnIndicatorText.setText("");
-
-			if (!styleClasses.contains("turn-indicator-inactive")) {
-				styleClasses.add("turn-indicator-inactive");
-			}
-		}
-
-		drawCard.setDisable(!isLocalPlayerTurn);
-	}
-
 	public void updateCardCount(int cardCount) {
 		updateDeckCount(cardCount);
 	}
 
-	public void showLocalHand(int handSize, String playerName) {
+	public void updateCurrentHand(int handSize, String playerName) {
 		String handText = playerName + ": "
 				+ handSize + " " + cardCountText;
 		localHandLabel.setText(handText);

@@ -18,11 +18,6 @@ public class GameController {
 			if (model.isGameStarted()) {
 				view.showOpponents(model.getOpponents());
 				view.updateDeckCount(model.getDeckSize());
-				view.updateTurnIndicator(model.isLocalPlayerTurn());
-				view.showLocalHand(
-						model.getLocalHandSize(),
-						model.getLocalPlayerName()
-				);
 				view.clearLog();
 			}
 		};
