@@ -141,8 +141,8 @@
 
 /* Comic Book Tactile Lift Effect - shifts up/left and deepens shadow */
 .deck-card-button:hover {
-    -fx-translate-y: -4px;
-    -fx-translate-x: -4px;
+    -fx-translate-y: -1px;
+    -fx-translate-x: -1px;
 }
 
 /* Underlay Silhouette cards to represent 3D stack depth in a StackPane */
@@ -179,7 +179,9 @@
     -fx-font-family: "Arial Black";
     -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-fill: #b91c1c; /* Bold red color matching your goal text */
+    -fx-fill: #b91c1c;
+    -fx-max-width: infinity;
+    -fx-alignment: center;
 }
 
 /* Soft Gray Capsule Badge */
@@ -191,7 +193,9 @@
     -fx-font-family: "Arial Black";
     -fx-font-size: 12px;
     -fx-font-weight: bold;
-    -fx-text-fill: #94a3b8; /* Cool gray font tint */
+    -fx-text-fill: #94a3b8;
+
+    -fx-alignment: center;
 }
 
 /* Solid Yellow Action Button underneath the deck stack */
@@ -255,9 +259,63 @@
 
 .chatter-feed-text {
     -fx-fill: #374151; /* Dark charcoal ink */
-    -fx-font-family: "Arial";
-    -fx-font-size: 11px;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 14px;
     -fx-font-weight: bold;
+}
+
+/* 1. THE MAIN SCROLLPANE VIEWPORT */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent; /* Ensures inner viewport is also transparent */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* 2. THE VERTICAL SCROLLBAR CONTAINER */
+.scroll-pane .scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-width: 8px; /* Snug, clean scroll bar width */
+    -fx-padding: 0;
+}
+
+/* 3. THE SCROLLBAR THUMB (The draggable handle) */
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: #cbd5e1; /* Slate-300 clean grey */
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #94a3b8; /* Slate-400 slightly darker grey on hover */
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:pressed {
+    -fx-background-color: #64748b; /* Slate-500 even darker when actively dragging */
+}
+
+/* 4. THE SCROLLBAR TRACK (The background column) */
+.scroll-pane .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* 5. DECREMENT & INCREMENT BUTTONS (The top and bottom arrow buttons) */
+/* We style these transparent to hide them and keep the comic layout looking flat and minimal */
+.scroll-pane .scroll-bar:vertical .decrement-button,
+.scroll-pane .scroll-bar:vertical .increment-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-pane .scroll-bar:vertical .decrement-arrow,
+.scroll-pane .scroll-bar:vertical .increment-arrow {
+    -fx-shape: null; /* Removes the native arrow rendering shape */
+    -fx-padding: 0;
 }
 
 /* 7. DISCARD PILE THEMATIC CARD WITH MULTI-STACK LAYERS */

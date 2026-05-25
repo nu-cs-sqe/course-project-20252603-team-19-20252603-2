@@ -1,5 +1,6 @@
 package ui.controller;
 
+import java.util.ResourceBundle;
 import ui.model.AppModel;
 import ui.model.GameModel;
 import ui.navigation.ScreenRouter;
@@ -19,8 +20,10 @@ public class GameController {
 				view.updateDeckCount(model.getDeckSize());
 				view.updateTurnIndicator(model.isLocalPlayerTurn());
 				view.showLocalHand(
-						model.getLocalHandSize(), model.getLocalPlayerName()
+						model.getLocalHandSize(),
+						model.getLocalPlayerName()
 				);
+				view.clearLog();
 			}
 		};
 		this.startGameAction = () -> {
@@ -32,6 +35,12 @@ public class GameController {
 		view.setOnDrawAction(() -> {
 			model.discardCard();
 			view.updateCardCount(model.getDeckSize());
+			if (model.getDeckSize() > 0) {
+				ResourceBundle bundle = appModel.getResourceBundle();
+				String playerName = model.getLocalPlayerName();
+				String message = bundle.getString("gameView.drawAction");
+				view.addLog(playerName + " " + message);
+			}
 		});
 	}
 

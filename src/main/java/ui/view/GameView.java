@@ -6,12 +6,15 @@ import java.util.ResourceBundle;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import ui.model.PlayerDisplayInfo;
 
 public class GameView extends StackPane {
@@ -23,6 +26,8 @@ public class GameView extends StackPane {
 	private HBox playerBar;
 	private HBox gamePlaySection;
 	private HBox cardSection;
+	private VBox feedContainer;
+	private ScrollPane scrollPane;
 
 	private Text logoText;
 	private Text deckTitleText;
@@ -42,6 +47,9 @@ public class GameView extends StackPane {
 	private static final int drawDeckSpacing = 25;
 	private static final int gamePlaySectionSpacing = 100;
 	private static final int tableChatterInfoSpacing = 5;
+	private static final int feedContainerSpacing = 5;
+	private static final int tableChatterSectionSpacing = 10;
+	private static final int playerEventLogSpacing = 8;
 	private static final double playerBarTranslateY = -7.5;
 
 	public GameView() {
@@ -71,6 +79,9 @@ public class GameView extends StackPane {
 		this.getStylesheets().add(
 				getClass().getResource(stylePath).toExternalForm()
 		);
+
+		this.feedContainer.heightProperty().addListener((observable, oldValue, newValue) ->
+				this.scrollPane.setVvalue(1.0));
 	}
 
 	private HBox createTopBarLeft() {
@@ -203,6 +214,7 @@ public class GameView extends StackPane {
 				deckTitleText,
 				deckCountLabel
 		);
+		deckTitleText.setTextAlignment(TextAlignment.CENTER);
 		deckInfo.setAlignment(Pos.CENTER);
 
 		return deckInfo;
@@ -239,6 +251,8 @@ public class GameView extends StackPane {
 	private Button createDrawCard() {
 		this.drawCard = new Button();
 		drawCard.getStyleClass().add("draw-action-button");
+		drawCard.setMaxHeight(Double.MAX_VALUE);
+		drawCard.setMaxWidth(Double.MAX_VALUE);
 		return this.drawCard;
 	}
 
@@ -268,7 +282,7 @@ public class GameView extends StackPane {
 		Text tableChatterTitle = createTableChatterTitle();
 		Region separatorLine = new Region();
 
-		tableChatterInfo.getStyleClass().add("table-chatter-card");
+		tableChatterTitle.getStyleClass().add("table-chatter-title");
 		separatorLine.getStyleClass().add("thick-black-line");
 
 		tableChatterInfo.getChildren().addAll(
@@ -279,14 +293,46 @@ public class GameView extends StackPane {
 		return tableChatterInfo;
 	}
 
+	private VBox createTableChatterView() {
+		VBox tableChatterView = new VBox();
+		tableChatterView.setStyle("-fx-background-color: transparent;");
+
+		this.scrollPane = new ScrollPane();
+		this.scrollPane.setFitToWidth(true);
+		this.scrollPane.setFitToHeight(true);
+		this.scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		this.scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+
+		this.scrollPane.getStyleClass().add("scroll-pane");
+
+		this.feedContainer = new VBox(feedContainerSpacing);
+		this.feedContainer.setStyle("-fx-background-color: transparent;");
+		this.scrollPane.setContent(this.feedContainer);
+
+		tableChatterView.getChildren().add(this.scrollPane);
+
+		VBox.setVgrow(this.scrollPane, Priority.ALWAYS);
+		VBox.setVgrow(tableChatterView, Priority.ALWAYS);
+
+		return tableChatterView;
+	}
+
 	private StackPane createTablechatter() {
 		StackPane tableChatter = new StackPane();
 		StackPane.setAlignment(tableChatter, Pos.CENTER);
+		tableChatter.getStyleClass().add("table-chatter-card");
 
+		VBox tableChatterSection = new VBox(tableChatterSectionSpacing);
 		VBox tableChatterInfo = createTableChatterInfo();
+		VBox tableChatterView = createTableChatterView();
+
+		tableChatterSection.getChildren().addAll(
+				tableChatterInfo,
+				tableChatterView
+		);
 
 		tableChatter.getChildren().add(
-				tableChatterInfo
+				tableChatterSection
 		);
 
 		return tableChatter;
@@ -372,6 +418,23 @@ public class GameView extends StackPane {
 		String handText = playerName + ": "
 				+ handSize + " " + cardCountText;
 		localHandLabel.setText(handText);
+	}
+
+	public void clearLog() {
+		this.scrollPane.setVvalue(0.0);
+		this.feedContainer.getChildren().clear();
+	}
+
+	public void addLog(String message) {
+		HBox playerEventLog = new HBox(playerEventLogSpacing);
+		playerEventLog.getStyleClass().add("chatter-feed-row");
+		playerEventLog.setAlignment(Pos.CENTER_LEFT);
+
+		Text logText = new Text(message);
+		logText.getStyleClass().add("chatter-feed-text");
+
+		playerEventLog.getChildren().add(logText);
+		this.feedContainer.getChildren().add(playerEventLog);
 	}
 
 	public void setOnQuitAction(Runnable handler) {
