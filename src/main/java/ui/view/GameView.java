@@ -27,6 +27,7 @@ public class GameView extends StackPane {
 	private Text logoText;
 	private Text deckTitleText;
 	private Text turnIndicatorText;
+	private Text tableChatterTitle;
 	private Label deckCountLabel;
 	private Label localHandLabel;
 
@@ -39,7 +40,8 @@ public class GameView extends StackPane {
 	private static final int playerSpacing = 5;
 	private static final int deckInfoSpacing = 20;
 	private static final int drawDeckSpacing = 25;
-	private static final int gamePlaySectionSpacing = 40;
+	private static final int gamePlaySectionSpacing = 100;
+	private static final int tableChatterInfoSpacing = 5;
 	private static final double playerBarTranslateY = -7.5;
 
 	public GameView() {
@@ -255,13 +257,60 @@ public class GameView extends StackPane {
 		return drawDeck;
 	}
 
+	private Text createTableChatterTitle() {
+		this.tableChatterTitle = new Text();
+		tableChatterTitle.getStyleClass().add("table-chatter-title");
+		return tableChatterTitle;
+	}
+
+	private VBox createTableChatterInfo() {
+		VBox tableChatterInfo = new VBox(tableChatterInfoSpacing);
+		Text tableChatterTitle = createTableChatterTitle();
+		Region separatorLine = new Region();
+
+		tableChatterInfo.getStyleClass().add("table-chatter-card");
+		separatorLine.getStyleClass().add("thick-black-line");
+
+		tableChatterInfo.getChildren().addAll(
+				tableChatterTitle,
+				separatorLine
+		);
+
+		return tableChatterInfo;
+	}
+
+	private StackPane createTablechatter() {
+		StackPane tableChatter = new StackPane();
+		StackPane.setAlignment(tableChatter, Pos.CENTER);
+
+		VBox tableChatterInfo = createTableChatterInfo();
+
+		tableChatter.getChildren().add(
+				tableChatterInfo
+		);
+
+		return tableChatter;
+	}
+
+	private VBox createDiscardDeck() {
+		VBox discardDeck = new VBox();
+		discardDeck.getStyleClass().add("discard-card");
+		return discardDeck;
+	}
+
 	private HBox createGamePlaySection() {
 		HBox gamePlaySection = new HBox(gamePlaySectionSpacing);
 		gamePlaySection.setAlignment(Pos.CENTER);
 
 		VBox drawDeck = createDrawDeck();
+		StackPane tableChatter = createTablechatter();
+		VBox discardDeck = createDiscardDeck();
 
-		gamePlaySection.getChildren().add(drawDeck);
+		gamePlaySection.getChildren().addAll(
+				drawDeck,
+				tableChatter,
+				discardDeck
+		);
 		return gamePlaySection;
 	}
 
@@ -280,6 +329,7 @@ public class GameView extends StackPane {
 		quitButton.setText(bundle.getString("gameView.quit"));
 		deckTitleText.setText(bundle.getString("gameView.deck"));
 		drawCard.setText(bundle.getString("gameView.drawCard"));
+		tableChatterTitle.setText(bundle.getString("gameView.tableChatter"));
 		cardCountText = bundle.getString("gameView.cardCount");
 		cardsText = bundle.getString("gameView.cards");
 		myTurnText = bundle.getString("gameView.myTurn");
@@ -314,6 +364,10 @@ public class GameView extends StackPane {
 		drawCard.setDisable(!isLocalPlayerTurn);
 	}
 
+	public void updateCardCount(int cardCount) {
+		updateDeckCount(cardCount);
+	}
+
 	public void showLocalHand(int handSize, String playerName) {
 		String handText = playerName + ": "
 				+ handSize + " " + cardCountText;
@@ -325,6 +379,7 @@ public class GameView extends StackPane {
 	}
 
 	public void setOnDrawAction(Runnable handler) {
+		this.deck.setOnAction(e -> handler.run());
 		this.drawCard.setOnAction(e -> handler.run());
 	}
 }

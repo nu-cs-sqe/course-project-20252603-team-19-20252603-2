@@ -29,6 +29,10 @@ public class GameController {
 		};
 
 		view.setOnQuitAction(router::showStart);
+		view.setOnDrawAction(() -> {
+			model.discardCard();
+			view.updateCardCount(model.getDeckSize());
+		});
 	}
 
 	public void startGame() {

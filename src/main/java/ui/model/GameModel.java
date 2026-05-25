@@ -10,10 +10,12 @@ public class GameModel {
 
 	private GameEngine engine;
 	private List<String> playerNames;
+	private int cardCount;
 
 	public void startGame(List<String> playerNames) {
 		this.playerNames = new ArrayList<>(playerNames);
 		this.engine = new GameEngine(playerNames.size());
+		cardCount = engine.getDrawPileSize();
 	}
 
 	public boolean isGameStarted() {
@@ -29,7 +31,13 @@ public class GameModel {
 	}
 
 	public int getDeckSize() {
-		return engine.getDrawPileSize();
+		return cardCount;
+	}
+
+	public void discardCard() {
+		if (cardCount > 0) {
+			cardCount -= 1;
+		}
 	}
 
 	public boolean isLocalPlayerTurn() {

@@ -385,3 +385,9 @@
     -fx-translate-y: 0px; /* Stands at resting 0px translation to keep text fully visible */
     -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 6, 6);
 }
+
+.thick-black-line {
+    -fx-background-color: #000000;
+    -fx-min-height: 5px;
+    -fx-max-height: 5px;
+}
