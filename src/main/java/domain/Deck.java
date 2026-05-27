@@ -58,16 +58,17 @@ public class Deck {
 		Collections.shuffle(drawPile);
 	}
 
-	public List<Card> peekTop(int n) {
+	private void validatePeekTopInput(int n) {
 		if (n < 0) {
 			throw new IllegalArgumentException(PEEK_TOP_NEGATIVE_N_KEY);
-		}
-		if (n == 0) {
-			return new ArrayList<>();
 		}
 		if (n > drawPile.size()) {
 			throw new IllegalStateException(PEEK_TOP_TOO_MANY_KEY);
 		}
+	}
+
+	public List<Card> peekTop(int n) {
+		validatePeekTopInput(n);
 
 		List<Card> result = new ArrayList<>();
 		for (int i = 0; i < n; i++) {
