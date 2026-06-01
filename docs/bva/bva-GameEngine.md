@@ -148,10 +148,10 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `getPlayerHand(0)` at game start | list of size 5 (the starting hand) | no |
-| TC2 | mutate the returned list, then `getPlayerHand(0)` again | original hand unchanged (defensive copy) | no |
-| TC3 | `getPlayerHand(-1)` | throws `IllegalArgumentException` with message `"gameEngine.getPlayer.invalidId"` | no |
-| TC4 | `getPlayerHand(numPlayers)` | throws `IllegalArgumentException` with message `"gameEngine.getPlayer.invalidId"` | no |
+| TC1 | `getPlayerHand(0)` at game start | list of size 5 (the starting hand) | yes |
+| TC2 | mutate the returned list, then `getPlayerHand(0)` again | original hand unchanged (defensive copy) | yes |
+| TC3 | `getPlayerHand(-1)` | throws `IllegalArgumentException` with message `"gameEngine.getPlayer.invalidId"` | yes |
+| TC4 | `getPlayerHand(numPlayers)` | throws `IllegalArgumentException` with message `"gameEngine.getPlayer.invalidId"` | yes |
 
 ---
 

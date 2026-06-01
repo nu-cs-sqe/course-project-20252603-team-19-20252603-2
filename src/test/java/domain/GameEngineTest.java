@@ -164,4 +164,39 @@ class GameEngineTest {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         assertFalse(engine.isDeckEmpty());
     }
+
+    @Test
+    void getPlayerHand_atGameStart_returnsStartingHand() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        assertEquals(STARTING_HAND_SIZE, engine.getPlayerHand(0).size());
+    }
+
+    @Test
+    void getPlayerHand_returnedListIsDefensiveCopy() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        engine.getPlayerHand(0).clear();
+        assertEquals(STARTING_HAND_SIZE, engine.getPlayerHand(0).size());
+    }
+
+    @Test
+    void getPlayerHand_negativeId_throwsIllegalArgumentException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                    engine.getPlayerHand(-1);
+                });
+        assertEquals("gameEngine.getPlayer.invalidId", ex.getMessage());
+    }
+
+    @Test
+    void getPlayerHand_idEqualToNumPlayers_throwsIllegalArgumentException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                    engine.getPlayerHand(MIN_PLAYERS);
+                });
+        assertEquals("gameEngine.getPlayer.invalidId", ex.getMessage());
+    }
 }
