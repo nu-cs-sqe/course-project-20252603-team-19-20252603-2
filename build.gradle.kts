@@ -6,6 +6,7 @@ plugins {
     checkstyle
     jacoco
     id("com.github.spotbugs") version "6.0.25"
+    id("info.solidsoft.pitest") version "1.15.0"
 }
 
 group = "nu.csse.sqe"
@@ -113,4 +114,30 @@ tasks.jacocoTestReport {
     reports {
         xml.required.set(true)
     }
+}
+
+// PIT mutation testing (info.solidsoft.pitest). Mirrors the Code-Coverage lab
+// setup, adapted to this project: production classes live in the `domain`
+// package (no group prefix), so target `domain.*` rather than the default
+// "${project.group}.*". `build` runs PIT so the HTML mutation report
+// (build/reports/pitest/) is regenerated on every full build.
+pitest {
+    targetClasses = setOf("domain.*")
+    targetTests = setOf("domain.*")
+    junit5PluginVersion = "1.2.1"
+    pitestVersion = "1.15.0"
+
+    threads = 4
+    outputFormats = setOf("HTML")
+    timestampedReports = false
+    testSourceSets.set(listOf(sourceSets.test.get()))
+    mainSourceSets.set(listOf(sourceSets.main.get()))
+    jvmArgs.set(listOf("-Xmx1024m"))
+    useClasspathFile.set(true)
+    fileExtensionsToFilter.addAll("xml")
+    exportLineCoverage = true
+}
+
+tasks.build {
+    dependsOn(tasks.pitest)
 }
