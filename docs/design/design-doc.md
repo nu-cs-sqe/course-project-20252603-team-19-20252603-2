@@ -138,6 +138,23 @@
 
 ## RuleManager Class
 
+Pure, stateless validation of whether a play is legal in the current state.
+Each method throws (with an i18n key) when the play is illegal and returns
+normally otherwise. No mutation; takes domain objects as parameters so it is
+trivially unit-testable.
+
+### Methods
+- `requirePlayable(CardType type)` — throws `IllegalArgumentException`
+  (`rule.play.cannotPlayDirectly`) if `type` is `DEFUSE` or `EXPLODING_KITTEN`
+  (those are never played directly from hand).
+- `requireValidTarget(Player actor, Player target)` — throws
+  `IllegalArgumentException` (`rule.target.invalid`) if `target` is the actor
+  themselves or is not alive.
+- `requireCatPair(Player actor)` — throws `IllegalStateException`
+  (`rule.catPair.needTwo`) if the actor holds fewer than two `CAT_CARDS`.
+- `requireSomethingToNope(CardType lastPlayedCard)` — throws
+  `IllegalStateException` (`rule.nope.nothingToCancel`) if `lastPlayedCard` is
+  `null`.
 
 ---
 
