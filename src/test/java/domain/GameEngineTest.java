@@ -158,4 +158,10 @@ class GameEngineTest {
         GameEngine engine = new GameEngine(MAX_PLAYERS);
         assertEquals(DRAW_PILE_SIZE_MAX_PLAYERS, engine.getDrawPileSize());
     }
+
+    @Test
+    void isDeckEmpty_atGameStart_returnsFalse() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        assertFalse(engine.isDeckEmpty());
+    }
 }

@@ -128,7 +128,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `new GameEngine(2).isDeckEmpty()` at game start | `false` | no |
+| TC1 | `new GameEngine(2).isDeckEmpty()` at game start | `false` | yes |
 | TC2 | draw every card, then `isDeckEmpty()` | `true` | no |
 
 ---

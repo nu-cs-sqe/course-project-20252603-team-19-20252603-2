@@ -55,6 +55,10 @@ public final class GameEngine {
         return deck.getSize();
     }
 
+    public boolean isDeckEmpty() {
+        return deck.isEmpty();
+    }
+
     private static List<Card> buildShuffledNonSpecialPool() {
         List<Card> pool = new ArrayList<>();
         for (Card card : new Deck().getDrawPile()) {
