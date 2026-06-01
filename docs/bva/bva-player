@@ -1,0 +1,157 @@
+# BVA Analysis for `Player`
+
+This file holds the BVA analysis for every public method of the `Player` class. Each public method has its own `## Method N:` section; new methods append a new section as the class grows.
+
+---
+
+## Method 1: ```public Player(String name)```
+### Step 1-3 Results
+|        | Input                                      | (if more to consider for input) | Output                                                                                                                          |
+|--------|--------------------------------------------|---------------------------------|---------------------------------------------------------------------------------------------------------------------------------|
+| Step 1 | A non-null String for the name             |                                 | A new `Player` whose `getName()` equals the argument; `isAlive()` is `true`; `getHand()` is empty; or `IllegalArgumentException` on null |
+| Step 2 | String augmented with the `null` reference |                                 | A `Player` instance / `IllegalArgumentException`                                                                                |
+| Step 3 | `"Alice"` (representative valid value), `null` |                             | A `Player` with `name = "Alice"` / `IllegalArgumentException`                                                                   |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+|             | System under test     | Expected output                                                              | Implemented? |
+|-------------|-----------------------|------------------------------------------------------------------------------|--------------|
+| Test Case 1 | `new Player("Alice")` | `getName()` == `"Alice"`, `isAlive()` == `true`, `getHand().size()` == `0`   | yes          |
+| Test Case 2 | `new Player(null)`    | `IllegalArgumentException` thrown; no `Player` produced                      | no           |
+
+---
+
+## Method 2: ```public String getName()```
+### Step 1-3 Results
+|        | Input                       | (if more to consider for input) | Output                                   |
+|--------|-----------------------------|---------------------------------|------------------------------------------|
+| Step 1 | none (instance-state query) |                                 | The name string supplied at construction |
+| Step 2 | n/a                         |                                 | String                                   |
+| Step 3 | n/a                         |                                 | `"Alice"` (representative value)         |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+|             | System under test               | Expected output | Implemented? |
+|-------------|---------------------------------|-----------------|--------------|
+| Test Case 1 | `new Player("Alice").getName()` | `"Alice"`       | yes          |
+
+---
+
+## Method 3: ```public boolean isAlive()```
+### Step 1-3 Results
+|        | Input                       | (if more to consider for input) | Output                                                          |
+|--------|-----------------------------|---------------------------------|-----------------------------------------------------------------|
+| Step 1 | none (instance-state query) |                                 | `true` when player has not exploded; `false` after `explode()` |
+| Step 2 | n/a                         |                                 | Boolean                                                         |
+| Step 3 | n/a                         |                                 | `true` (default state), `false` (after explode)                 |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+|             | System under test                      | Expected output | Implemented? |
+|-------------|----------------------------------------|-----------------|--------------|
+| Test Case 1 | fresh `Player` — `isAlive()`           | `true`          | yes          |
+| Test Case 2 | after `player.explode()` — `isAlive()` | `false`         | yes          |
+
+---
+
+## Method 4: ```public List<CardType> getHand()```
+### Step 1-3 Results
+|        | Input                       | (if more to consider for input) | Output                                                     |
+|--------|-----------------------------|---------------------------------|------------------------------------------------------------|
+| Step 1 | none (instance-state query) |                                 | The list of `CardType` values currently held by the player |
+| Step 2 | n/a                         |                                 | List (size 0 at minimum, unbounded above in principle)     |
+| Step 3 | n/a                         |                                 | Empty list (size 0), list of size 1, list of size 3        |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+|             | System under test                                | Expected output | Implemented? |
+|-------------|--------------------------------------------------|-----------------|--------------|
+| Test Case 1 | fresh player — `getHand().size()`                | `0`             | yes          |
+| Test Case 2 | after one `addCard` — `getHand().size()`         | `1`             | yes          |
+| Test Case 3 | after three `addCard` calls — `getHand().size()` | `3`             | yes          |
+
+---
+
+## Method 5: ```public void addCard(CardType cardType)```
+### Step 1-3 Results
+|        | Input                                           | (if more to consider for input) | Output                                                                     |
+|--------|-------------------------------------------------|---------------------------------|----------------------------------------------------------------------------|
+| Step 1 | A `CardType` value to add, or `null`            |                                 | Hand size increases by 1 for valid input; `IllegalArgumentException` on `null` |
+| Step 2 | Enumeration (`CardType`) augmented with `null`  |                                 | void / `IllegalArgumentException`                                          |
+| Step 3 | `DEFUSE` (representative valid value), `null`   |                                 | Hand grows by 1 / `IllegalArgumentException`                               |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+|             | System under test                                         | Expected output                   | Implemented? |
+|-------------|-----------------------------------------------------------|-----------------------------------|--------------|
+| Test Case 1 | `addCard(DEFUSE)`                                         | `getHand().size()` == `1`         | yes          |
+| Test Case 2 | `addCard(null)`                                           | `IllegalArgumentException` thrown | yes          |
+| Test Case 3 | `addCard(DEFUSE)`, `addCard(ATTACK)`, `addCard(NOPE)`     | `getHand().size()` == `3`         | yes          |
+
+---
+
+## Method 6: ```public void removeCard(CardType cardType)```
+### Step 1-3 Results
+|        | Input                                                                          | (if more to consider for input) | Output                                                                    |
+|--------|--------------------------------------------------------------------------------|---------------------------------|---------------------------------------------------------------------------|
+| Step 1 | A `CardType` in the hand, a `CardType` not in the hand, or an empty hand       |                                 | Hand shrinks by 1 / `IllegalArgumentException` (card absent or hand empty) |
+| Step 2 | Enumeration (`CardType`) — present in hand, absent from hand, hand empty       |                                 | void / `IllegalArgumentException`                                         |
+| Step 3 | `DEFUSE` when hand contains `DEFUSE`; `ATTACK` when absent; `DEFUSE` when empty |                                |  Decremented hand / `IllegalArgumentException` / `IllegalArgumentException` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+|             | System under test                      | Expected output                   | Implemented? |
+|-------------|----------------------------------------|-----------------------------------|--------------|
+| Test Case 1 | add `DEFUSE`, then `removeCard(DEFUSE)` | `getHand().size()` == `0`        | yes          |
+| Test Case 2 | empty hand, `removeCard(ATTACK)`       | `IllegalArgumentException` thrown | yes          |
+| Test Case 3 | empty hand, `removeCard(DEFUSE)`       | `IllegalArgumentException` thrown | yes          |
+
+---
+
+## Method 7: ```public void explode()```
+### Step 1-3 Results
+|        | Input                                     | (if more to consider for input) | Output                                                                          |
+|--------|-------------------------------------------|---------------------------------|---------------------------------------------------------------------------------|
+| Step 1 | Player state: alive (default) or dead     |                                 | Sets `isAlive()` to `false`; throws `IllegalStateException` if already dead     |
+| Step 2 | Boolean state (alive / dead)              |                                 | void / `IllegalStateException`                                                  |
+| Step 3 | Alive player; dead player (called twice)  |                                 | `isAlive()` becomes `false` / `IllegalStateException` thrown                    |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+|             | System under test                   | Expected output                   | Implemented? |
+|-------------|-------------------------------------|-----------------------------------|--------------|
+| Test Case 1 | `player.explode()` on alive player  | `isAlive()` == `false`            | yes          |
+| Test Case 2 | `player.explode()` called twice     | `IllegalStateException` thrown    | yes          |
+
+---
+
+## Method 8: ```public boolean hasCard(CardType cardType)```
+### Step 1-3 Results
+|        | Input                                              | (if more to consider for input) | Output                          |
+|--------|----------------------------------------------------|---------------------------------|---------------------------------|
+| Step 1 | A `CardType` in the hand, or one that isn't        |                                 | `true` if present; `false` if absent |
+| Step 2 | Enumeration (`CardType`) — present or absent       |                                 | Boolean                         |
+| Step 3 | `DEFUSE` when hand contains `DEFUSE`; `DEFUSE` when hand is empty |              | `true` / `false`                |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+|             | System under test                  | Expected output | Implemented? |
+|-------------|------------------------------------|-----------------|--------------|
+| Test Case 1 | add `DEFUSE`, then `hasCard(DEFUSE)` | `true`        | yes          |
+| Test Case 2 | empty hand, `hasCard(DEFUSE)`      | `false`         | yes          |
+
+---
+
+## Recall the 4 steps of BVA
+### Step 1: Describe the input and output in terms of the domain.
+### Step 2: Choose the data type for the input and the output from the BVA Catalog.
+### Step 3: Select concrete values along the edges for the input and the output.
+### Step 4: Determine the test cases using either all-combination or each-choice strategy.
