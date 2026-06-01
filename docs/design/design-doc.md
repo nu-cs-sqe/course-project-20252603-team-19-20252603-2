@@ -110,6 +110,28 @@
 
 ## ActionController Class
 
+Applies the deck/player-level effect of a played card. Stateless apart from an
+injected `Random` (so the Cat-pair random steal is deterministic under test).
+Turn-flow effects that change *whose* turn it is or *how many* turns are owed
+(Skip, Attack, Targeted Attack) live in `GameEngine`, since they manipulate its
+turn-state; `ActionController` only touches the deck and players' hands.
+
+### Data Members
+- `random`: `Random` — source of randomness for `stealRandomCard`.
+
+### Methods
+- `ActionController()` — production constructor; uses `new Random()`.
+- `ActionController(Random random)` — package-private; injects a seeded
+  `Random` for deterministic tests.
+- `shuffleDeck(Deck deck)` — `deck.shuffle()` (Shuffle card).
+- `peekTopThree(Deck deck): List<Card>` — top up to 3 cards (See the Future);
+  returns fewer when the draw pile is smaller; no state change.
+- `reverseDirection(TurnTracker turnTracker)` — `turnTracker.changeCurrentDirection()`
+  (Reverse card).
+- `giveCard(Player from, Player to, int cardIndex)` — Favor: removes the card at
+  `cardIndex` from `from`'s hand and adds it to `to`'s hand.
+- `stealRandomCard(Player from, Player to)` — Cat pair: moves one randomly
+  chosen card from `from`'s hand to `to`'s hand; no-op if `from` has no cards.
 
 ---
 

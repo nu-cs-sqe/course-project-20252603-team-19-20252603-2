@@ -4,8 +4,104 @@ This file holds the BVA analysis for every public method of the `ActionControlle
 
 ---
 
+## Method 1: ```public void shuffleDeck(Deck deck)```
 
+### Step 1-3 Results
 
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | The deck to shuffle | Same cards, possibly reordered |
+| Step 2 | `Deck` | void (deck mutated) |
+| Step 3 | a full deck | size unchanged, same multiset of cards |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `shuffleDeck(new Deck())` | deck size unchanged (63) | no |
+
+---
+
+## Method 2: ```public List<Card> peekTopThree(Deck deck)```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | The draw pile | Up to the top 3 cards, in draw order |
+| Step 2 | `Deck` | `List<Card>` |
+| Step 3 | deck of size 0, 2, >=3 | empty list / 2-card list / 3-card list; deck size unchanged |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `peekTopThree` on a full deck | list of size 3; deck size unchanged | no |
+| TC2 | `peekTopThree` on a 2-card deck | list of size 2 | no |
+| TC3 | `peekTopThree` on an empty deck | empty list | no |
+
+---
+
+## Method 3: ```public void reverseDirection(TurnTracker turnTracker)```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | The turn tracker | Playing direction flipped |
+| Step 2 | `TurnTracker` | void (tracker mutated) |
+| Step 3 | direction +1, direction -1 | becomes -1 / becomes +1 |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | tracker with direction +1 | `getCurrentDirection() == -1` | no |
+| TC2 | tracker with direction -1 | `getCurrentDirection() == 1` | no |
+
+---
+
+## Method 4: ```public void giveCard(Player from, Player to, int cardIndex)```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | Giver, receiver, index of the card to give | Card moves from giver to receiver |
+| Step 2 | two `Player`, `int` | void (hands mutated) / `IndexOutOfBoundsException` |
+| Step 3 | valid index, out-of-range index | card transferred / exception |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `from` has one DEFUSE, `giveCard(from, to, 0)` | `from` hand size 0, `to` hand has the DEFUSE | no |
+| TC2 | `giveCard(from, to, 0)` when `from` hand empty | throws `IndexOutOfBoundsException` | no |
+
+---
+
+## Method 5: ```public void stealRandomCard(Player from, Player to)```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | Victim and thief | One random card moves from victim to thief |
+| Step 2 | two `Player` (with injected `Random`) | void (hands mutated) |
+| Step 3 | victim with 0 cards, 1 card, many cards (seeded random) | no-op / that card moves / the seeded-index card moves |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | victim has exactly one card | that card moves to thief; victim hand size 0 | no |
+| TC2 | victim has several cards, seeded `Random` | the card at the seeded index moves to thief | no |
+| TC3 | victim has no cards | no-op; thief hand unchanged | no |
 
 ---
 
