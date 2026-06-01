@@ -19,4 +19,18 @@ class AppModelTest {
         Locale expectedLocale = Locale.SIMPLIFIED_CHINESE;
         assertEquals(expectedLocale, model.getSelectedLocale());
     }
+
+    @Test
+    void toggleLanguage_whenEnglishTwoToggle_stayAsEnglish() {
+        AppModel model = new AppModel();
+
+        Locale expectedInitialLocale = Locale.ENGLISH;
+        assertEquals(expectedInitialLocale, model.getSelectedLocale());
+
+        model.toggleLanguage();
+        model.toggleLanguage();
+
+        Locale expectedLocale = Locale.ENGLISH;
+        assertEquals(expectedLocale, model.getSelectedLocale());
+    }
 }
