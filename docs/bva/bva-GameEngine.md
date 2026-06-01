@@ -129,7 +129,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
 | TC1 | `new GameEngine(2).isDeckEmpty()` at game start | `false` | yes |
-| TC2 | draw every card, then `isDeckEmpty()` | `true` | no |
+| TC2 | draw every card, then `isDeckEmpty()` | `true` | yes |
 
 ---
 
@@ -170,8 +170,8 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `drawCardForCurrentPlayer()` at game start | returns a non-null `Card`; current player's hand size becomes 6; draw pile size decreases by 1 | no |
-| TC2 | draw every card, then `drawCardForCurrentPlayer()` | throws `IllegalStateException` with message `"deck.emptyType"` | no |
+| TC1 | `drawCardForCurrentPlayer()` at game start | returns a non-null `Card`; current player's hand size becomes 6; draw pile size decreases by 1 | yes |
+| TC2 | draw every card, then `drawCardForCurrentPlayer()` | throws `IllegalStateException` with message `"deck.emptyType"` | yes |
 
 ---
 

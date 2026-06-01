@@ -2,6 +2,7 @@ package domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -198,5 +199,33 @@ class GameEngineTest {
                     engine.getPlayerHand(MIN_PLAYERS);
                 });
         assertEquals("gameEngine.getPlayer.invalidId", ex.getMessage());
+    }
+
+    @Test
+    void drawCardForCurrentPlayer_movesTopCardIntoCurrentPlayerHand() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        int currentId = engine.getCurrentPlayerId();
+        int pileBefore = engine.getDrawPileSize();
+
+        Card drawn = engine.drawCardForCurrentPlayer();
+
+        assertNotNull(drawn);
+        assertEquals(STARTING_HAND_SIZE + 1, engine.getPlayerHand(currentId).size());
+        assertEquals(pileBefore - 1, engine.getDrawPileSize());
+    }
+
+    @Test
+    void drawCardForCurrentPlayer_emptyDeck_throwsIllegalStateExceptionAndDeckIsEmpty() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        while (!engine.isDeckEmpty()) {
+            engine.drawCardForCurrentPlayer();
+        }
+        assertTrue(engine.isDeckEmpty());
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> {
+                    engine.drawCardForCurrentPlayer();
+                });
+        assertEquals("deck.emptyType", ex.getMessage());
     }
 }
