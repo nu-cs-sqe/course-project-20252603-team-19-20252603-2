@@ -3,10 +3,12 @@ package ui;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import ui.controller.StartController;
 import ui.model.AppModel;
 import ui.navigation.JavaFxScreenRouter;
 import ui.navigation.ScreenRouter;
+import ui.view.GameSetupView;
+import ui.view.GameView;
+import ui.view.InstructionView;
 import ui.view.StartView;
 
 public class MainApp extends Application {
@@ -21,6 +23,9 @@ public class MainApp extends Application {
 		AppModel appModel = new AppModel();
 
 		StartView startView = new StartView();
+		InstructionView instructionView = new InstructionView();
+		GameSetupView gameSetupView = new GameSetupView();
+		GameView gameView = new GameView();
 
 		Scene scene = new Scene(startView, mainWindowWidth, mainWindowHeight);
 
@@ -33,21 +38,19 @@ public class MainApp extends Application {
 
 			@Override
 			public void showInstructions() {
-
+				scene.setRoot(instructionView);
 			}
 
 			@Override
 			public void showGameSetup() {
-
+				scene.setRoot(gameSetupView);
 			}
 
 			@Override
 			public void showGame() {
-
+				scene.setRoot(gameView);
 			}
 		});
-
-		new StartController(startView, appModel, router);
 
 		primaryStage.setTitle("Exploding Kittens");
 		primaryStage.setScene(scene);
