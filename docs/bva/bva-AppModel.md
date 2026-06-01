@@ -15,9 +15,9 @@
 ##### All-combination or each-choice: each-choice
 
 | Test Case # | System under test                                   | Expected output                                      | Implemented? |
-|-------------|-----------------------------------------------------|------------------------------------------------------|--------------|
-| TC1         | Initially Locale.ENGLISH and one`toggleLanguage()`  | `getSelectedLocale()` is `Locale.SIMPLIFIED_CHINESE` | no           |
-| TC2         | Initially Locale.ENGLISH and two `toggleLanguage()` | `getSelectedLocale()` is `Locale.ENGLISH`            | no           |
+|-------------|-----------------------------------------------------|------------------------------------------------------|-------------|
+| TC1         | Initially Locale.ENGLISH and one`toggleLanguage()`  | `getSelectedLocale()` is `Locale.SIMPLIFIED_CHINESE` | yes         |
+| TC2         | Initially Locale.ENGLISH and two `toggleLanguage()` | `getSelectedLocale()` is `Locale.ENGLISH`            | no          |
 
 ---
 
