@@ -40,9 +40,6 @@ public class TurnTracker {
     }
 
     public void changeCurrentDirection() {
-        if (currentDirection != 1 && currentDirection != -1) {
-            throw new IllegalArgumentException(INVALID_PLAYING_DIRECTION);
-        }
         this.currentDirection *= -1;
     }
 
