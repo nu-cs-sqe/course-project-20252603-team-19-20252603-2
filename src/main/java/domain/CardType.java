@@ -9,5 +9,7 @@ public enum CardType {
 	SEE_THE_FUTURE,
 	NOPE,
 	CAT_CARDS,
-	FAVOR
+	FAVOR,
+	REVERSE,
+	TARGETED_ATTACK
 }

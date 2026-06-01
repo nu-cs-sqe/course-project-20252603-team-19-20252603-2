@@ -47,6 +47,8 @@
 - `NOPE`
 - `CAT_CARDS`
 - `FAVOR`
+- `REVERSE`
+- `TARGETED_ATTACK`
 
 ---
 
