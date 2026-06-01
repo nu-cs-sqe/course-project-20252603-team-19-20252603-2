@@ -262,3 +262,232 @@ Postconditions:
 - The current player has drawn exactly one card (unless the pile was empty).
 - The hand shown to each player is a snapshot that cannot be edited from outside the game.
 - The turn has passed to the next player, or the game has ended.
+---
+
+## Use Case 9: Play Skip
+
+Actor: Current Player
+
+Preconditions:
+
+- It is the current player's turn.
+- The player's hand contains at least one Skip card.
+
+Main Flow:
+
+1. Player selects Skip from their hand.
+2. System places the Skip on the discard pile.
+3. System ends one of the player's owed turns without making them draw.
+4. If the player owes no more turns, system advances to the next living player.
+
+Alternate Flows:
+
+4.a The player was under an Attack and still owes one or more turns.
+  4.a.1 System keeps the turn with the same player for their remaining owed turn(s).
+
+Postconditions:
+
+- The Skip card is in the discard pile.
+- The player did not draw a card for the skipped turn.
+- The turn has advanced only if no owed turns remain.
+
+---
+
+## Use Case 10: Play Shuffle
+
+Actor: Current Player
+
+Preconditions:
+
+- It is the current player's turn.
+- The player's hand contains at least one Shuffle card.
+
+Main Flow:
+
+1. Player selects Shuffle from their hand.
+2. System places the Shuffle on the discard pile.
+3. System randomly reorders the draw pile.
+4. System returns to the play-or-pass prompt for the same player.
+
+Postconditions:
+
+- The Shuffle card is in the discard pile.
+- The draw pile contains the same cards in a new random order.
+- It is still the same player's turn.
+
+---
+
+## Use Case 11: Play Reverse
+
+Actor: Current Player
+
+Preconditions:
+
+- It is the current player's turn.
+- The player's hand contains at least one Reverse card.
+
+Main Flow:
+
+1. Player selects Reverse from their hand.
+2. System places the Reverse on the discard pile.
+3. System flips the direction of play (forward becomes backward and vice versa).
+4. System ends one owed turn without making the player draw, then advances in the new direction if no owed turns remain.
+
+Postconditions:
+
+- The Reverse card is in the discard pile.
+- The direction of play is flipped.
+- The turn has advanced in the new direction (unless the player still owes turns).
+
+---
+
+## Use Case 12: Play a Targeted Attack
+
+Actor: Current Player
+
+Preconditions:
+
+- It is the current player's turn.
+- The player's hand contains at least one Targeted Attack card.
+
+Main Flow:
+
+1. Player selects Targeted Attack and chooses a living opponent.
+2. System places the Targeted Attack on the discard pile.
+3. System ends the current player's turn without requiring a draw.
+4. System makes the chosen opponent the current player and forces them to take two consecutive turns.
+
+Alternate Flows:
+
+1.a The chosen target is the player themselves or is already eliminated.
+  1.a.1 System rejects the choice (`rule.target.invalid`) and resumes at step 1.
+
+4.a The current player was already serving a stacked Attack with N turns remaining.
+  4.a.1 System transfers the remaining N turns to the chosen target and adds 2 more.
+
+Postconditions:
+
+- The Targeted Attack card is in the discard pile.
+- The chosen opponent is now the current player and owes the correct number of forced turns.
+
+---
+
+## Use Case 13: Play Favor
+
+Actor: Current Player
+
+Preconditions:
+
+- It is the current player's turn.
+- The player's hand contains at least one Favor card.
+
+Main Flow:
+
+1. Player selects Favor and chooses a living opponent.
+2. System places the Favor on the discard pile.
+3. System takes the chosen card from the target's hand and gives it to the current player.
+4. System returns to the play-or-pass prompt for the same player.
+
+Alternate Flows:
+
+1.a The chosen target is the player themselves or is already eliminated.
+  1.a.1 System rejects the choice (`rule.target.invalid`) and resumes at step 1.
+
+Postconditions:
+
+- The Favor card is in the discard pile.
+- One card has moved from the target's hand to the current player's hand.
+- It is still the same player's turn.
+
+---
+
+## Use Case 14: Play a Pair of Cat Cards
+
+Actor: Current Player
+
+Preconditions:
+
+- It is the current player's turn.
+- The player's hand contains at least two matching Cat cards.
+
+Main Flow:
+
+1. Player selects a matching pair of Cat cards and chooses a living opponent.
+2. System places both Cat cards on the discard pile.
+3. System takes one card chosen at random from the target's hand and gives it to the current player.
+4. System returns to the play-or-pass prompt for the same player.
+
+Alternate Flows:
+
+1.a The player does not hold two matching Cat cards.
+  1.a.1 System rejects the play (`rule.catPair.needTwo`) and resumes at the play-or-pass prompt.
+
+1.b The chosen target is the player themselves or is already eliminated.
+  1.b.1 System rejects the choice (`rule.target.invalid`) and resumes at step 1.
+
+3.a The target has no cards.
+  3.a.1 System steals nothing; the play still consumed the pair.
+
+Postconditions:
+
+- Both Cat cards are in the discard pile.
+- At most one random card has moved from the target to the current player.
+- It is still the same player's turn.
+
+---
+
+## Use Case 15: Nope a Played Card
+
+Actor: Any Player (other than the one who just played)
+
+Preconditions:
+
+- A card was just played and its effect is the most recent action.
+- The noping player's hand contains at least one Nope card.
+
+Main Flow:
+
+1. Player chooses to play a Nope in response to the last played card.
+2. System places the Nope on the discard pile.
+3. System cancels the last played card so it can no longer be noped again.
+
+Alternate Flows:
+
+1.a There is no recently played card to cancel.
+  1.a.1 System rejects the play (`rule.nope.nothingToCancel`).
+
+1.b The player does not hold a Nope card.
+  1.b.1 System rejects the play (`gameEngine.play.notInHand`).
+
+Postconditions:
+
+- The Nope card is in the discard pile.
+- There is no longer a pending played card to nope.
+
+---
+
+## Use Case 16: End Game by Exhausted Draw Pile
+
+Actor: System
+
+Preconditions:
+
+- A game is in progress.
+- The draw pile has just become empty while two or more players are still alive.
+
+Main Flow:
+
+1. System detects that the draw pile is empty.
+2. System compares the hand sizes of all living players.
+3. System declares the living player holding the most cards the winner.
+4. System transitions to the End Screen, showing the winner.
+
+Alternate Flows:
+
+2.a Two or more living players are tied for the most cards.
+  2.a.1 System breaks the tie in favor of the lowest player id.
+
+Postconditions:
+
+- The game is no longer accepting turn actions.
+- The winner (most cards, lowest id on a tie) is displayed.
