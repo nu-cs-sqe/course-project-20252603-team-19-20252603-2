@@ -3,6 +3,7 @@ package ui;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ui.controller.InstructionController;
 import ui.controller.StartController;
 import ui.model.AppModel;
 import ui.navigation.JavaFxScreenRouter;
@@ -31,6 +32,11 @@ public class MainApp extends Application {
 		Scene scene = new Scene(startView, mainWindowWidth, mainWindowHeight);
 
 		JavaFxScreenRouter router = new JavaFxScreenRouter();
+
+		InstructionController instructionController = new InstructionController(
+				instructionView, appModel, router
+		);
+
 		router.configureNavigation(new ScreenRouter() {
 			@Override
 			public void showStart() {
@@ -39,6 +45,7 @@ public class MainApp extends Application {
 
 			@Override
 			public void showInstructions() {
+				instructionController.refreshView();
 				scene.setRoot(instructionView);
 			}
 
