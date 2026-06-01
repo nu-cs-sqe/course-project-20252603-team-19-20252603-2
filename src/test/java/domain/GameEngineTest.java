@@ -2,6 +2,7 @@ package domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -157,5 +158,89 @@ class GameEngineTest {
     void getDrawPileSize_maxPlayers_returns31() {
         GameEngine engine = new GameEngine(MAX_PLAYERS);
         assertEquals(DRAW_PILE_SIZE_MAX_PLAYERS, engine.getDrawPileSize());
+    }
+
+    @Test
+    void isDeckEmpty_atGameStart_returnsFalse() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        assertFalse(engine.isDeckEmpty());
+    }
+
+    @Test
+    void getPlayerHand_atGameStart_returnsStartingHand() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        assertEquals(STARTING_HAND_SIZE, engine.getPlayerHand(0).size());
+    }
+
+    @Test
+    void getPlayerHand_returnedListIsDefensiveCopy() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        engine.getPlayerHand(0).clear();
+        assertEquals(STARTING_HAND_SIZE, engine.getPlayerHand(0).size());
+    }
+
+    @Test
+    void getPlayerHand_negativeId_throwsIllegalArgumentException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                    engine.getPlayerHand(-1);
+                });
+        assertEquals("gameEngine.getPlayer.invalidId", ex.getMessage());
+    }
+
+    @Test
+    void getPlayerHand_idEqualToNumPlayers_throwsIllegalArgumentException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> {
+                    engine.getPlayerHand(MIN_PLAYERS);
+                });
+        assertEquals("gameEngine.getPlayer.invalidId", ex.getMessage());
+    }
+
+    @Test
+    void drawCardForCurrentPlayer_movesTopCardIntoCurrentPlayerHand() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        int currentId = engine.getCurrentPlayerId();
+        int pileBefore = engine.getDrawPileSize();
+
+        Card drawn = engine.drawCardForCurrentPlayer();
+
+        assertNotNull(drawn);
+        assertEquals(STARTING_HAND_SIZE + 1, engine.getPlayerHand(currentId).size());
+        assertEquals(pileBefore - 1, engine.getDrawPileSize());
+    }
+
+    @Test
+    void drawCardForCurrentPlayer_emptyDeck_throwsIllegalStateExceptionAndDeckIsEmpty() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        while (!engine.isDeckEmpty()) {
+            engine.drawCardForCurrentPlayer();
+        }
+        assertTrue(engine.isDeckEmpty());
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> {
+                    engine.drawCardForCurrentPlayer();
+                });
+        assertEquals("deck.emptyType", ex.getMessage());
+    }
+
+    @Test
+    void advanceToNextPlayer_once_movesToNextPlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        engine.advanceToNextPlayer();
+        assertEquals(1, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void advanceToNextPlayer_twice_wrapsBackToFirstPlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        engine.advanceToNextPlayer();
+        engine.advanceToNextPlayer();
+        assertEquals(0, engine.getCurrentPlayerId());
     }
 }

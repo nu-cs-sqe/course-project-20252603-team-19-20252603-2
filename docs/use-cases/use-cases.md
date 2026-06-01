@@ -228,3 +228,37 @@ Postconditions:
 - The game is no longer accepting turn actions.
 - The winning player is displayed.
 - A new game can be started, or the application can be exited.
+
+---
+
+## Use Case 8: View Hand and Draw to End a Turn
+
+Actor: Current Player
+
+Preconditions:
+
+- A game is in progress.
+- It is the current player's turn.
+
+Main Flow:
+
+1. System shows the current player whose turn it is and displays that player's hand.
+2. Player clicks "Draw Card" to end their turn.
+3. System confirms the draw pile still has cards.
+4. System moves the top card of the draw pile into the current player's hand and reveals it.
+5. System hands the turn to the next player.
+6. System displays the next player's hand, ready for their turn.
+
+Alternate Flows:
+
+3.a The draw pile is empty.
+  3.a.1 System does not draw and instead branches to Use Case 7 (End Game) to decide the winner.
+
+4.a The drawn card is an Exploding Kitten.
+  4.a.1 Branch to Use Case 3 (Draw an Exploding Kitten).
+
+Postconditions:
+
+- The current player has drawn exactly one card (unless the pile was empty).
+- The hand shown to each player is a snapshot that cannot be edited from outside the game.
+- The turn has passed to the next player, or the game has ended.

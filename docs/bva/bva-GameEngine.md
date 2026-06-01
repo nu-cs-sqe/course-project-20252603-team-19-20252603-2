@@ -113,6 +113,88 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 ---
 
+## Method 6: ```public boolean isDeckEmpty()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | none (instance query) | Whether the draw pile has any cards left |
+| Step 2 | n/a | `boolean` |
+| Step 3 | freshly set-up deck (non-empty), deck drained to 0 | `false` / `true` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `new GameEngine(2).isDeckEmpty()` at game start | `false` | yes |
+| TC2 | draw every card, then `isDeckEmpty()` | `true` | yes |
+
+---
+
+## Method 7: ```public List<Card> getPlayerHand(int playerId)```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | Player id whose hand to read | A defensive copy of that player's hand |
+| Step 2 | `int` | `List<Card>` / `IllegalArgumentException` |
+| Step 3 | id `-1`, `0`, `numPlayers-1`, `numPlayers` | exception / hand / hand / exception |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `getPlayerHand(0)` at game start | list of size 5 (the starting hand) | yes |
+| TC2 | mutate the returned list, then `getPlayerHand(0)` again | original hand unchanged (defensive copy) | yes |
+| TC3 | `getPlayerHand(-1)` | throws `IllegalArgumentException` with message `"gameEngine.getPlayer.invalidId"` | yes |
+| TC4 | `getPlayerHand(numPlayers)` | throws `IllegalArgumentException` with message `"gameEngine.getPlayer.invalidId"` | yes |
+
+---
+
+## Method 8: ```public Card drawCardForCurrentPlayer()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | none; acts on current player and draw pile | Top card moved from draw pile to current player's hand, and returned |
+| Step 2 | n/a | `Card` / `IllegalStateException` |
+| Step 3 | non-empty draw pile, empty draw pile | card returned + hand grows + pile shrinks / `IllegalStateException` with key `deck.emptyType` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `drawCardForCurrentPlayer()` at game start | returns a non-null `Card`; current player's hand size becomes 6; draw pile size decreases by 1 | yes |
+| TC2 | draw every card, then `drawCardForCurrentPlayer()` | throws `IllegalStateException` with message `"deck.emptyType"` | yes |
+
+---
+
+## Method 9: ```public void advanceToNextPlayer()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | none; advances the turn | Current player id becomes the next player's id |
+| Step 2 | n/a | state mutation on the turn tracker |
+| Step 3 | start at player 0 with `n=2`, call once / twice | `1` / back to `0` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `advanceToNextPlayer()` once with 2 players | `getCurrentPlayerId()==1` | yes |
+| TC2 | `advanceToNextPlayer()` twice with 2 players | `getCurrentPlayerId()==0` | yes |
+
+---
+
 ## Recall the 4 steps of BVA
 ### Step 1: Describe the input and output in terms of the domain.
 ### Step 2: Choose the data type for the input and the output from the BVA Catalog.

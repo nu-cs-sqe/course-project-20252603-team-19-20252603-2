@@ -14,6 +14,7 @@
 - `removeCardFromHand(int index): Card`
 - `getHandSize(): int`
 - `getCardAt(int index): Card`
+- `getHand(): List<Card>` — returns a defensive copy of the hand (`new ArrayList<>(hand)`).
 - `hasCard(CardType): boolean`
 - `getIndexOfCard(CardType): int`
 - `isAlive(): boolean`
@@ -92,6 +93,16 @@
   is outside `[0, numPlayers)`.
 - `getCurrentPlayerId(): int`
 - `getDrawPileSize(): int`
+- `isDeckEmpty(): boolean` — true when the draw pile has no cards left; the UI
+  checks this before letting the current player draw.
+- `getPlayerHand(int playerId): List<Card>` — defensive copy of the given
+  player's hand (delegates to `Player.getHand()`); used by the UI to render a
+  hand at game start and on each turn change.
+- `drawCardForCurrentPlayer(): Card` — draws the top card of the draw pile,
+  adds it to the current player's hand, and returns it. Throws
+  `IllegalStateException` (`deck.emptyType`) if the draw pile is empty.
+- `advanceToNextPlayer()` — hands the turn to the next player via
+  `TurnTracker.turnGoesToNextPlayer()`.
 
 ---
 

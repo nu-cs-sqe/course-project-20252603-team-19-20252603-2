@@ -55,6 +55,24 @@ public final class GameEngine {
         return deck.getSize();
     }
 
+    public boolean isDeckEmpty() {
+        return deck.isEmpty();
+    }
+
+    public List<Card> getPlayerHand(int playerId) {
+        return getPlayer(playerId).getHand();
+    }
+
+    public Card drawCardForCurrentPlayer() {
+        Card drawn = deck.drawTop();
+        getPlayer(getCurrentPlayerId()).addCardToHand(drawn);
+        return drawn;
+    }
+
+    public void advanceToNextPlayer() {
+        turnTracker.turnGoesToNextPlayer();
+    }
+
     private static List<Card> buildShuffledNonSpecialPool() {
         List<Card> pool = new ArrayList<>();
         for (Card card : new Deck().getDrawPile()) {
