@@ -42,6 +42,10 @@ public final class Player {
         return hand.get(index);
     }
 
+    public List<Card> getHand() {
+        return new ArrayList<>(hand);
+    }
+
     public Card removeCardFromHand(int index) {
         if (index < 0 || index >= hand.size()) {
             throw new IndexOutOfBoundsException(REMOVE_INVALID_INDEX_KEY);

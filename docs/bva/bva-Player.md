@@ -221,9 +221,9 @@
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `getHand()` on new player | empty list (`size()==0`) | no |
-| TC2 | `getHand()` after one `addCardToHand` | list of size 1 with that card | no |
-| TC3 | mutate the list returned by `getHand()`, then call `getHandSize()` | player's own hand size is unchanged (copy is defensive) | no |
+| TC1 | `getHand()` on new player | empty list (`size()==0`) | yes |
+| TC2 | `getHand()` after one `addCardToHand` | list of size 1 with that card | yes |
+| TC3 | mutate the list returned by `getHand()`, then call `getHandSize()` | player's own hand size is unchanged (copy is defensive) | yes |
 
 ---
 
