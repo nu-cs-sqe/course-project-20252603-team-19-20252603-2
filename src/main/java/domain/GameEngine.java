@@ -69,6 +69,10 @@ public final class GameEngine {
         return drawn;
     }
 
+    public void advanceToNextPlayer() {
+        turnTracker.turnGoesToNextPlayer();
+    }
+
     private static List<Card> buildShuffledNonSpecialPool() {
         List<Card> pool = new ArrayList<>();
         for (Card card : new Deck().getDrawPile()) {

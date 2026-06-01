@@ -228,4 +228,19 @@ class GameEngineTest {
                 });
         assertEquals("deck.emptyType", ex.getMessage());
     }
+
+    @Test
+    void advanceToNextPlayer_once_movesToNextPlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        engine.advanceToNextPlayer();
+        assertEquals(1, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void advanceToNextPlayer_twice_wrapsBackToFirstPlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        engine.advanceToNextPlayer();
+        engine.advanceToNextPlayer();
+        assertEquals(0, engine.getCurrentPlayerId());
+    }
 }

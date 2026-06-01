@@ -190,8 +190,8 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `advanceToNextPlayer()` once with 2 players | `getCurrentPlayerId()==1` | no |
-| TC2 | `advanceToNextPlayer()` twice with 2 players | `getCurrentPlayerId()==0` | no |
+| TC1 | `advanceToNextPlayer()` once with 2 players | `getCurrentPlayerId()==1` | yes |
+| TC2 | `advanceToNextPlayer()` twice with 2 players | `getCurrentPlayerId()==0` | yes |
 
 ---
 
