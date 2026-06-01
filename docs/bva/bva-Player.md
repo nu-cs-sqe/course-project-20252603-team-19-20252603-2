@@ -206,6 +206,27 @@
 
 ---
 
+## Method 11: ```public List<Card> getHand()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | none (instance query) | A defensive copy of the hand's cards |
+| Step 2 | n/a | `List<Card>` (a new list, not the internal one) |
+| Step 3 | empty hand, hand of size 1 | empty list / list of size 1; mutating the returned list does not affect the player |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `getHand()` on new player | empty list (`size()==0`) | no |
+| TC2 | `getHand()` after one `addCardToHand` | list of size 1 with that card | no |
+| TC3 | mutate the list returned by `getHand()`, then call `getHandSize()` | player's own hand size is unchanged (copy is defensive) | no |
+
+---
+
 ## Recall the 4 steps of BVA
 ### Step 1: Describe the input and output in terms of the domain.
 ### Step 2: Choose the data type for the input and the output from the BVA Catalog.
