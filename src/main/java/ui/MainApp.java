@@ -3,6 +3,7 @@ package ui;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ui.controller.StartController;
 import ui.model.AppModel;
 import ui.navigation.JavaFxScreenRouter;
 import ui.navigation.ScreenRouter;
@@ -51,6 +52,8 @@ public class MainApp extends Application {
 				scene.setRoot(gameView);
 			}
 		});
+
+		new StartController(startView, appModel, router);
 
 		primaryStage.setTitle("Exploding Kittens");
 		primaryStage.setScene(scene);
