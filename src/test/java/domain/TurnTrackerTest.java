@@ -209,4 +209,27 @@ public class TurnTrackerTest {
     }
 
 
+    @Test
+    public void changeCurrentDirection_3TotalPlayers_shouldChangeDirection() {
+        TurnTracker turnTracker = new TurnTracker();
+        final int numTotalPlayers = 3;
+        final int currentPlayer = 0;
+        final int currentDirection = 1;
+        turnTracker.setNumTotalPlayers(numTotalPlayers);
+        turnTracker.setCurrentPlayer(currentPlayer);
+        turnTracker.setCurrentDirection(currentDirection);
+
+        turnTracker.changeCurrentDirection();
+
+        final int expectedPlayer = 0;
+        final int actualPlayer = turnTracker.getCurrentPlayer();
+        assertEquals(expectedPlayer, actualPlayer);
+
+        final int expectedDirection = -1;
+        final int actualDirection = turnTracker.getCurrentDirection();
+        assertEquals(expectedDirection, actualDirection);
+    }
+
+
+
 }

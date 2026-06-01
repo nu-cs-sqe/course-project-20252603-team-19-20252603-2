@@ -62,7 +62,7 @@ This file holds the BVA analysis for every public method of the `TurnTracker` cl
 - input: void
 - output: none
 - - TC 4.1: changeCurrentDirection_3TotalPlayers_shouldChangeDirection
-  - State of the system: numTotalPlayers is 2, currentPlayer is 0, currentDirection is 1
+  - State of the system: numTotalPlayers is 3, currentPlayer is 0, currentDirection is 1
     - Expected output: currentPlayer is 0; currentDirection is -1
   - Implemented: no
 
