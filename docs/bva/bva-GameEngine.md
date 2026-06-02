@@ -26,8 +26,8 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | TC5 | `new GameEngine(0)` | throws `IllegalArgumentException` with message `"gameEngine.numPlayers.outOfRange"` | yes |
 | TC6 | `new GameEngine(-1)` | throws `IllegalArgumentException` with message `"gameEngine.numPlayers.outOfRange"` | yes |
 | TC7 | `new GameEngine(2)` post-state | each player has 5 cards in hand (1 Defuse + 4 others, no Exploding Kitten) | yes |
-| TC8 | `new GameEngine(2)` post-state | draw pile size is `43` (38 non-EK non-Defuse + (6-n) Defuses + (n-1) EK = 38 + 4 + 1) | yes |
-| TC9 | `new GameEngine(5)` post-state | draw pile size is `31` (26 + 1 + 4) | yes |
+| TC8 | `new GameEngine(2)` post-state | draw pile size is `50` (45 non-EK non-Defuse + (6-n) Defuses + (n-1) EK = 45 + 4 + 1) | yes |
+| TC9 | `new GameEngine(5)` post-state | draw pile size is `38` (33 + 1 + 4) | yes |
 
 ---
 
@@ -101,15 +101,15 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 |------|-------|--------|
 | Step 1 | none (instance query) | Number of cards still in the draw pile |
 | Step 2 | n/a | `int` |
-| Step 3 | game start at `n=2`, `n=5` | `43`, `31` |
+| Step 3 | game start at `n=2`, `n=5` | `50`, `38` |
 
 ### Step 4:
 ##### All-combination or each-choice: each-choice
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `new GameEngine(2).getDrawPileSize()` | `43` | yes |
-| TC2 | `new GameEngine(5).getDrawPileSize()` | `31` | yes |
+| TC1 | `new GameEngine(2).getDrawPileSize()` | `50` | yes |
+| TC2 | `new GameEngine(5).getDrawPileSize()` | `38` | yes |
 
 ---
 
