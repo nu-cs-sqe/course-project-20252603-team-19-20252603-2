@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class PlayerTest {
@@ -202,5 +203,29 @@ class PlayerTest {
                 IllegalStateException.class,
                 () -> player.markDead());
         assertEquals("player.markDead.alreadyDead", ex.getMessage());
+    }
+
+    @Test
+    void getHand_newPlayer_returnsEmptyList() {
+        Player player = new Player(0);
+        assertEquals(0, player.getHand().size());
+    }
+
+    @Test
+    void getHand_afterAddCard_containsThatCard() {
+        Player player = new Player(0);
+        Card defuse = new Card(CardType.DEFUSE);
+        player.addCardToHand(defuse);
+        List<Card> hand = player.getHand();
+        assertEquals(1, hand.size());
+        assertSame(defuse, hand.get(0));
+    }
+
+    @Test
+    void getHand_returnedListIsDefensiveCopy() {
+        Player player = new Player(0);
+        player.addCardToHand(new Card(CardType.DEFUSE));
+        player.getHand().add(new Card(CardType.ATTACK));
+        assertEquals(1, player.getHandSize());
     }
 }

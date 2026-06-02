@@ -10,14 +10,25 @@ public final class GameEngine {
     private static final int MAX_PLAYERS = 5;
     private static final int INITIAL_NON_DEFUSE_CARDS_PER_PLAYER = 4;
     private static final int TOTAL_DEFUSES = 6;
+    private static final int NORMAL_FORCED_TURNS = 1;
+    private static final int TURNS_ADDED_BY_ATTACK = 2;
 
     private static final String NUM_PLAYERS_OUT_OF_RANGE_KEY = "gameEngine.numPlayers.outOfRange";
     private static final String INVALID_PLAYER_ID_KEY = "gameEngine.getPlayer.invalidId";
+    private static final String NOT_IN_HAND_KEY = "gameEngine.play.notInHand";
+    private static final String NO_KITTEN_KEY = "gameEngine.defuse.noKitten";
+    private static final String NO_DEFUSE_KEY = "gameEngine.defuse.noDefuse";
+    private static final String NOT_OVER_KEY = "gameEngine.notOver";
 
     private final int numPlayers;
     private final List<Player> players;
     private final TurnTracker turnTracker;
     private final Deck deck;
+    private final RuleManager ruleManager;
+    private final ActionController actionController;
+
+    private int forcedTurns = NORMAL_FORCED_TURNS;
+    private CardType lastPlayedCard;
 
     public GameEngine(int numPlayers) {
         if (numPlayers < MIN_PLAYERS || numPlayers > MAX_PLAYERS) {
@@ -30,6 +41,8 @@ public final class GameEngine {
         }
         this.turnTracker = new TurnTracker();
         this.turnTracker.setNumTotalPlayers(numPlayers);
+        this.ruleManager = new RuleManager();
+        this.actionController = new ActionController();
 
         List<Card> nonSpecialPool = buildShuffledNonSpecialPool();
         dealStartingHands(this.players, nonSpecialPool);
@@ -53,6 +66,197 @@ public final class GameEngine {
 
     public int getDrawPileSize() {
         return deck.getSize();
+    }
+
+    public boolean isDeckEmpty() {
+        return deck.isEmpty();
+    }
+
+    public List<Card> getPlayerHand(int playerId) {
+        return getPlayer(playerId).getHand();
+    }
+
+    public Card drawCardForCurrentPlayer() {
+        Card drawn = deck.drawTop();
+        getPlayer(getCurrentPlayerId()).addCardToHand(drawn);
+        return drawn;
+    }
+
+    public void advanceToNextPlayer() {
+        advanceToNextLivingPlayer();
+    }
+
+    public void endTurnByDrawing() {
+        consumeOneForcedTurn();
+    }
+
+    public List<Card> getDiscardPile() {
+        return deck.getDiscardPile();
+    }
+
+    public int getForcedTurns() {
+        return forcedTurns;
+    }
+
+    public CardType getLastPlayedCard() {
+        return lastPlayedCard;
+    }
+
+    public void playSkip() {
+        playFromHand(CardType.SKIP);
+        consumeOneForcedTurn();
+    }
+
+    public void playShuffle() {
+        playFromHand(CardType.SHUFFLE);
+        actionController.shuffleDeck(deck);
+    }
+
+    public List<Card> playSeeTheFuture() {
+        playFromHand(CardType.SEE_THE_FUTURE);
+        return actionController.peekTopThree(deck);
+    }
+
+    public void playReverse() {
+        playFromHand(CardType.REVERSE);
+        actionController.reverseDirection(turnTracker);
+        consumeOneForcedTurn();
+    }
+
+    public void playAttack() {
+        playFromHand(CardType.ATTACK);
+        int transferred = forcedTurns == NORMAL_FORCED_TURNS ? 0 : forcedTurns;
+        advanceToNextLivingPlayer();
+        forcedTurns = transferred + TURNS_ADDED_BY_ATTACK;
+    }
+
+    public void playTargetedAttack(int targetId) {
+        Player current = getPlayer(getCurrentPlayerId());
+        Player target = getPlayer(targetId);
+        ruleManager.requireValidTarget(current, target);
+        playFromHand(CardType.TARGETED_ATTACK);
+        int transferred = forcedTurns == NORMAL_FORCED_TURNS ? 0 : forcedTurns;
+        turnTracker.setCurrentPlayer(targetId);
+        forcedTurns = transferred + TURNS_ADDED_BY_ATTACK;
+    }
+
+    public void playFavor(int targetId, int cardIndex) {
+        Player current = getPlayer(getCurrentPlayerId());
+        Player target = getPlayer(targetId);
+        ruleManager.requireValidTarget(current, target);
+        playFromHand(CardType.FAVOR);
+        actionController.giveCard(target, current, cardIndex);
+    }
+
+    public void playCatPair(int targetId) {
+        Player current = getPlayer(getCurrentPlayerId());
+        Player target = getPlayer(targetId);
+        ruleManager.requireValidTarget(current, target);
+        ruleManager.requireCatPair(current);
+        discardOneFromCurrent(CardType.CAT_CARDS);
+        discardOneFromCurrent(CardType.CAT_CARDS);
+        lastPlayedCard = CardType.CAT_CARDS;
+        actionController.stealRandomCard(target, current);
+    }
+
+    public void defuseDrawnKitten(int reinsertIndex) {
+        Player current = getPlayer(getCurrentPlayerId());
+        int kittenIndex = current.getIndexOfCard(CardType.EXPLODING_KITTEN);
+        if (kittenIndex < 0) {
+            throw new IllegalStateException(NO_KITTEN_KEY);
+        }
+        if (current.getIndexOfCard(CardType.DEFUSE) < 0) {
+            throw new IllegalStateException(NO_DEFUSE_KEY);
+        }
+        Card kitten = current.removeCardFromHand(kittenIndex);
+        deck.discard(current.removeCardFromHand(current.getIndexOfCard(CardType.DEFUSE)));
+        deck.insertAt(kitten, reinsertIndex);
+        consumeOneForcedTurn();
+    }
+
+    public void explodeCurrentPlayer() {
+        Player current = getPlayer(getCurrentPlayerId());
+        int kittenIndex = current.getIndexOfCard(CardType.EXPLODING_KITTEN);
+        if (kittenIndex < 0) {
+            throw new IllegalStateException(NO_KITTEN_KEY);
+        }
+        deck.discard(current.removeCardFromHand(kittenIndex));
+        current.markDead();
+        while (current.getHandSize() > 0) {
+            deck.discard(current.removeCardFromHand(0));
+        }
+        advanceToNextLivingPlayer();
+        forcedTurns = NORMAL_FORCED_TURNS;
+    }
+
+    public void playNope(int noperId) {
+        ruleManager.requireSomethingToNope(lastPlayedCard);
+        Player noper = getPlayer(noperId);
+        int index = noper.getIndexOfCard(CardType.NOPE);
+        if (index < 0) {
+            throw new IllegalStateException(NOT_IN_HAND_KEY);
+        }
+        deck.discard(noper.removeCardFromHand(index));
+        lastPlayedCard = null;
+    }
+
+    public boolean isGameOver() {
+        return countAlive() == 1 || deck.isEmpty();
+    }
+
+    public int getWinnerId() {
+        if (!isGameOver()) {
+            throw new IllegalStateException(NOT_OVER_KEY);
+        }
+        int winnerId = -1;
+        int mostCards = -1;
+        for (Player player : players) {
+            if (player.isAlive() && player.getHandSize() > mostCards) {
+                mostCards = player.getHandSize();
+                winnerId = player.getPlayerId();
+            }
+        }
+        return winnerId;
+    }
+
+    private int countAlive() {
+        int alive = 0;
+        for (Player player : players) {
+            if (player.isAlive()) {
+                alive++;
+            }
+        }
+        return alive;
+    }
+
+    private void discardOneFromCurrent(CardType type) {
+        Player current = getPlayer(getCurrentPlayerId());
+        deck.discard(current.removeCardFromHand(current.getIndexOfCard(type)));
+    }
+
+    private void playFromHand(CardType type) {
+        ruleManager.requirePlayable(type);
+        Player current = getPlayer(getCurrentPlayerId());
+        int index = current.getIndexOfCard(type);
+        if (index < 0) {
+            throw new IllegalStateException(NOT_IN_HAND_KEY);
+        }
+        deck.discard(current.removeCardFromHand(index));
+        lastPlayedCard = type;
+    }
+
+    private void consumeOneForcedTurn() {
+        forcedTurns--;
+        if (forcedTurns <= 0) {
+            advanceToNextLivingPlayer();
+            forcedTurns = NORMAL_FORCED_TURNS;
+        }
+    }
+
+    private void advanceToNextLivingPlayer() {
+        do {
+            turnTracker.turnGoesToNextPlayer();
+        } while (!getPlayer(getCurrentPlayerId()).isAlive());
     }
 
     private static List<Card> buildShuffledNonSpecialPool() {

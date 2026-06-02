@@ -14,6 +14,7 @@
 - `removeCardFromHand(int index): Card`
 - `getHandSize(): int`
 - `getCardAt(int index): Card`
+- `getHand(): List<Card>` — returns a defensive copy of the hand (`new ArrayList<>(hand)`).
 - `hasCard(CardType): boolean`
 - `getIndexOfCard(CardType): int`
 - `isAlive(): boolean`
@@ -46,6 +47,8 @@
 - `NOPE`
 - `CAT_CARDS`
 - `FAVOR`
+- `REVERSE`
+- `TARGETED_ATTACK`
 
 ---
 
@@ -92,11 +95,107 @@
   is outside `[0, numPlayers)`.
 - `getCurrentPlayerId(): int`
 - `getDrawPileSize(): int`
+- `isDeckEmpty(): boolean` — true when the draw pile has no cards left; the UI
+  checks this before letting the current player draw.
+- `getPlayerHand(int playerId): List<Card>` — defensive copy of the given
+  player's hand (delegates to `Player.getHand()`); used by the UI to render a
+  hand at game start and on each turn change.
+- `drawCardForCurrentPlayer(): Card` — draws the top card of the draw pile,
+  adds it to the current player's hand, and returns it. Throws
+  `IllegalStateException` (`deck.emptyType`) if the draw pile is empty.
+- `advanceToNextPlayer()` — hands the turn to the next living player (skips
+  eliminated seats).
+- `endTurnByDrawing()` — ends the current turn after a safe (non-kitten) draw:
+  consumes one owed turn and, when none remain, advances to the next living
+  player. The UI calls this after `drawCardForCurrentPlayer()` returns a
+  non-kitten card, so Attack / Targeted Attack stacking is honoured.
+- `getDiscardPile(): List<Card>` — defensive copy of the discard pile for the
+  UI to render.
+- `getForcedTurns(): int` — draws the current player still owes before the turn
+  passes (1 normally; raised by Attack / Targeted Attack).
+- `getLastPlayedCard(): CardType` — the most recently played card type (what a
+  Nope may cancel); `null` before any card is played.
+- `playSkip()` — discards a SKIP from the current hand and ends one owed turn
+  without drawing.
+- `playShuffle()` — discards a SHUFFLE and shuffles the draw pile; same player
+  continues.
+- `playSeeTheFuture(): List<Card>` — discards a SEE_THE_FUTURE and returns the
+  top up-to-3 cards; same player continues.
+- `playReverse()` — discards a REVERSE, flips the turn direction, and ends one
+  owed turn without drawing.
+- `playAttack()` — discards an ATTACK and ends the current turn without drawing;
+  the next living player owes `(2 + any stacked turns)` turns.
+- `playTargetedAttack(int targetId)` — discards a TARGETED_ATTACK; like Attack
+  but the chosen living opponent (not the neighbour) owes the turns.
+- `playFavor(int targetId, int cardIndex)` — discards a FAVOR; the target gives
+  the card at `cardIndex` to the current player; same player continues.
+- `playCatPair(int targetId)` — discards two CAT_CARDS and steals one random
+  card from the target; same player continues.
+- `playNope(int noperId)` — the noper discards a NOPE to cancel the last played
+  card (simplified, no reaction window); clears `lastPlayedCard`.
+- `defuseDrawnKitten(int reinsertIndex)` — after drawing an Exploding Kitten,
+  discards a DEFUSE, reinserts the kitten at `reinsertIndex`, and ends the turn.
+- `explodeCurrentPlayer()` — after drawing an Exploding Kitten with no Defuse,
+  marks the current player dead, discards their remaining hand, and ends the
+  turn (advancing to the next living player).
+- `isGameOver(): boolean` — true when only one player is alive or the draw pile
+  is exhausted.
+- `getWinnerId(): int` — the winner's id; throws `IllegalStateException`
+  (`gameEngine.notOver`) if the game is not over. Last player standing, or — on
+  an exhausted pile — the living player with the most cards (ties: lowest id).
+
+### UI turn flow (recommended call sequence)
+
+For each turn the UI drives the engine as follows:
+
+1. Show `getPlayerHand(getCurrentPlayerId())` and `getDiscardPile()`.
+2. While the current player chooses to play cards, call the matching
+   `play*` method (e.g. `playSkip`, `playAttack`, `playFavor`). Each returns
+   after validating; catch `IllegalArgumentException` / `IllegalStateException`
+   and show the message (resolve the key against the locale bundle).
+   - `playSkip`, `playReverse`, `playAttack`, `playTargetedAttack` end the turn
+     themselves — after them, go to step 5.
+3. When the player chooses to draw, check `isDeckEmpty()`; if empty the game is
+   over (`isGameOver()`), go to step 6.
+4. Call `drawCardForCurrentPlayer()`.
+   - If the drawn card is `EXPLODING_KITTEN`: call `defuseDrawnKitten(index)`
+     when the player has (and plays) a Defuse, otherwise `explodeCurrentPlayer()`.
+     Both end the turn.
+   - Otherwise call `endTurnByDrawing()` to end the turn (honours Attack
+     stacking and skips eliminated players).
+5. After any turn-ending action, check `isGameOver()`; if true call
+   `getWinnerId()` and show the End screen.
+6. Otherwise repeat from step 1 for the new `getCurrentPlayerId()`.
+
+A Nope may be played by any other player via `playNope(noperId)` immediately
+after a card is played, before the next action.
 
 ---
 
 ## ActionController Class
 
+Applies the deck/player-level effect of a played card. Stateless apart from an
+injected `Random` (so the Cat-pair random steal is deterministic under test).
+Turn-flow effects that change *whose* turn it is or *how many* turns are owed
+(Skip, Attack, Targeted Attack) live in `GameEngine`, since they manipulate its
+turn-state; `ActionController` only touches the deck and players' hands.
+
+### Data Members
+- `random`: `Random` — source of randomness for `stealRandomCard`.
+
+### Methods
+- `ActionController()` — production constructor; uses `new Random()`.
+- `ActionController(Random random)` — package-private; injects a seeded
+  `Random` for deterministic tests.
+- `shuffleDeck(Deck deck)` — `deck.shuffle()` (Shuffle card).
+- `peekTopThree(Deck deck): List<Card>` — top up to 3 cards (See the Future);
+  returns fewer when the draw pile is smaller; no state change.
+- `reverseDirection(TurnTracker turnTracker)` — `turnTracker.changeCurrentDirection()`
+  (Reverse card).
+- `giveCard(Player from, Player to, int cardIndex)` — Favor: removes the card at
+  `cardIndex` from `from`'s hand and adds it to `to`'s hand.
+- `stealRandomCard(Player from, Player to)` — Cat pair: moves one randomly
+  chosen card from `from`'s hand to `to`'s hand; no-op if `from` has no cards.
 
 ---
 
@@ -125,6 +224,23 @@
 
 ## RuleManager Class
 
+Pure, stateless validation of whether a play is legal in the current state.
+Each method throws (with an i18n key) when the play is illegal and returns
+normally otherwise. No mutation; takes domain objects as parameters so it is
+trivially unit-testable.
+
+### Methods
+- `requirePlayable(CardType type)` — throws `IllegalArgumentException`
+  (`rule.play.cannotPlayDirectly`) if `type` is `DEFUSE` or `EXPLODING_KITTEN`
+  (those are never played directly from hand).
+- `requireValidTarget(Player actor, Player target)` — throws
+  `IllegalArgumentException` (`rule.target.invalid`) if `target` is the actor
+  themselves or is not alive.
+- `requireCatPair(Player actor)` — throws `IllegalStateException`
+  (`rule.catPair.needTwo`) if the actor holds fewer than two `CAT_CARDS`.
+- `requireSomethingToNope(CardType lastPlayedCard)` — throws
+  `IllegalStateException` (`rule.nope.nothingToCancel`) if `lastPlayedCard` is
+  `null`.
 
 ---
 
