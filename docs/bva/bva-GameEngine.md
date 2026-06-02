@@ -210,8 +210,8 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | current player given a SKIP, `playSkip()` (2 players) | turn passes to player 1; draw pile unchanged | no |
-| TC2 | current player has no SKIP, `playSkip()` | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | no |
+| TC1 | current player given a SKIP, `playSkip()` (2 players) | turn passes to player 1; draw pile unchanged | yes |
+| TC2 | current player has no SKIP, `playSkip()` | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | yes |
 
 ---
 
@@ -230,7 +230,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | current player given a SHUFFLE, `playShuffle()` | `getCurrentPlayerId()` unchanged; draw pile size unchanged | no |
+| TC1 | current player given a SHUFFLE, `playShuffle()` | `getCurrentPlayerId()` unchanged; draw pile size unchanged | yes |
 
 ---
 
@@ -249,7 +249,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | current player given a SEE_THE_FUTURE, `playSeeTheFuture()` | returns list of size 3; `getCurrentPlayerId()` unchanged | no |
+| TC1 | current player given a SEE_THE_FUTURE, `playSeeTheFuture()` | returns list of size 3; `getCurrentPlayerId()` unchanged | yes |
 
 ---
 
@@ -268,7 +268,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | current player given a REVERSE, `playReverse()` (2 players) | turn passes to player 1 | no |
+| TC1 | current player given a REVERSE, `playReverse()` (2 players) | turn passes to player 1 | yes |
 
 ---
 
@@ -287,8 +287,8 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | current player given an ATTACK, `playAttack()` (2 players, normal turn) | `getCurrentPlayerId()==1`, `getForcedTurns()==2` | no |
-| TC2 | player 1 (owing 2 after an attack) given an ATTACK, `playAttack()` | turn passes, the next player owes 4 | no |
+| TC1 | current player given an ATTACK, `playAttack()` (2 players, normal turn) | `getCurrentPlayerId()==1`, `getForcedTurns()==2` | yes |
+| TC2 | player 1 (owing 2 after an attack) given an ATTACK, `playAttack()` | turn passes, the next player owes 4 | yes |
 
 ---
 

@@ -10,14 +10,22 @@ public final class GameEngine {
     private static final int MAX_PLAYERS = 5;
     private static final int INITIAL_NON_DEFUSE_CARDS_PER_PLAYER = 4;
     private static final int TOTAL_DEFUSES = 6;
+    private static final int NORMAL_FORCED_TURNS = 1;
+    private static final int TURNS_ADDED_BY_ATTACK = 2;
 
     private static final String NUM_PLAYERS_OUT_OF_RANGE_KEY = "gameEngine.numPlayers.outOfRange";
     private static final String INVALID_PLAYER_ID_KEY = "gameEngine.getPlayer.invalidId";
+    private static final String NOT_IN_HAND_KEY = "gameEngine.play.notInHand";
 
     private final int numPlayers;
     private final List<Player> players;
     private final TurnTracker turnTracker;
     private final Deck deck;
+    private final RuleManager ruleManager;
+    private final ActionController actionController;
+
+    private int forcedTurns = NORMAL_FORCED_TURNS;
+    private CardType lastPlayedCard;
 
     public GameEngine(int numPlayers) {
         if (numPlayers < MIN_PLAYERS || numPlayers > MAX_PLAYERS) {
@@ -30,6 +38,8 @@ public final class GameEngine {
         }
         this.turnTracker = new TurnTracker();
         this.turnTracker.setNumTotalPlayers(numPlayers);
+        this.ruleManager = new RuleManager();
+        this.actionController = new ActionController();
 
         List<Card> nonSpecialPool = buildShuffledNonSpecialPool();
         dealStartingHands(this.players, nonSpecialPool);
@@ -71,6 +81,67 @@ public final class GameEngine {
 
     public void advanceToNextPlayer() {
         turnTracker.turnGoesToNextPlayer();
+    }
+
+    public int getForcedTurns() {
+        return forcedTurns;
+    }
+
+    public CardType getLastPlayedCard() {
+        return lastPlayedCard;
+    }
+
+    public void playSkip() {
+        playFromHand(CardType.SKIP);
+        consumeOneForcedTurn();
+    }
+
+    public void playShuffle() {
+        playFromHand(CardType.SHUFFLE);
+        actionController.shuffleDeck(deck);
+    }
+
+    public List<Card> playSeeTheFuture() {
+        playFromHand(CardType.SEE_THE_FUTURE);
+        return actionController.peekTopThree(deck);
+    }
+
+    public void playReverse() {
+        playFromHand(CardType.REVERSE);
+        actionController.reverseDirection(turnTracker);
+        consumeOneForcedTurn();
+    }
+
+    public void playAttack() {
+        playFromHand(CardType.ATTACK);
+        int transferred = forcedTurns == NORMAL_FORCED_TURNS ? 0 : forcedTurns;
+        advanceToNextLivingPlayer();
+        forcedTurns = transferred + TURNS_ADDED_BY_ATTACK;
+    }
+
+    private void playFromHand(CardType type) {
+        ruleManager.requirePlayable(type);
+        Player current = getPlayer(getCurrentPlayerId());
+        int index = current.getIndexOfCard(type);
+        if (index < 0) {
+            throw new IllegalStateException(NOT_IN_HAND_KEY);
+        }
+        deck.discard(current.removeCardFromHand(index));
+        lastPlayedCard = type;
+    }
+
+    private void consumeOneForcedTurn() {
+        forcedTurns--;
+        if (forcedTurns <= 0) {
+            advanceToNextLivingPlayer();
+            forcedTurns = NORMAL_FORCED_TURNS;
+        }
+    }
+
+    private void advanceToNextLivingPlayer() {
+        do {
+            turnTracker.turnGoesToNextPlayer();
+        } while (!getPlayer(getCurrentPlayerId()).isAlive());
     }
 
     private static List<Card> buildShuffledNonSpecialPool() {
