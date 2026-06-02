@@ -8,6 +8,8 @@ public class GameSetupModel {
 	private List<String> playerNames;
 
 	private static final int initialPlayerCount = 4;
+	private static final int minPlayerCount = 2;
+	private static final int maxPlayerCount = 5;
 
 	private static final String TOO_FEW_PLAYERS = "gameSetupModel.tooFewPlayers";
 	private static final String TOO_MANY_PLAYERS = "gameSetupModel.tooManyPlayers";
@@ -17,14 +19,17 @@ public class GameSetupModel {
 		this.playerNames = new ArrayList<>();
 	}
 
-	public void capturePlayerNamesFromInputs(List<String> rawInputs, String defaultNamePrefix) {
-		if (rawInputs.size() < 2) {
+	private void checkPlayerNameInputs(List<String> rawInputs) {
+		if (rawInputs.size() < minPlayerCount) {
 			throw new IllegalArgumentException(TOO_FEW_PLAYERS);
 		}
-		if (rawInputs.size() > 5) {
+		if (rawInputs.size() > maxPlayerCount) {
 			throw new IllegalArgumentException(TOO_MANY_PLAYERS);
 		}
+	}
 
+	public void capturePlayerNamesFromInputs(List<String> rawInputs, String defaultNamePrefix) {
+		checkPlayerNameInputs(rawInputs);
 		List<String> names = new ArrayList<>();
 		for (int i = 0; i < rawInputs.size(); i++) {
 			String name = rawInputs.get(i).trim();
