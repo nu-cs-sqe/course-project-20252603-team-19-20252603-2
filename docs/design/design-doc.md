@@ -144,6 +144,32 @@
   (`gameEngine.notOver`) if the game is not over. Last player standing, or — on
   an exhausted pile — the living player with the most cards (ties: lowest id).
 
+### UI turn flow (recommended call sequence)
+
+For each turn the UI drives the engine as follows:
+
+1. Show `getPlayerHand(getCurrentPlayerId())` and `getDiscardPile()`.
+2. While the current player chooses to play cards, call the matching
+   `play*` method (e.g. `playSkip`, `playAttack`, `playFavor`). Each returns
+   after validating; catch `IllegalArgumentException` / `IllegalStateException`
+   and show the message (resolve the key against the locale bundle).
+   - `playSkip`, `playReverse`, `playAttack`, `playTargetedAttack` end the turn
+     themselves — after them, go to step 5.
+3. When the player chooses to draw, check `isDeckEmpty()`; if empty the game is
+   over (`isGameOver()`), go to step 6.
+4. Call `drawCardForCurrentPlayer()`.
+   - If the drawn card is `EXPLODING_KITTEN`: call `defuseDrawnKitten(index)`
+     when the player has (and plays) a Defuse, otherwise `explodeCurrentPlayer()`.
+     Both end the turn.
+   - Otherwise call `endTurnByDrawing()` to end the turn (honours Attack
+     stacking and skips eliminated players).
+5. After any turn-ending action, check `isGameOver()`; if true call
+   `getWinnerId()` and show the End screen.
+6. Otherwise repeat from step 1 for the new `getCurrentPlayerId()`.
+
+A Nope may be played by any other player via `playNope(noperId)` immediately
+after a card is played, before the next action.
+
 ---
 
 ## ActionController Class
