@@ -31,4 +31,15 @@ class GameSetupModelTest {
 				List.of("Vincent", "Vinny"), DEFAULT_PREFIX);
 		assertEquals(List.of("Vincent", "Vinny"), model.getPlayerNames());
 	}
+
+	@Test
+	void capturePlayerNamesFromInputs_listSizeFive_storesAllNames() {
+		GameSetupModel model = new GameSetupModel();
+
+		model.capturePlayerNamesFromInputs(
+				List.of("Vincent", "Vinny", "VV", "V", "vv"), DEFAULT_PREFIX);
+		assertEquals(
+				List.of("Vincent", "Vinny", "VV", "V", "vv"),
+				model.getPlayerNames());
+	}
 }
