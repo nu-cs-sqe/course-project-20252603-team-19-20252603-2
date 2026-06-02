@@ -307,8 +307,8 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | 3 players, current 0 given TARGETED_ATTACK, `playTargetedAttack(2)` | `getCurrentPlayerId()==2`, `getForcedTurns()==2` | no |
-| TC2 | `playTargetedAttack(0)` by player 0 (self) | throws `IllegalArgumentException` with message `"rule.target.invalid"` | no |
+| TC1 | 3 players, current 0 given TARGETED_ATTACK, `playTargetedAttack(2)` | `getCurrentPlayerId()==2`, `getForcedTurns()==2` | yes |
+| TC2 | `playTargetedAttack(0)` by player 0 (self) | throws `IllegalArgumentException` with message `"rule.target.invalid"` | yes |
 
 ---
 
@@ -327,8 +327,8 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | 2 players, current 0 given FAVOR, `playFavor(1, 0)` | target hand shrinks by 1; current keeps the turn | no |
-| TC2 | `playFavor(0, 0)` by player 0 (self) | throws `IllegalArgumentException` with message `"rule.target.invalid"` | no |
+| TC1 | 2 players, current 0 given FAVOR, `playFavor(1, 0)` | target hand shrinks by 1; current keeps the turn | yes |
+| TC2 | `playFavor(0, 0)` by player 0 (self) | throws `IllegalArgumentException` with message `"rule.target.invalid"` | yes |
 
 ---
 
@@ -347,8 +347,8 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | 2 players, current 0 given 2 CAT_CARDS, `playCatPair(1)` | target hand shrinks by 1, current keeps the turn | no |
-| TC2 | current holds no extra cats, `playCatPair(1)` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | no |
+| TC1 | 2 players, current 0 given 2 CAT_CARDS, `playCatPair(1)` | target hand shrinks by 1, current keeps the turn | yes |
+| TC2 | current holds no extra cats, `playCatPair(1)` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | yes |
 
 ---
 
@@ -367,9 +367,9 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | current given an Exploding Kitten, `defuseDrawnKitten(0)` | current still alive, kitten gone from hand, draw pile grows by 1, turn passes | no |
-| TC2 | current has no Exploding Kitten, `defuseDrawnKitten(0)` | throws `IllegalStateException` with message `"gameEngine.defuse.noKitten"` | no |
-| TC3 | current given a kitten but no Defuse, `defuseDrawnKitten(0)` | throws `IllegalStateException` with message `"gameEngine.defuse.noDefuse"` | no |
+| TC1 | current given an Exploding Kitten, `defuseDrawnKitten(0)` | current still alive, kitten gone from hand, draw pile grows by 1, turn passes | yes |
+| TC2 | current has no Exploding Kitten, `defuseDrawnKitten(0)` | throws `IllegalStateException` with message `"gameEngine.defuse.noKitten"` | yes |
+| TC3 | current given a kitten but no Defuse, `defuseDrawnKitten(0)` | throws `IllegalStateException` with message `"gameEngine.defuse.noDefuse"` | yes |
 
 ---
 
@@ -388,8 +388,8 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | 2 players, current given an Exploding Kitten, `explodeCurrentPlayer()` | `getPlayer(0).isAlive()==false`, `getCurrentPlayerId()==1` | no |
-| TC2 | current has no Exploding Kitten, `explodeCurrentPlayer()` | throws `IllegalStateException` with message `"gameEngine.defuse.noKitten"` | no |
+| TC1 | 2 players, current given an Exploding Kitten, `explodeCurrentPlayer()` | `getPlayer(0).isAlive()==false`, `getCurrentPlayerId()==1` | yes |
+| TC2 | current has no Exploding Kitten, `explodeCurrentPlayer()` | throws `IllegalStateException` with message `"gameEngine.defuse.noKitten"` | yes |
 
 ---
 

@@ -16,6 +16,8 @@ public final class GameEngine {
     private static final String NUM_PLAYERS_OUT_OF_RANGE_KEY = "gameEngine.numPlayers.outOfRange";
     private static final String INVALID_PLAYER_ID_KEY = "gameEngine.getPlayer.invalidId";
     private static final String NOT_IN_HAND_KEY = "gameEngine.play.notInHand";
+    private static final String NO_KITTEN_KEY = "gameEngine.defuse.noKitten";
+    private static final String NO_DEFUSE_KEY = "gameEngine.defuse.noDefuse";
 
     private final int numPlayers;
     private final List<Player> players;
@@ -117,6 +119,67 @@ public final class GameEngine {
         int transferred = forcedTurns == NORMAL_FORCED_TURNS ? 0 : forcedTurns;
         advanceToNextLivingPlayer();
         forcedTurns = transferred + TURNS_ADDED_BY_ATTACK;
+    }
+
+    public void playTargetedAttack(int targetId) {
+        Player current = getPlayer(getCurrentPlayerId());
+        Player target = getPlayer(targetId);
+        ruleManager.requireValidTarget(current, target);
+        playFromHand(CardType.TARGETED_ATTACK);
+        int transferred = forcedTurns == NORMAL_FORCED_TURNS ? 0 : forcedTurns;
+        turnTracker.setCurrentPlayer(targetId);
+        forcedTurns = transferred + TURNS_ADDED_BY_ATTACK;
+    }
+
+    public void playFavor(int targetId, int cardIndex) {
+        Player current = getPlayer(getCurrentPlayerId());
+        Player target = getPlayer(targetId);
+        ruleManager.requireValidTarget(current, target);
+        playFromHand(CardType.FAVOR);
+        actionController.giveCard(target, current, cardIndex);
+    }
+
+    public void playCatPair(int targetId) {
+        Player current = getPlayer(getCurrentPlayerId());
+        Player target = getPlayer(targetId);
+        ruleManager.requireValidTarget(current, target);
+        ruleManager.requireCatPair(current);
+        discardOneFromCurrent(CardType.CAT_CARDS);
+        discardOneFromCurrent(CardType.CAT_CARDS);
+        lastPlayedCard = CardType.CAT_CARDS;
+        actionController.stealRandomCard(target, current);
+    }
+
+    public void defuseDrawnKitten(int reinsertIndex) {
+        Player current = getPlayer(getCurrentPlayerId());
+        int kittenIndex = current.getIndexOfCard(CardType.EXPLODING_KITTEN);
+        if (kittenIndex < 0) {
+            throw new IllegalStateException(NO_KITTEN_KEY);
+        }
+        if (current.getIndexOfCard(CardType.DEFUSE) < 0) {
+            throw new IllegalStateException(NO_DEFUSE_KEY);
+        }
+        Card kitten = current.removeCardFromHand(kittenIndex);
+        deck.discard(current.removeCardFromHand(current.getIndexOfCard(CardType.DEFUSE)));
+        deck.insertAt(kitten, reinsertIndex);
+        consumeOneForcedTurn();
+    }
+
+    public void explodeCurrentPlayer() {
+        Player current = getPlayer(getCurrentPlayerId());
+        int kittenIndex = current.getIndexOfCard(CardType.EXPLODING_KITTEN);
+        if (kittenIndex < 0) {
+            throw new IllegalStateException(NO_KITTEN_KEY);
+        }
+        deck.discard(current.removeCardFromHand(kittenIndex));
+        current.markDead();
+        advanceToNextLivingPlayer();
+        forcedTurns = NORMAL_FORCED_TURNS;
+    }
+
+    private void discardOneFromCurrent(CardType type) {
+        Player current = getPlayer(getCurrentPlayerId());
+        deck.discard(current.removeCardFromHand(current.getIndexOfCard(type)));
     }
 
     private void playFromHand(CardType type) {
