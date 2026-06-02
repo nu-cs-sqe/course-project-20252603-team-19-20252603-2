@@ -393,6 +393,49 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 ---
 
+## Method 20: ```public boolean isGameOver()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | current alive count and draw pile | whether the game has ended |
+| Step 2 | game state | `boolean` |
+| Step 3 | 2 alive + non-empty pile, 1 alive, 2 alive + empty pile | `false` / `true` / `true` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `new GameEngine(2)` at game start | `false` | no |
+| TC2 | one player marked dead | `true` | no |
+| TC3 | draw pile drained to empty, both alive | `true` | no |
+
+---
+
+## Method 21: ```public int getWinnerId()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | the finished game state | id of the winner |
+| Step 2 | game state | `int` / `IllegalStateException` |
+| Step 3 | not over, last player standing, exhausted pile with a clear leader, exhausted pile tie | exception / survivor id / most-cards id / lowest id |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `getWinnerId()` before the game is over | throws `IllegalStateException` with message `"gameEngine.notOver"` | no |
+| TC2 | player 0 marked dead (2 players) | `1` (last player standing) | no |
+| TC3 | draw pile drained by player 0 (most cards), both alive | `0` | no |
+| TC4 | exhausted pile with both hands equal | `0` (tie broken by lowest id) | no |
+
+---
+
 ## Recall the 4 steps of BVA
 ### Step 1: Describe the input and output in terms of the domain.
 ### Step 2: Choose the data type for the input and the output from the BVA Catalog.

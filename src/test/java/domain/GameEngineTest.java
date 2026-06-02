@@ -444,6 +444,66 @@ class GameEngineTest {
         assertEquals("gameEngine.defuse.noKitten", ex.getMessage());
     }
 
+    @Test
+    void isGameOver_atGameStart_returnsFalse() {
+        assertFalse(new GameEngine(MIN_PLAYERS).isGameOver());
+    }
+
+    @Test
+    void isGameOver_oneAlive_returnsTrue() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        engine.getPlayer(0).markDead();
+        assertTrue(engine.isGameOver());
+    }
+
+    @Test
+    void isGameOver_deckExhausted_returnsTrue() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        while (!engine.isDeckEmpty()) {
+            engine.drawCardForCurrentPlayer();
+        }
+        assertTrue(engine.isGameOver());
+    }
+
+    @Test
+    void getWinnerId_notOver_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.getWinnerId());
+        assertEquals("gameEngine.notOver", ex.getMessage());
+    }
+
+    @Test
+    void getWinnerId_lastPlayerStanding_returnsSurvivor() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        engine.getPlayer(0).markDead();
+        assertEquals(1, engine.getWinnerId());
+    }
+
+    @Test
+    void getWinnerId_deckExhausted_returnsPlayerWithMostCards() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        while (!engine.isDeckEmpty()) {
+            engine.drawCardForCurrentPlayer();
+        }
+        assertEquals(0, engine.getWinnerId());
+    }
+
+    @Test
+    void getWinnerId_deckExhaustedTie_returnsLowestId() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        while (!engine.isDeckEmpty()) {
+            engine.drawCardForCurrentPlayer();
+        }
+        Player first = engine.getPlayer(0);
+        Player second = engine.getPlayer(1);
+        while (first.getHandSize() > second.getHandSize()) {
+            first.removeCardFromHand(0);
+        }
+        assertEquals(0, engine.getWinnerId());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
