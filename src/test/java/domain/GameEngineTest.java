@@ -3,6 +3,7 @@ package domain;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -502,6 +503,39 @@ class GameEngineTest {
             first.removeCardFromHand(0);
         }
         assertEquals(0, engine.getWinnerId());
+    }
+
+    @Test
+    void playNope_clearsLastPlayedCard() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SKIP);
+        engine.playSkip();
+        engine.getPlayer(1).addCardToHand(new Card(CardType.NOPE));
+
+        engine.playNope(1);
+
+        assertNull(engine.getLastPlayedCard());
+    }
+
+    @Test
+    void playNope_nothingToCancel_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playNope(0));
+        assertEquals("rule.nope.nothingToCancel", ex.getMessage());
+    }
+
+    @Test
+    void playNope_noperLacksNope_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SKIP);
+        engine.playSkip();
+        clearCardType(engine.getPlayer(1), CardType.NOPE);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playNope(1));
+        assertEquals("gameEngine.play.notInHand", ex.getMessage());
     }
 
     private void giveToCurrent(GameEngine engine, CardType type) {

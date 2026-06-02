@@ -436,6 +436,27 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 ---
 
+## Method 22: ```public void playNope(int noperId)```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | a played card to cancel; the noper who holds a NOPE | NOPE discarded; `lastPlayedCard` cleared |
+| Step 2 | `int` noper id | void / `IllegalStateException` |
+| Step 3 | something to nope + noper holds NOPE, nothing played yet, noper holds no NOPE | cancels / `rule.nope.nothingToCancel` / `gameEngine.play.notInHand` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | a card was just played, noper holds a NOPE, `playNope(noperId)` | `getLastPlayedCard()` becomes `null` | no |
+| TC2 | nothing played yet, `playNope(0)` | throws `IllegalStateException` with message `"rule.nope.nothingToCancel"` | no |
+| TC3 | a card was just played, noper holds no NOPE | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | no |
+
+---
+
 ## Recall the 4 steps of BVA
 ### Step 1: Describe the input and output in terms of the domain.
 ### Step 2: Choose the data type for the input and the output from the BVA Catalog.
