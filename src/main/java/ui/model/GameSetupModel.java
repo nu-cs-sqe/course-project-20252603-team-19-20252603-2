@@ -26,8 +26,12 @@ public class GameSetupModel {
 		}
 
 		List<String> names = new ArrayList<>();
-		for (String playerName : rawInputs) {
-			names.add(playerName);
+		for (int i = 0; i < rawInputs.size(); i++) {
+			String name = rawInputs.get(i).trim();
+			if (name.isEmpty()) {
+				name = defaultNamePrefix + " " + (i + 1);
+			}
+			names.add(name);
 		}
 		this.playerNames = names;
 	}
