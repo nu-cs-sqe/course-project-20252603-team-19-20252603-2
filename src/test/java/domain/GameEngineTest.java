@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 class GameEngineTest {
 
     private static final int MIN_PLAYERS = 2;
+    private static final int THREE_PLAYERS = 3;
     private static final int MAX_PLAYERS = 5;
     private static final int TOO_FEW = 1;
     private static final int TOO_MANY = 6;
@@ -321,6 +322,126 @@ class GameEngineTest {
 
         assertEquals(0, engine.getCurrentPlayerId());
         assertEquals(STACKED_ATTACK_FORCED_TURNS, engine.getForcedTurns());
+    }
+
+    @Test
+    void playTargetedAttack_sendsTurnToChosenTargetWithTwoForcedTurns() {
+        GameEngine engine = new GameEngine(THREE_PLAYERS);
+        giveToCurrent(engine, CardType.TARGETED_ATTACK);
+
+        engine.playTargetedAttack(2);
+
+        assertEquals(2, engine.getCurrentPlayerId());
+        assertEquals(2, engine.getForcedTurns());
+    }
+
+    @Test
+    void playTargetedAttack_self_throwsIllegalArgumentException() {
+        GameEngine engine = new GameEngine(THREE_PLAYERS);
+        giveToCurrent(engine, CardType.TARGETED_ATTACK);
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> engine.playTargetedAttack(0));
+        assertEquals("rule.target.invalid", ex.getMessage());
+    }
+
+    @Test
+    void playFavor_takesCardFromTargetAndKeepsTurn() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.FAVOR);
+        int targetHandBefore = engine.getPlayerHand(1).size();
+
+        engine.playFavor(1, 0);
+
+        assertEquals(targetHandBefore - 1, engine.getPlayerHand(1).size());
+        assertEquals(0, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void playFavor_self_throwsIllegalArgumentException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.FAVOR);
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> engine.playFavor(0, 0));
+        assertEquals("rule.target.invalid", ex.getMessage());
+    }
+
+    @Test
+    void playCatPair_stealsOneCardFromTargetAndKeepsTurn() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        int targetHandBefore = engine.getPlayerHand(1).size();
+
+        engine.playCatPair(1);
+
+        assertEquals(targetHandBefore - 1, engine.getPlayerHand(1).size());
+        assertEquals(0, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void playCatPair_withoutTwoCats_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.CAT_CARDS);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playCatPair(1));
+        assertEquals("rule.catPair.needTwo", ex.getMessage());
+    }
+
+    @Test
+    void defuseDrawnKitten_survivesAndReinsertsKitten() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.EXPLODING_KITTEN);
+        final int pileBefore = engine.getDrawPileSize();
+
+        engine.defuseDrawnKitten(0);
+
+        assertTrue(engine.getPlayer(0).isAlive());
+        assertEquals(-1, engine.getPlayer(0).getIndexOfCard(CardType.EXPLODING_KITTEN));
+        assertEquals(pileBefore + 1, engine.getDrawPileSize());
+        assertEquals(1, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void defuseDrawnKitten_noKitten_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.defuseDrawnKitten(0));
+        assertEquals("gameEngine.defuse.noKitten", ex.getMessage());
+    }
+
+    @Test
+    void defuseDrawnKitten_noDefuse_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.DEFUSE);
+        giveToCurrent(engine, CardType.EXPLODING_KITTEN);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.defuseDrawnKitten(0));
+        assertEquals("gameEngine.defuse.noDefuse", ex.getMessage());
+    }
+
+    @Test
+    void explodeCurrentPlayer_killsPlayerAndPassesTurn() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.EXPLODING_KITTEN);
+
+        engine.explodeCurrentPlayer();
+
+        assertFalse(engine.getPlayer(0).isAlive());
+        assertEquals(1, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void explodeCurrentPlayer_noKitten_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.explodeCurrentPlayer());
+        assertEquals("gameEngine.defuse.noKitten", ex.getMessage());
     }
 
     private void giveToCurrent(GameEngine engine, CardType type) {

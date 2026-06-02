@@ -292,6 +292,107 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 ---
 
+## Method 15: ```public void playTargetedAttack(int targetId)```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | current holds TARGETED_ATTACK; a chosen living opponent | turn jumps to the target who owes 2 turns |
+| Step 2 | `int` target id | void / `IllegalArgumentException` for bad target |
+| Step 3 | distinct living target, self/dead target | turn to target, owes 2 / `rule.target.invalid` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | 3 players, current 0 given TARGETED_ATTACK, `playTargetedAttack(2)` | `getCurrentPlayerId()==2`, `getForcedTurns()==2` | no |
+| TC2 | `playTargetedAttack(0)` by player 0 (self) | throws `IllegalArgumentException` with message `"rule.target.invalid"` | no |
+
+---
+
+## Method 16: ```public void playFavor(int targetId, int cardIndex)```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | current holds FAVOR; target and the index of the card to take | that card moves from target to current; same player continues |
+| Step 2 | two `int` | void / exception for bad target or index |
+| Step 3 | valid target + index, self target | card transferred / `rule.target.invalid` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | 2 players, current 0 given FAVOR, `playFavor(1, 0)` | target hand shrinks by 1; current keeps the turn | no |
+| TC2 | `playFavor(0, 0)` by player 0 (self) | throws `IllegalArgumentException` with message `"rule.target.invalid"` | no |
+
+---
+
+## Method 17: ```public void playCatPair(int targetId)```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | current holds 2 CAT_CARDS; a target | one random card moves from target to current; same player continues |
+| Step 2 | `int` target id | void / exception for bad target or too few cats |
+| Step 3 | 2 cats + valid target, fewer than 2 cats | steal happens / `rule.catPair.needTwo` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | 2 players, current 0 given 2 CAT_CARDS, `playCatPair(1)` | target hand shrinks by 1, current keeps the turn | no |
+| TC2 | current holds no extra cats, `playCatPair(1)` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | no |
+
+---
+
+## Method 18: ```public void defuseDrawnKitten(int reinsertIndex)```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | current holds a drawn Exploding Kitten and a Defuse; reinsert index | kitten reinserted, Defuse discarded, turn ends; player survives |
+| Step 2 | `int` index | void / `IllegalStateException` |
+| Step 3 | has kitten + defuse, no kitten, no defuse | survives / `gameEngine.defuse.noKitten` / `gameEngine.defuse.noDefuse` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | current given an Exploding Kitten, `defuseDrawnKitten(0)` | current still alive, kitten gone from hand, draw pile grows by 1, turn passes | no |
+| TC2 | current has no Exploding Kitten, `defuseDrawnKitten(0)` | throws `IllegalStateException` with message `"gameEngine.defuse.noKitten"` | no |
+| TC3 | current given a kitten but no Defuse, `defuseDrawnKitten(0)` | throws `IllegalStateException` with message `"gameEngine.defuse.noDefuse"` | no |
+
+---
+
+## Method 19: ```public void explodeCurrentPlayer()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | current holds a drawn Exploding Kitten | current dies; turn passes to the next living player |
+| Step 2 | none | void / `IllegalStateException` |
+| Step 3 | has kitten, no kitten | dies + turn passes / `gameEngine.defuse.noKitten` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | 2 players, current given an Exploding Kitten, `explodeCurrentPlayer()` | `getPlayer(0).isAlive()==false`, `getCurrentPlayerId()==1` | no |
+| TC2 | current has no Exploding Kitten, `explodeCurrentPlayer()` | throws `IllegalStateException` with message `"gameEngine.defuse.noKitten"` | no |
+
+---
+
 ## Recall the 4 steps of BVA
 ### Step 1: Describe the input and output in terms of the domain.
 ### Step 2: Choose the data type for the input and the output from the BVA Catalog.
