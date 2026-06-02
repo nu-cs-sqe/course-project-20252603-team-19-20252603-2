@@ -391,7 +391,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 |-------------|------------------|-----------------|--------------|
 | TC1 | 2 players, current given an Exploding Kitten, `explodeCurrentPlayer()` | `getPlayer(0).isAlive()==false`, `getCurrentPlayerId()==1` | yes |
 | TC2 | current has no Exploding Kitten, `explodeCurrentPlayer()` | throws `IllegalStateException` with message `"gameEngine.defuse.noKitten"` | yes |
-| TC3 | current with extra cards explodes | eliminated player's hand is emptied (cards discarded) | no |
+| TC3 | current with extra cards explodes | eliminated player's hand is emptied (cards discarded) | yes |
 
 ---
 
@@ -474,9 +474,9 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | 2 players, normal turn, `endTurnByDrawing()` | `getCurrentPlayerId()==1`, `getForcedTurns()==1` | no |
-| TC2 | player owing 2 (after an Attack), `endTurnByDrawing()` | same player keeps the turn; `getForcedTurns()==1` | no |
-| TC3 | 3 players, next seat eliminated, `endTurnByDrawing()` | turn skips the dead seat to the next living player | no |
+| TC1 | 2 players, normal turn, `endTurnByDrawing()` | `getCurrentPlayerId()==1`, `getForcedTurns()==1` | yes |
+| TC2 | player owing 2 (after an Attack), `endTurnByDrawing()` | same player keeps the turn; `getForcedTurns()==1` | yes |
+| TC3 | 3 players, next seat eliminated, `endTurnByDrawing()` | turn skips the dead seat to the next living player | yes |
 
 ---
 
@@ -495,9 +495,9 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `getDiscardPile()` at game start | empty list | no |
-| TC2 | after `playSkip()`, `getDiscardPile()` | list of size 1 containing the SKIP | no |
-| TC3 | mutate the returned list, then `getDiscardPile()` again | discard pile unchanged (defensive copy) | no |
+| TC1 | `getDiscardPile()` at game start | empty list | yes |
+| TC2 | after `playSkip()`, `getDiscardPile()` | list of size 1 containing the SKIP | yes |
+| TC3 | mutate the returned list, then `getDiscardPile()` again | discard pile unchanged (defensive copy) | yes |
 
 ---
 

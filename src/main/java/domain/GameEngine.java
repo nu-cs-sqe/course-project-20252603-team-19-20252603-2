@@ -83,7 +83,15 @@ public final class GameEngine {
     }
 
     public void advanceToNextPlayer() {
-        turnTracker.turnGoesToNextPlayer();
+        advanceToNextLivingPlayer();
+    }
+
+    public void endTurnByDrawing() {
+        consumeOneForcedTurn();
+    }
+
+    public List<Card> getDiscardPile() {
+        return deck.getDiscardPile();
     }
 
     public int getForcedTurns() {
@@ -174,6 +182,9 @@ public final class GameEngine {
         }
         deck.discard(current.removeCardFromHand(kittenIndex));
         current.markDead();
+        while (current.getHandSize() > 0) {
+            deck.discard(current.removeCardFromHand(0));
+        }
         advanceToNextLivingPlayer();
         forcedTurns = NORMAL_FORCED_TURNS;
     }
