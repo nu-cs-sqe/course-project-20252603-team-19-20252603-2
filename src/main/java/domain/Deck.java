@@ -13,9 +13,11 @@ public class Deck {
 	private static final int numberOfSeeTheFutures = 5;
 	private static final int numberOfNopes = 5;
 	private static final int numberOfFavors = 4;
+	private static final int numberOfReverses = 4;
+	private static final int numberOfTargetedAttacks = 3;
 	private static final int numberOfCatCards = 20;
 
-	private static final int deckSize = 56;
+	private static final int deckSize = 63;
 
 	private static final String EMPTY_DECK_TYPE_KEY = "deck.emptyType";
 	private static final String PEEK_TOP_TOO_MANY_KEY = "deck.peekTop.tooManyRequested";
@@ -44,6 +46,8 @@ public class Deck {
 		addCards(CardType.SEE_THE_FUTURE, numberOfSeeTheFutures);
 		addCards(CardType.NOPE, numberOfNopes);
 		addCards(CardType.FAVOR, numberOfFavors);
+		addCards(CardType.REVERSE, numberOfReverses);
+		addCards(CardType.TARGETED_ATTACK, numberOfTargetedAttacks);
 		addCards(CardType.CAT_CARDS, numberOfCatCards);
 	}
 
