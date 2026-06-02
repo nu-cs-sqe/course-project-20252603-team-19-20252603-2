@@ -64,4 +64,13 @@ class GameSetupModelTest {
 				List.of("Vincent", "   "), DEFAULT_PREFIX);
 		assertEquals(List.of("Vincent", "Player 2"), model.getPlayerNames());
 	}
+
+	@Test
+	void capturePlayerNamesFromInputs_emptySecondName_usesDefaultPrefix() {
+		GameSetupModel model = new GameSetupModel();
+
+		model.capturePlayerNamesFromInputs(
+				List.of("Vincent", ""), DEFAULT_PREFIX);
+		assertEquals(List.of("Vincent", "Player 2"), model.getPlayerNames());
+	}
 }
