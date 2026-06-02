@@ -15,6 +15,8 @@ class GameEngineTest {
     private static final int TOO_FEW = 1;
     private static final int TOO_MANY = 6;
     private static final int STARTING_HAND_SIZE = 5;
+    private static final int SEE_THE_FUTURE_COUNT = 3;
+    private static final int STACKED_ATTACK_FORCED_TURNS = 4;
     private static final int DRAW_PILE_SIZE_MIN_PLAYERS = 50;
     private static final int DRAW_PILE_SIZE_MAX_PLAYERS = 38;
 
@@ -242,5 +244,94 @@ class GameEngineTest {
         engine.advanceToNextPlayer();
         engine.advanceToNextPlayer();
         assertEquals(0, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void playSkip_endsTurnWithoutDrawing() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SKIP);
+        int pileBefore = engine.getDrawPileSize();
+
+        engine.playSkip();
+
+        assertEquals(1, engine.getCurrentPlayerId());
+        assertEquals(pileBefore, engine.getDrawPileSize());
+    }
+
+    @Test
+    void playSkip_withoutSkipInHand_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.SKIP);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playSkip());
+        assertEquals("gameEngine.play.notInHand", ex.getMessage());
+    }
+
+    @Test
+    void playShuffle_keepsSamePlayerAndDeckSize() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SHUFFLE);
+        int pileBefore = engine.getDrawPileSize();
+
+        engine.playShuffle();
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(pileBefore, engine.getDrawPileSize());
+    }
+
+    @Test
+    void playSeeTheFuture_returnsTopThreeAndKeepsSamePlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SEE_THE_FUTURE);
+
+        assertEquals(SEE_THE_FUTURE_COUNT, engine.playSeeTheFuture().size());
+        assertEquals(0, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void playReverse_flipsDirectionAndEndsTurn() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.REVERSE);
+
+        engine.playReverse();
+
+        assertEquals(1, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void playAttack_normalTurn_nextPlayerOwesTwoTurns() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.ATTACK);
+
+        engine.playAttack();
+
+        assertEquals(1, engine.getCurrentPlayerId());
+        assertEquals(2, engine.getForcedTurns());
+    }
+
+    @Test
+    void playAttack_stackedTurn_nextPlayerOwesFourTurns() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.ATTACK);
+        engine.playAttack();
+        giveToCurrent(engine, CardType.ATTACK);
+
+        engine.playAttack();
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(STACKED_ATTACK_FORCED_TURNS, engine.getForcedTurns());
+    }
+
+    private void giveToCurrent(GameEngine engine, CardType type) {
+        engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
+    }
+
+    private void clearCardType(Player player, CardType type) {
+        int index = player.getIndexOfCard(type);
+        while (index >= 0) {
+            player.removeCardFromHand(index);
+            index = player.getIndexOfCard(type);
+        }
     }
 }

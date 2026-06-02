@@ -195,6 +195,103 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 ---
 
+## Method 10: ```public void playSkip()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | current player holds a SKIP | SKIP discarded; one owed turn ended without drawing |
+| Step 2 | game state | void / `IllegalStateException` if no SKIP held |
+| Step 3 | holds SKIP (normal turn), holds no SKIP | turn passes to next / `gameEngine.play.notInHand` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | current player given a SKIP, `playSkip()` (2 players) | turn passes to player 1; draw pile unchanged | no |
+| TC2 | current player has no SKIP, `playSkip()` | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | no |
+
+---
+
+## Method 11: ```public void playShuffle()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | current player holds a SHUFFLE | SHUFFLE discarded; draw pile reordered; same player continues |
+| Step 2 | game state | void |
+| Step 3 | holds SHUFFLE | draw pile size unchanged, current player unchanged |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | current player given a SHUFFLE, `playShuffle()` | `getCurrentPlayerId()` unchanged; draw pile size unchanged | no |
+
+---
+
+## Method 12: ```public List<Card> playSeeTheFuture()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | current player holds a SEE_THE_FUTURE | up to top 3 cards returned; same player continues |
+| Step 2 | game state | `List<Card>` |
+| Step 3 | holds SEE_THE_FUTURE, full draw pile | list of size 3 |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | current player given a SEE_THE_FUTURE, `playSeeTheFuture()` | returns list of size 3; `getCurrentPlayerId()` unchanged | no |
+
+---
+
+## Method 13: ```public void playReverse()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | current player holds a REVERSE | REVERSE discarded; direction flipped; one owed turn ended |
+| Step 2 | game state | void |
+| Step 3 | holds REVERSE (2 players, forward) | direction becomes -1; turn passes |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | current player given a REVERSE, `playReverse()` (2 players) | turn passes to player 1 | no |
+
+---
+
+## Method 14: ```public void playAttack()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | current player holds an ATTACK | ATTACK discarded; turn ends without drawing; next player owes 2 turns |
+| Step 2 | game state | void |
+| Step 3 | normal turn (owe 1), stacked turn (owe 2) | next owes 2 / next owes 4 |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | current player given an ATTACK, `playAttack()` (2 players, normal turn) | `getCurrentPlayerId()==1`, `getForcedTurns()==2` | no |
+| TC2 | player 1 (owing 2 after an attack) given an ATTACK, `playAttack()` | turn passes, the next player owes 4 | no |
+
+---
+
 ## Recall the 4 steps of BVA
 ### Step 1: Describe the input and output in terms of the domain.
 ### Step 2: Choose the data type for the input and the output from the BVA Catalog.

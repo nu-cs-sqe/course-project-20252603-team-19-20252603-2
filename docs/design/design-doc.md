@@ -105,6 +105,37 @@
   `IllegalStateException` (`deck.emptyType`) if the draw pile is empty.
 - `advanceToNextPlayer()` — hands the turn to the next player via
   `TurnTracker.turnGoesToNextPlayer()`.
+- `getForcedTurns(): int` — draws the current player still owes before the turn
+  passes (1 normally; raised by Attack / Targeted Attack).
+- `getLastPlayedCard(): CardType` — the most recently played card type (what a
+  Nope may cancel); `null` before any card is played.
+- `playSkip()` — discards a SKIP from the current hand and ends one owed turn
+  without drawing.
+- `playShuffle()` — discards a SHUFFLE and shuffles the draw pile; same player
+  continues.
+- `playSeeTheFuture(): List<Card>` — discards a SEE_THE_FUTURE and returns the
+  top up-to-3 cards; same player continues.
+- `playReverse()` — discards a REVERSE, flips the turn direction, and ends one
+  owed turn without drawing.
+- `playAttack()` — discards an ATTACK and ends the current turn without drawing;
+  the next living player owes `(2 + any stacked turns)` turns.
+- `playTargetedAttack(int targetId)` — discards a TARGETED_ATTACK; like Attack
+  but the chosen living opponent (not the neighbour) owes the turns.
+- `playFavor(int targetId, int cardIndex)` — discards a FAVOR; the target gives
+  the card at `cardIndex` to the current player; same player continues.
+- `playCatPair(int targetId)` — discards two CAT_CARDS and steals one random
+  card from the target; same player continues.
+- `playNope(int noperId)` — the noper discards a NOPE to cancel the last played
+  card (simplified, no reaction window); clears `lastPlayedCard`.
+- `defuseDrawnKitten(int reinsertIndex)` — after drawing an Exploding Kitten,
+  discards a DEFUSE, reinserts the kitten at `reinsertIndex`, and ends the turn.
+- `explodeCurrentPlayer()` — after drawing an Exploding Kitten with no Defuse,
+  marks the current player dead and ends the turn.
+- `isGameOver(): boolean` — true when only one player is alive or the draw pile
+  is exhausted.
+- `getWinnerId(): int` — the winner's id; throws `IllegalStateException`
+  (`gameEngine.notOver`) if the game is not over. Last player standing, or — on
+  an exhausted pile — the living player with the most cards (ties: lowest id).
 
 ---
 
