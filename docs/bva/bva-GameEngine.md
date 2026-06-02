@@ -451,9 +451,9 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | a card was just played, noper holds a NOPE, `playNope(noperId)` | `getLastPlayedCard()` becomes `null` | no |
-| TC2 | nothing played yet, `playNope(0)` | throws `IllegalStateException` with message `"rule.nope.nothingToCancel"` | no |
-| TC3 | a card was just played, noper holds no NOPE | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | no |
+| TC1 | a card was just played, noper holds a NOPE, `playNope(noperId)` | `getLastPlayedCard()` becomes `null` | yes |
+| TC2 | nothing played yet, `playNope(0)` | throws `IllegalStateException` with message `"rule.nope.nothingToCancel"` | yes |
+| TC3 | a card was just played, noper holds no NOPE | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | yes |
 
 ---
 

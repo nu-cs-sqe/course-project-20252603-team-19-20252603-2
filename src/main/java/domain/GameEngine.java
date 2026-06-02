@@ -178,6 +178,17 @@ public final class GameEngine {
         forcedTurns = NORMAL_FORCED_TURNS;
     }
 
+    public void playNope(int noperId) {
+        ruleManager.requireSomethingToNope(lastPlayedCard);
+        Player noper = getPlayer(noperId);
+        int index = noper.getIndexOfCard(CardType.NOPE);
+        if (index < 0) {
+            throw new IllegalStateException(NOT_IN_HAND_KEY);
+        }
+        deck.discard(noper.removeCardFromHand(index));
+        lastPlayedCard = null;
+    }
+
     public boolean isGameOver() {
         return countAlive() == 1 || deck.isEmpty();
     }
