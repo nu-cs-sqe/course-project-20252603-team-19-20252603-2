@@ -24,7 +24,7 @@
 |--------|-----------------------------|---------------------------------|---------------------------------------------------------------------------------------|
 | Step 1 | none (instance-state query) |                                 | The `CardType` value supplied at construction                                         |
 | Step 2 | n/a                         |                                 | Enumeration (`CardType`)                                                              |
-| Step 3 | n/a                         |                                 | `EXPLODING_KITTEN`, `DEFUSE`, `ATTACK`, `SHUFFLE`, `SKIP`, `SEE_THE_FUTURE`, `NOPE`, `CAT_CARDS`, `FAVOR` |
+| Step 3 | n/a                         |                                 | `EXPLODING_KITTEN`, `DEFUSE`, `ATTACK`, `SHUFFLE`, `SKIP`, `SEE_THE_FUTURE`, `NOPE`, `CAT_CARDS`, `FAVOR`, `REVERSE`, `TARGETED_ATTACK` |
 
 ### Step 4:
 ##### All-combination or each-choice: each-choice
@@ -40,6 +40,8 @@
 | Test Case 7  | `new Card(NOPE)`             | `NOPE`             | yes          |
 | Test Case 8  | `new Card(CAT_CARDS)`        | `CAT_CARDS`        | yes          |
 | Test Case 9  | `new Card(FAVOR)`            | `FAVOR`            | yes          |
+| Test Case 10 | `new Card(REVERSE)`          | `REVERSE`          | yes          |
+| Test Case 11 | `new Card(TARGETED_ATTACK)`  | `TARGETED_ATTACK`  | yes          |
 
 ---
 

@@ -8,14 +8,14 @@
 |------|-----------------------------------|-----------------------|
 | Step 1 | No input parameters (constructor) | Fully initialized deck |
 | Step 2 | N/A                               | `List<Card>`            |
-| Step 3 | N/A                               | 56 cards in the deck  |
+| Step 3 | N/A                               | 63 cards in the deck  |
 
 ### Step 4:
 ##### each-choice
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|-------------|
-| TC1 | `new Deck()` | deck size = 56 | yes         |
+| TC1 | `new Deck()` | deck size = 63 | yes         |
 | TC2 | `new Deck()` | first card = EXPLODING_KITTEN | yes         |
 | TC3 | `new Deck()` | last card = CAT_CARDS | yes         |
 | TC4 | `new Deck()` | correct full ordering of cards | yes         |
@@ -28,9 +28,9 @@
 
 | Step | Input                      | Output                                     |
 |------|----------------------------|--------------------------------------------|
-| Step 1 | Deck state (0,1,2,56 cards) | Modified deck                              |
+| Step 1 | Deck state (0,1,2,63 cards) | Modified deck                              |
 | Step 2 | deck `List<Card>`           | Card Object                                |
-| Step 3 | deck sizes: 0, 1, 2, 56    | return top Card and deck size decrease by 1 |
+| Step 3 | deck sizes: 0, 1, 2, 63    | return top Card and deck size decrease by 1 |
 
 ### Step 4:
 ##### each-choice
@@ -40,7 +40,7 @@
 | TC1 | empty drawPile (`[]`) | throws IllegalStateException with message "deck.emptyType" | yes         |
 | TC2 | drawPile size = 1 | returns Card, drawPile becomes `[]` | yes         |
 | TC3 | drawPile size = 2 | returns Card, drawPile size becomes `1` | yes         |
-| TC4 | drawPile size = 56 | returns Card, drawPile size becomes `55` | yes         |
+| TC4 | drawPile size = 63 | returns Card, drawPile size becomes `62` | yes         |
 
 ---
 
@@ -52,7 +52,7 @@
 |------|----------------------------|--------------------------|
 | Step 1 | The current drawPile state. | Reordered deck state with same elements  |
 | Step 2 | deck `List<Card>`           | N/A                      |
-| Step 3 | deck sizes: 0,1,2,56       | same elements, same size |
+| Step 3 | deck sizes: 0,1,2,63       | same elements, same size |
 
 ### Step 4:
 ##### each-choice
@@ -62,7 +62,7 @@
 | TC1 | empty deck (`[]`) | empty deck unchanged | yes          |
 | TC2 | deck size = 1 | same single card | yes          |
 | TC3 | deck size = 2 | same elements, order may change | yes          |
-| TC4 | deck size = 56 | same elements, order may change | yes          |
+| TC4 | deck size = 63 | same elements, order may change | yes          |
 
 ---
 
@@ -74,7 +74,7 @@
 |------|------------------------------------------------------------|---------------------------------------------------------------|
 | Step 1 | The current drawPile state and number of requested cards n | a list containing the top n cards from the deck               |
 | Step 2 | deck `List<Card>` and Integer n                            | List<Card> / IllegalStateException / IllegalArgumentException |
-| Step 3 | deck sizes: 0,1,2,56, int n: -1, 0, 1, 3, 55, 56, 57       | List<Card> / IllegalStateException / IllegalArgumentException |
+| Step 3 | deck sizes: 0,1,2,63, int n: -1, 0, 1, 3, 55, 63, 64       | List<Card> / IllegalStateException / IllegalArgumentException |
 
 ### Step 4:
 ##### each-choice
@@ -84,10 +84,10 @@
 | TC1         | deck size = 0, int n = -1  | throws IllegalArgumentException with message "deck.peekTop.negativeN" | yes         |
 | TC2         | deck size = 1, int n = 0   | an empty list (`[]`) and deck size = 1                                         | yes         |
 | TC3         | deck size = 2, int n = 1   | new list containing the first card with size = 1 and deck size = 2             | yes         |
-| TC4         | deck size = 56, int n = 3  | new list containing the first 3 elements with size = 3 and deck size = 56      | yes         |
-| TC5         | deck size = 56, int n = 55 | new list containing the first 55 elements with size = 55 and deck size = 56    | yes         |
-| TC6         | deck size = 56, int n = 56 | new list containing all the elements with size = 56 and deck size = 56         | yes         |
-| TC7         | deck size = 56, int n = 57 | throws IllegalStateException with message "deck.peekTop.tooManyRequested" | yes         |
+| TC4         | deck size = 63, int n = 3  | new list containing the first 3 elements with size = 3 and deck size = 63      | yes         |
+| TC5         | deck size = 63, int n = 55 | new list containing the first 55 elements with size = 55 and deck size = 63    | yes         |
+| TC6         | deck size = 63, int n = 63 | new list containing all the elements with size = 63 and deck size = 63         | yes         |
+| TC7         | deck size = 63, int n = 64 | throws IllegalStateException with message "deck.peekTop.tooManyRequested" | yes         |
 | TC8         | deck size = 3, int n = 5   | throws IllegalStateException with message "deck.peekTop.tooManyRequested" | yes         |
 
 ---
@@ -123,8 +123,8 @@
 - input: void
 - output: int
 - TC 6.1: getSize_InitialDeck_ReturnsDeckSize
-    - State of the system: Deck with list of 56 cards
-    - Expected output: returns 56
+    - State of the system: Deck with list of 63 cards
+    - Expected output: returns 63
     - Implemented: yes
 - TC 6.2: getSize_EmptyDeck_ReturnsZero
   - State of the system: Deck with list of 0 cards
@@ -136,7 +136,7 @@
 - input: void
 - output: boolean
 - TC 7.1: isEmpty_InitialDeck_ReturnsFalse
-  - State of the system: Deck with list of 56 cards
+  - State of the system: Deck with list of 63 cards
   - Expected output: returns false
   - Implemented: yes
 - TC 7.2: isEmpty_EmptyDeck_ReturnsTrue
@@ -150,37 +150,37 @@
 - output: boolean
 - TC 8.1: insertAt_InitialDeck_ReturnsTrue
   - input: Card EXPLODING_KITTEN, int 0
-  - State of the system: Deck with list of 56 cards
+  - State of the system: Deck with list of 63 cards
   - Expected output: returns true
   - Implemented: yes
 - TC 8.2: insertAt_InitialDeckIndex1_ReturnsTrue
   - input: Card EXPLODING_KITTEN, int 1
-  - State of the system: Deck with list of 56 cards
+  - State of the system: Deck with list of 63 cards
   - Expected output: returns true
   - Implemented: yes
-- TC 8.3: insertAt_InitialDeckIndex56_ReturnsTrue
-  - input: Card EXPLODING_KITTEN, int 56
-  - State of the system: Deck with list of 56 cards
+- TC 8.3: insertAt_InitialDeckIndex63_ReturnsTrue
+  - input: Card EXPLODING_KITTEN, int 63
+  - State of the system: Deck with list of 63 cards
   - Expected output: returns true
   - Implemented: yes
-- TC 8.4: insertAt_InitialDeckIndex57_ThrowsException
-  - input: Card EXPLODING_KITTEN, int 57
-  - State of the system: Deck with list of 56 cards
+- TC 8.4: insertAt_InitialDeckIndex64_ThrowsException
+  - input: Card EXPLODING_KITTEN, int 64
+  - State of the system: Deck with list of 63 cards
   - Expected output: throws IllegalArgumentException error
   - Implemented: yes
 - TC 8.5: insertAt_InitialDeckIndexNeg1_ThrowsException
   - input: Card EXPLODING_KITTEN, int -1
-  - State of the system: Deck with list of 56 cards
+  - State of the system: Deck with list of 63 cards
   - Expected output: throws IllegalArgumentException error
   - Implemented: yes
 - TC 8.6: insertAt_InitialDeckNullCard_ThrowsException
   - input: Card null, int 1
-  - State of the system: Deck with list of 56 cards
+  - State of the system: Deck with list of 63 cards
   - Expected output: throws IllegalArgumentException error
   - Implemented: yes
 - TC 8.7: insertAt_InitialDeckNullCardNeg1_ThrowsException
   - input: Card null, int -1
-  - State of the system: Deck with list of 56 cards
+  - State of the system: Deck with list of 63 cards
   - Expected output: throws IllegalArgumentException error
   - Implemented: yes
 

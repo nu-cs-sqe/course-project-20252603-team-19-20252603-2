@@ -40,8 +40,9 @@
 2. [done] Allan: started game implementation (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/39)
 3. [in progress] Allan: started TurnTracker class
 
-# Week X (XX/XX/2026-XX/XX/2026) TEMPLATE (You can change the format to whatever the team likes better)
+# Week 10 (06/01/2026-06/07/2026)
 **Planning and Progress Tracking**:
-1. [done] Person: Task (Links to PR)
-2. [not started] Person: Task (Links to PR)
-3. [80% done] Person: Task (Links to PR)
+1. [done] Kevin: Refactored `Player` to match the design-doc API (`int playerId`, `List<Card>` hand, `getCardAt`/`getHand`/`getIndexOfCard`/`markDead`, all error strings i18n-keyed) and built the `GameEngine` setup phase (validate 2–5 players, deal 5-card hands, rig the deck with Exploding Kittens/Defuses). Per-method Red→Green TDD with BVA (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/43)
+2. [done] Kevin: Added UI-facing `GameEngine` methods for the UI developer — `isDeckEmpty`, `getPlayerHand` (defensive copy via new `Player.getHand`), `drawCardForCurrentPlayer`, `advanceToNextPlayer`; TDD + design-doc + BVA (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/48)
+3. [done] Kevin: Set up PIT mutation testing (`info.solidsoft.pitest`) wired into `./gradlew build`, mirroring the Code-Coverage lab; first run reports 95% test strength (branch `setup/pitest`). TurnTracker `changeCurrentDirection` shows as the lone uncovered method — flagged for Allan
+4. [done] Kevin: Finalized the playable game loop on `feat/game-loop` — new `REVERSE` + `TARGETED_ATTACK` card types dealt from the deck (size 63), `RuleManager` legality checks, `ActionController` effects (shuffle, see-the-future, reverse, favor, cat-pair steal with injected `Random`), all `GameEngine` play methods (skip/shuffle/see-the-future/reverse/attack/targeted-attack/favor/cat-pair/nope), explode-or-defuse resolution, and two win conditions (last player standing + draw-pile exhausted). Per-method Red→Green TDD; design-doc, BVA, and use-cases updated alongside
