@@ -408,9 +408,9 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `new GameEngine(2)` at game start | `false` | no |
-| TC2 | one player marked dead | `true` | no |
-| TC3 | draw pile drained to empty, both alive | `true` | no |
+| TC1 | `new GameEngine(2)` at game start | `false` | yes |
+| TC2 | one player marked dead | `true` | yes |
+| TC3 | draw pile drained to empty, both alive | `true` | yes |
 
 ---
 
@@ -429,10 +429,10 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `getWinnerId()` before the game is over | throws `IllegalStateException` with message `"gameEngine.notOver"` | no |
-| TC2 | player 0 marked dead (2 players) | `1` (last player standing) | no |
-| TC3 | draw pile drained by player 0 (most cards), both alive | `0` | no |
-| TC4 | exhausted pile with both hands equal | `0` (tie broken by lowest id) | no |
+| TC1 | `getWinnerId()` before the game is over | throws `IllegalStateException` with message `"gameEngine.notOver"` | yes |
+| TC2 | player 0 marked dead (2 players) | `1` (last player standing) | yes |
+| TC3 | draw pile drained by player 0 (most cards), both alive | `0` | yes |
+| TC4 | exhausted pile with both hands equal | `0` (tie broken by lowest id) | yes |
 
 ---
 

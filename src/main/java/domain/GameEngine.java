@@ -18,6 +18,7 @@ public final class GameEngine {
     private static final String NOT_IN_HAND_KEY = "gameEngine.play.notInHand";
     private static final String NO_KITTEN_KEY = "gameEngine.defuse.noKitten";
     private static final String NO_DEFUSE_KEY = "gameEngine.defuse.noDefuse";
+    private static final String NOT_OVER_KEY = "gameEngine.notOver";
 
     private final int numPlayers;
     private final List<Player> players;
@@ -175,6 +176,35 @@ public final class GameEngine {
         current.markDead();
         advanceToNextLivingPlayer();
         forcedTurns = NORMAL_FORCED_TURNS;
+    }
+
+    public boolean isGameOver() {
+        return countAlive() == 1 || deck.isEmpty();
+    }
+
+    public int getWinnerId() {
+        if (!isGameOver()) {
+            throw new IllegalStateException(NOT_OVER_KEY);
+        }
+        int winnerId = -1;
+        int mostCards = -1;
+        for (Player player : players) {
+            if (player.isAlive() && player.getHandSize() > mostCards) {
+                mostCards = player.getHandSize();
+                winnerId = player.getPlayerId();
+            }
+        }
+        return winnerId;
+    }
+
+    private int countAlive() {
+        int alive = 0;
+        for (Player player : players) {
+            if (player.isAlive()) {
+                alive++;
+            }
+        }
+        return alive;
     }
 
     private void discardOneFromCurrent(CardType type) {
