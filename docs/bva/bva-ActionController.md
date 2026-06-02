@@ -19,7 +19,7 @@ This file holds the BVA analysis for every public method of the `ActionControlle
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `shuffleDeck(new Deck())` | deck size unchanged (63) | no |
+| TC1 | `shuffleDeck(new Deck())` | deck size unchanged (63) | yes |
 
 ---
 
@@ -38,9 +38,9 @@ This file holds the BVA analysis for every public method of the `ActionControlle
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `peekTopThree` on a full deck | list of size 3; deck size unchanged | no |
-| TC2 | `peekTopThree` on a 2-card deck | list of size 2 | no |
-| TC3 | `peekTopThree` on an empty deck | empty list | no |
+| TC1 | `peekTopThree` on a full deck | list of size 3; deck size unchanged | yes |
+| TC2 | `peekTopThree` on a 2-card deck | list of size 2 | yes |
+| TC3 | `peekTopThree` on an empty deck | empty list | yes |
 
 ---
 
@@ -59,8 +59,8 @@ This file holds the BVA analysis for every public method of the `ActionControlle
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | tracker with direction +1 | `getCurrentDirection() == -1` | no |
-| TC2 | tracker with direction -1 | `getCurrentDirection() == 1` | no |
+| TC1 | tracker with direction +1 | `getCurrentDirection() == -1` | yes |
+| TC2 | tracker with direction -1 | `getCurrentDirection() == 1` | yes |
 
 ---
 
@@ -79,8 +79,8 @@ This file holds the BVA analysis for every public method of the `ActionControlle
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `from` has one DEFUSE, `giveCard(from, to, 0)` | `from` hand size 0, `to` hand has the DEFUSE | no |
-| TC2 | `giveCard(from, to, 0)` when `from` hand empty | throws `IndexOutOfBoundsException` | no |
+| TC1 | `from` has one DEFUSE, `giveCard(from, to, 0)` | `from` hand size 0, `to` hand has the DEFUSE | yes |
+| TC2 | `giveCard(from, to, 0)` when `from` hand empty | throws `IndexOutOfBoundsException` | yes |
 
 ---
 
@@ -99,9 +99,9 @@ This file holds the BVA analysis for every public method of the `ActionControlle
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | victim has exactly one card | that card moves to thief; victim hand size 0 | no |
-| TC2 | victim has several cards, seeded `Random` | the card at the seeded index moves to thief | no |
-| TC3 | victim has no cards | no-op; thief hand unchanged | no |
+| TC1 | victim has exactly one card | that card moves to thief; victim hand size 0 | yes |
+| TC2 | victim has several cards, seeded `Random` | the card at the seeded index moves to thief | yes |
+| TC3 | victim has no cards | no-op; thief hand unchanged | yes |
 
 ---
 
