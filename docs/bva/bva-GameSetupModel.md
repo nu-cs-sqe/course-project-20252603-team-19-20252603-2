@@ -17,7 +17,7 @@
 
 | Test Case # | System under test                                                     | Expected output                                                                | Implemented? |
 |-------------|-----------------------------------------------------------------------|--------------------------------------------------------------------------------|--------------|
-| TC1         | list size of 1 with Vincent and prefix is Player                      | throws `IllegalArgumentException` with message `gameSetupModel.tooFewPlayers`  | no           |
+| TC1         | list size of 1 with Vincent and prefix is Player                      | throws `IllegalArgumentException` with message `gameSetupModel.tooFewPlayers`  | yes          |
 | TC2         | list size of 2 with Vincent, Vinny and prefix is Player               | `["Vincent", "Vinny"]`                                                         | no           |
 | TC3         | list size of 5 with Vincent, Vinny, VV, V, vv and prefix is Player    | `["Vincent", "Vinny", "VV", "V", "vv"]`                                        | no           |
 | TC4         | list size of 6 with Vincent, Vinny, VV, V, vv, v and prefix is Player | throws `IllegalArgumentException` with message `gameSetupModel.tooManyPlayers` | no           |
