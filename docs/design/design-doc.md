@@ -103,8 +103,14 @@
 - `drawCardForCurrentPlayer(): Card` — draws the top card of the draw pile,
   adds it to the current player's hand, and returns it. Throws
   `IllegalStateException` (`deck.emptyType`) if the draw pile is empty.
-- `advanceToNextPlayer()` — hands the turn to the next player via
-  `TurnTracker.turnGoesToNextPlayer()`.
+- `advanceToNextPlayer()` — hands the turn to the next living player (skips
+  eliminated seats).
+- `endTurnByDrawing()` — ends the current turn after a safe (non-kitten) draw:
+  consumes one owed turn and, when none remain, advances to the next living
+  player. The UI calls this after `drawCardForCurrentPlayer()` returns a
+  non-kitten card, so Attack / Targeted Attack stacking is honoured.
+- `getDiscardPile(): List<Card>` — defensive copy of the discard pile for the
+  UI to render.
 - `getForcedTurns(): int` — draws the current player still owes before the turn
   passes (1 normally; raised by Attack / Targeted Attack).
 - `getLastPlayedCard(): CardType` — the most recently played card type (what a
@@ -130,7 +136,8 @@
 - `defuseDrawnKitten(int reinsertIndex)` — after drawing an Exploding Kitten,
   discards a DEFUSE, reinserts the kitten at `reinsertIndex`, and ends the turn.
 - `explodeCurrentPlayer()` — after drawing an Exploding Kitten with no Defuse,
-  marks the current player dead and ends the turn.
+  marks the current player dead, discards their remaining hand, and ends the
+  turn (advancing to the next living player).
 - `isGameOver(): boolean` — true when only one player is alive or the draw pile
   is exhausted.
 - `getWinnerId(): int` — the winner's id; throws `IllegalStateException`

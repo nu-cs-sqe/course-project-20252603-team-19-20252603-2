@@ -391,6 +391,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 |-------------|------------------|-----------------|--------------|
 | TC1 | 2 players, current given an Exploding Kitten, `explodeCurrentPlayer()` | `getPlayer(0).isAlive()==false`, `getCurrentPlayerId()==1` | yes |
 | TC2 | current has no Exploding Kitten, `explodeCurrentPlayer()` | throws `IllegalStateException` with message `"gameEngine.defuse.noKitten"` | yes |
+| TC3 | current with extra cards explodes | eliminated player's hand is emptied (cards discarded) | no |
 
 ---
 
@@ -455,6 +456,48 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | TC1 | a card was just played, noper holds a NOPE, `playNope(noperId)` | `getLastPlayedCard()` becomes `null` | yes |
 | TC2 | nothing played yet, `playNope(0)` | throws `IllegalStateException` with message `"rule.nope.nothingToCancel"` | yes |
 | TC3 | a card was just played, noper holds no NOPE | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | yes |
+
+---
+
+## Method 23: ```public void endTurnByDrawing()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | the current player has just taken a safe draw | one owed turn consumed; turn passes to the next living player only when none remain |
+| Step 2 | game state (`forcedTurns`, alive flags) | state mutation on the turn tracker |
+| Step 3 | normal turn (owe 1), stacked turn (owe 2), next seat dead | advance to next living / same player keeps the turn / dead seat skipped |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | 2 players, normal turn, `endTurnByDrawing()` | `getCurrentPlayerId()==1`, `getForcedTurns()==1` | no |
+| TC2 | player owing 2 (after an Attack), `endTurnByDrawing()` | same player keeps the turn; `getForcedTurns()==1` | no |
+| TC3 | 3 players, next seat eliminated, `endTurnByDrawing()` | turn skips the dead seat to the next living player | no |
+
+---
+
+## Method 24: ```public List<Card> getDiscardPile()```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | none (instance query) | A defensive copy of the discard pile |
+| Step 2 | n/a | `List<Card>` |
+| Step 3 | nothing discarded, one card discarded | empty list / list of size 1; mutating the copy does not affect the game |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | `getDiscardPile()` at game start | empty list | no |
+| TC2 | after `playSkip()`, `getDiscardPile()` | list of size 1 containing the SKIP | no |
+| TC3 | mutate the returned list, then `getDiscardPile()` again | discard pile unchanged (defensive copy) | no |
 
 ---
 

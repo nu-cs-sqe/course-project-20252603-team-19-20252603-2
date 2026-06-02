@@ -549,6 +549,75 @@ class GameEngineTest {
         assertEquals("gameEngine.play.notInHand", ex.getMessage());
     }
 
+    @Test
+    void endTurnByDrawing_normalTurn_advancesToNextPlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        engine.endTurnByDrawing();
+        assertEquals(1, engine.getCurrentPlayerId());
+        assertEquals(1, engine.getForcedTurns());
+    }
+
+    @Test
+    void endTurnByDrawing_underAttack_keepsSamePlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.ATTACK);
+        engine.playAttack();
+        int attackedPlayer = engine.getCurrentPlayerId();
+
+        engine.endTurnByDrawing();
+
+        assertEquals(attackedPlayer, engine.getCurrentPlayerId());
+        assertEquals(1, engine.getForcedTurns());
+    }
+
+    @Test
+    void endTurnByDrawing_nextSeatDead_skipsToLivingPlayer() {
+        GameEngine engine = new GameEngine(THREE_PLAYERS);
+        engine.getPlayer(1).markDead();
+        engine.endTurnByDrawing();
+        assertEquals(2, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void advanceToNextPlayer_skipsDeadPlayer() {
+        GameEngine engine = new GameEngine(THREE_PLAYERS);
+        engine.getPlayer(1).markDead();
+        engine.advanceToNextPlayer();
+        assertEquals(2, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void getDiscardPile_atGameStart_isEmpty() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        assertEquals(0, engine.getDiscardPile().size());
+    }
+
+    @Test
+    void getDiscardPile_afterPlay_containsPlayedCard() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SKIP);
+        engine.playSkip();
+        assertEquals(1, engine.getDiscardPile().size());
+        assertEquals(CardType.SKIP, engine.getDiscardPile().get(0).getCardType());
+    }
+
+    @Test
+    void getDiscardPile_returnedListIsDefensiveCopy() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SKIP);
+        engine.playSkip();
+        engine.getDiscardPile().clear();
+        assertEquals(1, engine.getDiscardPile().size());
+    }
+
+    @Test
+    void explodeCurrentPlayer_discardsEliminatedPlayersHand() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.EXPLODING_KITTEN);
+        engine.explodeCurrentPlayer();
+        assertEquals(0, engine.getPlayer(0).getHandSize());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
