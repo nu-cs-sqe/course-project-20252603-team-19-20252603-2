@@ -17,6 +17,18 @@ public class GameSetupModel {
 	}
 
 	public void capturePlayerNamesFromInputs(List<String> rawInputs, String defaultNamePrefix) {
-		throw new IllegalArgumentException(TOO_FEW_PLAYERS);
+		if (rawInputs.size() < 2) {
+			throw new IllegalArgumentException(TOO_FEW_PLAYERS);
+		}
+
+		List<String> names = new ArrayList<>();
+		for (String playerName : rawInputs) {
+			names.add(playerName);
+		}
+		this.playerNames = names;
+	}
+
+	public List<String> getPlayerNames() {
+		return new ArrayList<>(this.playerNames);
 	}
 }
