@@ -11,6 +11,7 @@ class GameSetupModelTest {
 
 	private static final String DEFAULT_PREFIX = "Player";
 	private static final String TOO_FEW_PLAYERS_KEY = "gameSetupModel.tooFewPlayers";
+	private static final String TOO_MANY_PLAYERS_KEY = "gameSetupModel.tooManyPlayers";
 
 	@Test
 	void capturePlayerNamesFromInputs_listSizeOne_throwsIllegalArgumentException() {
@@ -41,5 +42,17 @@ class GameSetupModelTest {
 		assertEquals(
 				List.of("Vincent", "Vinny", "VV", "V", "vv"),
 				model.getPlayerNames());
+	}
+
+	@Test
+	void capturePlayerNamesFromInputs_listSizeSix_throwsIllegalArgumentException() {
+		GameSetupModel model = new GameSetupModel();
+
+		IllegalArgumentException ex = assertThrows(
+				IllegalArgumentException.class,
+				() -> model.capturePlayerNamesFromInputs(
+						List.of("Vincent", "Vinny", "VV", "V", "vv", "v"),
+						DEFAULT_PREFIX));
+		assertEquals(TOO_MANY_PLAYERS_KEY, ex.getMessage());
 	}
 }
