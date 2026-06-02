@@ -64,7 +64,7 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 | TC1 | actor holds 2 `CAT_CARDS` | returns normally | yes |
 | TC2 | actor holds 0 `CAT_CARDS` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | yes |
 | TC3 | actor holds 1 `CAT_CARDS` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | yes |
-| TC4 | actor holds 3 `CAT_CARDS` | returns normally | no |
+| TC4 | actor holds 3 `CAT_CARDS` | returns normally | yes |
 
 ---
 

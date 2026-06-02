@@ -369,6 +369,17 @@ class GameEngineTest {
     }
 
     @Test
+    void playFavor_invalidCardIndex_throwsIndexOutOfBoundsException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.FAVOR);
+        final int outOfRangeIndex = engine.getPlayerHand(1).size();
+        IndexOutOfBoundsException ex = assertThrows(
+                IndexOutOfBoundsException.class,
+                () -> engine.playFavor(1, outOfRangeIndex));
+        assertEquals("player.removeCardFromHand.invalidIndex", ex.getMessage());
+    }
+
+    @Test
     void playCatPair_stealsOneCardFromTargetAndKeepsTurn() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.CAT_CARDS);

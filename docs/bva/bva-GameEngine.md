@@ -329,6 +329,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 |-------------|------------------|-----------------|--------------|
 | TC1 | 2 players, current 0 given FAVOR, `playFavor(1, 0)` | target hand shrinks by 1; current keeps the turn | yes |
 | TC2 | `playFavor(0, 0)` by player 0 (self) | throws `IllegalArgumentException` with message `"rule.target.invalid"` | yes |
+| TC3 | `playFavor(1, size)` with a card index past the target's hand | throws `IndexOutOfBoundsException` with message `"player.removeCardFromHand.invalidIndex"` | yes |
 
 ---
 

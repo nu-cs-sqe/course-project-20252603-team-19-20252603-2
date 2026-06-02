@@ -86,6 +86,15 @@ class RuleManagerTest {
     }
 
     @Test
+    void requireCatPair_threeCatCards_returnsNormally() {
+        Player actor = new Player(0);
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        assertDoesNotThrow(() -> ruleManager.requireCatPair(actor));
+    }
+
+    @Test
     void requireSomethingToNope_nonNullLastCard_returnsNormally() {
         assertDoesNotThrow(() -> ruleManager.requireSomethingToNope(CardType.ATTACK));
     }
