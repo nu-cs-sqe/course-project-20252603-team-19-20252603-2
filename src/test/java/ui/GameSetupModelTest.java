@@ -55,4 +55,13 @@ class GameSetupModelTest {
 						DEFAULT_PREFIX));
 		assertEquals(TOO_MANY_PLAYERS_KEY, ex.getMessage());
 	}
+
+	@Test
+	void capturePlayerNamesFromInputs_blankWhitespaceSecondName_usesDefaultPrefix() {
+		GameSetupModel model = new GameSetupModel();
+
+		model.capturePlayerNamesFromInputs(
+				List.of("Vincent", "   "), DEFAULT_PREFIX);
+		assertEquals(List.of("Vincent", "Player 2"), model.getPlayerNames());
+	}
 }
