@@ -19,9 +19,9 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `requirePlayable(SKIP)` | returns normally | no |
-| TC2 | `requirePlayable(DEFUSE)` | throws `IllegalArgumentException` with message `"rule.play.cannotPlayDirectly"` | no |
-| TC3 | `requirePlayable(EXPLODING_KITTEN)` | throws `IllegalArgumentException` with message `"rule.play.cannotPlayDirectly"` | no |
+| TC1 | `requirePlayable(SKIP)` | returns normally | yes |
+| TC2 | `requirePlayable(DEFUSE)` | throws `IllegalArgumentException` with message `"rule.play.cannotPlayDirectly"` | yes |
+| TC3 | `requirePlayable(EXPLODING_KITTEN)` | throws `IllegalArgumentException` with message `"rule.play.cannotPlayDirectly"` | yes |
 
 ---
 
@@ -40,9 +40,9 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | actor id 0, distinct living target id 1 | returns normally | no |
-| TC2 | actor and target are the same player | throws `IllegalArgumentException` with message `"rule.target.invalid"` | no |
-| TC3 | distinct target that is not alive | throws `IllegalArgumentException` with message `"rule.target.invalid"` | no |
+| TC1 | actor id 0, distinct living target id 1 | returns normally | yes |
+| TC2 | actor and target are the same player | throws `IllegalArgumentException` with message `"rule.target.invalid"` | yes |
+| TC3 | distinct target that is not alive | throws `IllegalArgumentException` with message `"rule.target.invalid"` | yes |
 
 ---
 
@@ -61,9 +61,10 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | actor holds 2 `CAT_CARDS` | returns normally | no |
-| TC2 | actor holds 0 `CAT_CARDS` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | no |
-| TC3 | actor holds 1 `CAT_CARDS` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | no |
+| TC1 | actor holds 2 `CAT_CARDS` | returns normally | yes |
+| TC2 | actor holds 0 `CAT_CARDS` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | yes |
+| TC3 | actor holds 1 `CAT_CARDS` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | yes |
+| TC4 | actor holds 3 `CAT_CARDS` | returns normally | no |
 
 ---
 
@@ -82,8 +83,8 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | `requireSomethingToNope(ATTACK)` | returns normally | no |
-| TC2 | `requireSomethingToNope(null)` | throws `IllegalStateException` with message `"rule.nope.nothingToCancel"` | no |
+| TC1 | `requireSomethingToNope(ATTACK)` | returns normally | yes |
+| TC2 | `requireSomethingToNope(null)` | throws `IllegalStateException` with message `"rule.nope.nothingToCancel"` | yes |
 
 ---
 
