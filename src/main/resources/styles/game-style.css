@@ -41,6 +41,17 @@
     -fx-font-weight: bold;
 }
 
+.quit-text {
+    -fx-fill: #ef4444;
+    -fx-text-fill: #ef4444;
+    -fx-background-color: transparent;
+    -fx-font-family: Arial Black;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+}
+
 .quit-btn {
     -fx-fill: #ef4444; /* Fiery red text for standard Text nodes */
     -fx-text-fill: #ef4444; /* Fiery red text for Button/Hyperlink nodes */
@@ -64,9 +75,9 @@
     -fx-border-width: 0 0 3px 0;
     -fx-padding: 15px;
 
-    -fx-pref-height: 110px;
-    -fx-max-height: 110px;
-    -fx-min-height: 110px;
+    -fx-pref-height: 140px;
+    -fx-max-height: 140px;
+    -fx-min-height: 140px;
 }
 
 .opponent-avatar {
@@ -110,9 +121,9 @@
     -fx-padding: 20px 40px;
 
     /* Layout boundaries matching the 1000x800 blueprint */
-    -fx-min-height: 410px;
-    -fx-max-height: 410px;
-    -fx-pref-height: 410px;
+    -fx-min-height: 380px;
+    -fx-max-height: 380px;
+    -fx-pref-height: 380px;
 }
 
 /* 5. TABLE ELEMENTS (DECK STACKS) */
@@ -511,4 +522,26 @@
     -fx-background-color: #000000;
     -fx-min-height: 5px;
     -fx-max-height: 5px;
+}
+
+.opponent-avatar-active {
+    -fx-border-color: #facc15; /* 🚀 Theme-matching Golden Yellow */
+    -fx-border-width: 3px;      /* Thicker ink stroke for visual pop */
+    -fx-border-radius: 10px;
+    -fx-padding: 4px;
+
+    /* Optional: Adds a warm comic-book golden outer glow */
+    -fx-effect: dropshadow(three-pass-box, rgba(250, 204, 21, 0.5), 8, 0, 0, 0);
+}
+
+.opponent-active-highlight {
+    -fx-scale-x: 1.1;                               /* scale-110 (Horizontal) */
+    -fx-scale-y: 1.1;                               /* scale-110 (Vertical) */
+    -fx-background-color: rgba(255, 255, 255, 0.1);  /* bg-white/10 */
+    -fx-background-radius: 12px;                    /* rounded-lg */
+    -fx-border-color: #facc15;                      /* ring-yellow-400 */
+    -fx-border-width: 2px;                          /* ring-2 */
+    -fx-border-radius: 10px;                        /* Snug border corner alignment */
+    -fx-padding: 6px;                               /* p-1 padding conversion */
+    -fx-effect: dropshadow(three-pass-box, rgba(250, 204, 21, 0.4), 8, 0, 0, 0); /* Outer golden glow */
 }
