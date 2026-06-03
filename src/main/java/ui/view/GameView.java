@@ -3,6 +3,7 @@ package ui.view;
 
 import domain.Card;
 import domain.CardType;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,7 +60,7 @@ public class GameView extends StackPane {
 	private Button drawCard;
 	private Button playCardButton;
 
-	private CardView selectedHandCard = null;
+	private List<CardView> selectedHandCards;
 
 	private static final int topBarRightSpacing = 20;
 	private static final int playerBarSpacing = 25;
@@ -78,6 +79,7 @@ public class GameView extends StackPane {
 		this.getStyleClass().add("game-root");
 
 		this.cardCollection = new HashMap<>();
+		this.selectedHandCards = new ArrayList<>();
 
 		CardType[] types = CardType.values();
 		for (int i = 0; i < types.length; i++) {
@@ -532,31 +534,45 @@ public class GameView extends StackPane {
 		}
 	}
 
-	private void selectCard() {
-		this.selectedHandCard.getStyleClass().remove("hand-card");
-		this.selectedHandCard.getStyleClass().add("hand-card-selected");
+	private void selectCard(CardView card) {
+		card.getStyleClass().remove("hand-card");
+		card.getStyleClass().add("hand-card-selected");
+		this.selectedHandCards.add(card);
 		this.playCardButton.setDisable(false);
 	}
 
-	private void deselectCard() {
-		if (this.selectedHandCard != null) {
-			this.selectedHandCard.getStyleClass().remove("hand-card-selected");
-			this.selectedHandCard.getStyleClass().add("hand-card");
-			this.selectedHandCard = null;
+	private void deselectCard(CardView card) {
+		card.getStyleClass().remove("hand-card-selected");
+		card.getStyleClass().add("hand-card");
+	}
+
+	private void clearSelection() {
+		for (CardView card : selectedHandCards) {
+			deselectCard(card);
 		}
+		selectedHandCards.clear();
 		this.playCardButton.setDisable(true);
 	}
 
 	private void handleCardSelection(CardView playerCard) {
-		if (this.selectedHandCard == playerCard) {
-			deselectCard();
-		} else {
-			if (this.selectedHandCard != null) {
-				deselectCard();
+		if (selectedHandCards.contains(playerCard)) {
+			deselectCard(playerCard);
+			selectedHandCards.remove(playerCard);
+			if (selectedHandCards.isEmpty()) {
+				this.playCardButton.setDisable(true);
 			}
-			this.selectedHandCard = playerCard;
-			selectCard();
+			return;
 		}
+
+		CardType currentCardType = playerCard.getCardType();
+		if (!selectedHandCards.isEmpty()) {
+			CardType anchorType = selectedHandCards.get(0).getCardType();
+			if (currentCardType != anchorType) {
+				clearSelection();
+			}
+		}
+
+		selectCard(playerCard);
 	}
 
 	public void addPlayerCard(Card card) {
@@ -612,10 +628,12 @@ public class GameView extends StackPane {
 	}
 
 	public void removeCardFromHand() {
-		this.playerHandSection.getChildren().remove(
-				this.selectedHandCard
-		);
-		this.selectedHandCard = null;
+		for (CardView card : this.selectedHandCards) {
+			this.playerHandSection.getChildren().remove(
+					card
+			);
+		}
+		this.selectedHandCards.clear();
 		this.playCardButton.setDisable(true);
 	}
 
@@ -624,9 +642,9 @@ public class GameView extends StackPane {
 		this.drawCard.setOnAction(e -> handler.run());
 	}
 
-	public void setOnPlayButtonAction(Consumer<CardView> handler) {
+	public void setOnPlayButtonAction(Consumer<List<CardView>> handler) {
 		this.playCardButton.setOnAction(e -> {
-			handler.accept(this.selectedHandCard);
+			handler.accept(new ArrayList<>(this.selectedHandCards));
 		});
 	}
 }

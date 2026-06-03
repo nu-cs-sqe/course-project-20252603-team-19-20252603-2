@@ -5,6 +5,7 @@ import java.util.ResourceBundle;
 import ui.model.AppModel;
 import ui.model.GameModel;
 import ui.navigation.ScreenRouter;
+import ui.view.CardView;
 import ui.view.GameView;
 
 public class GameController {
@@ -17,6 +18,7 @@ public class GameController {
 		this.refreshAction = () -> {
 			view.updateDisplay(appModel.getResourceBundle());
 			if (model.isGameStarted()) {
+				model.resetPlayerId();
 				view.updatePlayerCards(model.getLocalHand());
 				view.showOpponents(model.getOpponents());
 				view.updateDeckCount(model.getDeckSize());
@@ -65,37 +67,41 @@ public class GameController {
 					model.getLocalPlayerName()
 			);
 		});
-		view.setOnPlayButtonAction((handCard) -> {
+		view.setOnPlayButtonAction((handCards) -> {
 			if (!model.isGameStarted()) {
 				return;
 			}
-
-			handCard.setOnMouseEntered(null);
-			handCard.setOnMouseExited(null);
-			handCard.setOnMouseClicked(null);
-
-			handCard.getStyleClass().remove("hand-card");
-			handCard.getStyleClass().remove("hand-card-selected");
-			handCard.getStyleClass().add("discard-card");
-
-			view.addCardToDiscardPile(handCard);
-
-			model.removeCard(handCard.getCardType());
 
 			String playerName = model.getLocalPlayerName();
 			String action = appModel.getResourceBundle().getString(
 					"gameView.playAction"
 			);
-			String cardName = handCard.getCardName();
+			String cardName = handCards.get(0).getCardName();
 			String log = playerName + " " + action + " " + cardName;
 
 			view.addLog(log);
-			view.removeCardFromHand();
-			view.updateCardCount(model.getDeckSize());
-			view.updateHandCount(
-					model.getLocalHandSize(),
-					model.getLocalPlayerName()
-			);
+
+			for (CardView handCard : handCards) {
+				handCard.setOnMouseEntered(null);
+				handCard.setOnMouseExited(null);
+				handCard.setOnMouseClicked(null);
+
+				handCard.getStyleClass().remove("hand-card");
+				handCard.getStyleClass().remove("hand-card-selected");
+				handCard.getStyleClass().add("discard-card");
+
+				view.addCardToDiscardPile(handCard);
+
+				model.removeCard(handCard.getCardType());
+
+				view.removeCardFromHand();
+				view.updateCardCount(model.getDeckSize());
+				view.updateHandCount(
+						model.getLocalHandSize(),
+						model.getLocalPlayerName()
+				);
+				view.showOpponents(model.getOpponents());
+			}
 		});
 	}
 

@@ -56,6 +56,10 @@ public class GameModel {
 		return playerNames.get(localPlayerId);
 	}
 
+	public void resetPlayerId() {
+		localPlayerId = 0;
+	}
+
 	public List<PlayerDisplayInfo> getOpponents() {
 		List<PlayerDisplayInfo> opponents = new ArrayList<>();
 		for (int playerId = 0; playerId < engine.getNumPlayers(); playerId++) {
