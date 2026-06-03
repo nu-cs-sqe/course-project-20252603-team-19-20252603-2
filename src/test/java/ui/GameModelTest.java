@@ -57,4 +57,18 @@ class GameModelTest {
 
         assertEquals(expectedMessage, ex.getMessage());
     }
+
+    @Test
+    void startGame_sixPlayer_throwsIllegalArgumentException() {
+        GameModel model = new GameModel();
+
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> model.startGame(List.of("P0", "P1", "P2", "P3", "P4", "P5"))
+        );
+
+        String expectedMessage = "gameEngine.numPlayers.outOfRange";
+
+        assertEquals(expectedMessage, ex.getMessage());
+    }
 }
