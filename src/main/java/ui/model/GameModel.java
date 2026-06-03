@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameModel {
+	private int localPlayerId = 0;
+
 	private GameEngine engine;
 	private List<String> playerNames;
 
@@ -18,5 +20,9 @@ public class GameModel {
 
 	public boolean isGameStarted() {
 		return engine != null;
+	}
+
+	public String getLocalPlayerName() {
+		return playerNames.get(localPlayerId);
 	}
 }

@@ -15,7 +15,7 @@
 | Test Case # | System under test                                       | Expected output                                                                   | Implemented? |
 |-------------|---------------------------------------------------------|-----------------------------------------------------------------------------------|--------------|
 | TC1         | `startGame(List.of("P0", "P1"))`                        | `isGameStarted()` is `true`                                                       | yes          |
-| TC2         | `startGame(List.of("P0", "P1"))`                        | `getLocalPlayerName()` is `"P0"`                                                  | no           |
+| TC2         | `startGame(List.of("P0", "P1"))`                        | `getLocalPlayerName()` is `"P0"`                                                  | yes          |
 | TC3         | `startGame(List.of("P0", "P1", "P2", "P3","P4"))`       | `isGameStarted()` is `true`                                                       | no           |
 | TC4         | `startGame(List.of("P0", "P1", "P2", "P3","P4"))`       | `getLocalPlayerName()` is `"P0"`                                                  | no           |
 | TC5         | `startGame(List.of("P0"))`                              | throws `IllegalArgumentException` with message `gameEngine.numPlayers.outOfRange` | no           |
