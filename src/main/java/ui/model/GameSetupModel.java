@@ -44,4 +44,12 @@ public class GameSetupModel {
 	public List<String> getPlayerNames() {
 		return new ArrayList<>(this.playerNames);
 	}
+
+	public void setNumberPlayer(int playerCount) {
+		this.numberPlayer = playerCount;
+	}
+
+	public int getNumberPlayer() {
+		return this.numberPlayer;
+	}
 }
