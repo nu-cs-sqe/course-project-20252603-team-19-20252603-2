@@ -1,5 +1,6 @@
 package ui.model;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -10,6 +11,8 @@ public class AppModel {
 	private static final Locale CHINESE = Locale.SIMPLIFIED_CHINESE;
 
 	private Locale selectedLocale = ENGLISH;
+
+	private final GameSetupModel setupModel = new GameSetupModel();
 
 	public void toggleLanguage() {
 		if (selectedLocale.equals(ENGLISH)) {
@@ -25,5 +28,23 @@ public class AppModel {
 
 	public Locale getSelectedLocale() {
 		return selectedLocale;
+	}
+
+	public int getNumberPlayer() {
+		return setupModel.getNumberPlayer();
+	}
+
+	public void setNumberPlayer(int playerCount) {
+		setupModel.setNumberPlayer(playerCount);
+	}
+
+	public List<String> getPlayerNames() {
+		return setupModel.getPlayerNames();
+	}
+
+	public void capturePlayerNamesFromInputs(
+			List<String> rawInputs, String defaultNamePrefix
+	) {
+		setupModel.capturePlayerNamesFromInputs(rawInputs, defaultNamePrefix);
 	}
 }
