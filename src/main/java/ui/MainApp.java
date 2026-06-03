@@ -3,6 +3,7 @@ package ui;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import ui.controller.GameController;
 import ui.controller.GameSetupController;
 import ui.controller.InstructionController;
 import ui.controller.StartController;
@@ -40,6 +41,9 @@ public class MainApp extends Application {
 		GameSetupController gameSetupController = new GameSetupController(
 				gameSetupView, appModel, router
 		);
+		GameController gameController = new GameController(
+				gameView, appModel, router
+		);
 
 		router.configureNavigation(new ScreenRouter() {
 			@Override
@@ -61,6 +65,7 @@ public class MainApp extends Application {
 
 			@Override
 			public void showGame() {
+				gameController.startGame();
 				scene.setRoot(gameView);
 			}
 		});
