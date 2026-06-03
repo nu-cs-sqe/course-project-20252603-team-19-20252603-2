@@ -27,7 +27,7 @@
 | TC9         | card name `Shuffle`, file count = 4, mock `random` nextInt returns 0         | non-null path of `/assets/Shuffle/Shuffle1.png`                                | yes          |
 | TC10        | card name `Skip`, file count = 4, mock `random` nextInt returns 0            | non-null path of `/assets/Skip/Skip1.png`                                      | yes          |
 | TC11        | card name `TargetedAttack`, file count = 5, mock `random` nextInt returns 0  | non-null path of `/assets/TargetedAttack/TargetedAttack1.png`                  | yes          |
-| TC12        | card name `Empty`, file count = 4, mock `random` nextInt returns 0           | throws `IllegalArgumentException` with message `cardServices.cardDoesNotExist` | no           |
+| TC12        | card name `Empty`, file count = 4, mock `random` nextInt returns 0           | throws `IllegalArgumentException` with message `cardServices.cardDoesNotExist` | yes          |
 
 ---
 
