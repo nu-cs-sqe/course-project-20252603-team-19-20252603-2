@@ -46,3 +46,10 @@
 2. [done] Kevin: Added UI-facing `GameEngine` methods for the UI developer — `isDeckEmpty`, `getPlayerHand` (defensive copy via new `Player.getHand`), `drawCardForCurrentPlayer`, `advanceToNextPlayer`; TDD + design-doc + BVA (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/48)
 3. [done] Kevin: Set up PIT mutation testing (`info.solidsoft.pitest`) wired into `./gradlew build`, mirroring the Code-Coverage lab; first run reports 95% test strength (branch `setup/pitest`). TurnTracker `changeCurrentDirection` shows as the lone uncovered method — flagged for Allan
 4. [done] Kevin: Finalized the playable game loop on `feat/game-loop` — new `REVERSE` + `TARGETED_ATTACK` card types dealt from the deck (size 63), `RuleManager` legality checks, `ActionController` effects (shuffle, see-the-future, reverse, favor, cat-pair steal with injected `Random`), all `GameEngine` play methods (skip/shuffle/see-the-future/reverse/attack/targeted-attack/favor/cat-pair/nope), explode-or-defuse resolution, and two win conditions (last player standing + draw-pile exhausted). Per-method Red→Green TDD; design-doc, BVA, and use-cases updated alongside
+5. [done] Vincent: Implemented the Start, Instructions, GameSetup, CardView, and Game Screen for the UI following MVC (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/49)
+6. [done] Vincent: Implemented the Controllers and Models for each screen 
+7. [done] Vincent: Implemented a navigation file to control switching between screens 
+8. [done] Vincent: Conduct BVA/TDD for the methods in UI that needs it
+9. [done] Vincent: Added the CSS files, card images, and a random selector method
+10. [done] Vincent: Updated the i18n file to contain the test needed for the screens/view created and updated the design doc.
+11. [done] Vincent: Connected the methods that Kevin implemented in GameEngine to have a semi functioning game
