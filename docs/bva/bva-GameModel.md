@@ -17,7 +17,7 @@
 | TC1         | `startGame(List.of("P0", "P1"))`                        | `isGameStarted()` is `true`                                                       | yes          |
 | TC2         | `startGame(List.of("P0", "P1"))`                        | `getLocalPlayerName()` is `"P0"`                                                  | yes          |
 | TC3         | `startGame(List.of("P0", "P1", "P2", "P3","P4"))`       | `isGameStarted()` is `true`                                                       | yes          |
-| TC4         | `startGame(List.of("P0", "P1", "P2", "P3","P4"))`       | `getLocalPlayerName()` is `"P0"`                                                  | no           |
+| TC4         | `startGame(List.of("P0", "P1", "P2", "P3","P4"))`       | `getLocalPlayerName()` is `"P0"`                                                  | yes          |
 | TC5         | `startGame(List.of("P0"))`                              | throws `IllegalArgumentException` with message `gameEngine.numPlayers.outOfRange` | no           |
 | TC6         | `startGame(List.of("P0", "P1", "P2", "P3","P4", "P5"))` | throws `IllegalArgumentException` with message `gameEngine.numPlayers.outOfRange` | no           |
 
