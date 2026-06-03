@@ -1,0 +1,43 @@
+package ui;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Random;
+import org.easymock.EasyMock;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+class CardServicesTest {
+
+	@ParameterizedTest
+	@CsvSource({
+			"Attack, 4, /assets/Attack/Attack1.png",
+			"CatCards, 5, /assets/CatCards/CatCards1.png",
+			"Defuse, 6, /assets/Defuse/Defuse1.png",
+			"ExplodingKitten, 4, /assets/ExplodingKitten/ExplodingKitten1.png",
+			"Favor, 4, /assets/Favor/Favor1.png",
+			"Nope, 5, /assets/Nope/Nope1.png",
+			"Reverse, 6, /assets/Reverse/Reverse1.png",
+			"SeeTheFuture, 5, /assets/SeeTheFuture/SeeTheFuture1.png",
+			"Shuffle, 4, /assets/Shuffle/Shuffle1.png",
+			"Skip, 4, /assets/Skip/Skip1.png",
+			"TargetedAttack, 5, /assets/TargetedAttack/TargetedAttack1.png",
+	})
+	void getRandomCardImage_validCardName_returnsFirstFilePath(
+			String cardName, int fileCount, String expectedPath
+	) {
+		Random mockRandom = EasyMock.createMock(Random.class);
+		EasyMock.expect(mockRandom.nextInt(fileCount)).andReturn(0);
+		EasyMock.replay(mockRandom);
+
+		String actualPath = CardServices.getRandomCardImage(
+				mockRandom,
+				cardName,
+				fileCount
+		);
+
+		assertEquals(expectedPath, actualPath);
+
+		EasyMock.verify(mockRandom);
+	}
+}
