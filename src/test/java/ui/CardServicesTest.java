@@ -1,13 +1,17 @@
 package ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Random;
 import org.easymock.EasyMock;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 class CardServicesTest {
+
+	private static final String invalidCardNameKey = "cardServices.cardDoesNotExist";
 
 	@ParameterizedTest
 	@CsvSource({
@@ -39,5 +43,24 @@ class CardServicesTest {
 		assertEquals(expectedPath, actualPath);
 
 		EasyMock.verify(mockRandom);
+	}
+
+	@Test
+	void getRandomCardImage_invalidCardName_throwIllegalArgumentException() {
+		final int fileCount = 4;
+		String cardName = "Empty";
+
+		Random mockRandom = EasyMock.createMock(Random.class);
+		EasyMock.expect(mockRandom.nextInt(fileCount)).andReturn(0);
+		EasyMock.replay(mockRandom);
+
+		IllegalArgumentException ex = assertThrows(
+				IllegalArgumentException.class,
+				() -> CardServices.getRandomCardImage(
+						mockRandom,
+						cardName,
+						fileCount
+				));
+		assertEquals(invalidCardNameKey, ex.getMessage());
 	}
 }
