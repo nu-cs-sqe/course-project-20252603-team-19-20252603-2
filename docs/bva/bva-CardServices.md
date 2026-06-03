@@ -16,17 +16,17 @@
 
 | Test Case # | System under test                                                            | Expected output                                                                | Implemented? |
 |-------------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------|--------------|
-| TC1         | card name `Attack`, file count = 4, mock `random` nextInt returns 0          | non-null path of `/assets/Attack/Attack1.png`                                  | no           |
-| TC2         | card name `CatCards`, file count = 5, mock `random` nextInt returns 0        | non-null path of `/assets/CatCards/CatCards1.png`                              | no           |
-| TC3         | card name `Defuse`, file count = 6, mock `random` nextInt returns 0          | non-null path of `/assets/Defuse/Defuse1.png`                                  | no           |
-| TC4         | card name `ExplodingKitten`, file count = 4, mock `random` nextInt returns 0 | non-null path of `/assets/ExplodingKitten/ExplodingKitten1.png`                | no           |
-| TC5         | card name `Favor`, file count = 4, mock `random` nextInt returns 0           | non-null path of `/assets/Favor/Favor1.png`                                    | no           |
-| TC6         | card name `Nope`, file count = 5, mock `random` nextInt returns 0            | non-null path of `/assets/Nope/Nope1.png`                                      | no           |
-| TC7         | card name `Reverse`, file count = 6, mock `random` nextInt returns 0         | non-null path of `/assets/Reverse/Reverse1.png`                                | no           |
-| TC8         | card name `SeeTheFuture`, file count = 5, mock `random` nextInt returns 0    | non-null path of `/assets/SeeTheFuture/SeeTheFuture1.png`                      | no           |
-| TC9         | card name `Shuffle`, file count = 4, mock `random` nextInt returns 0         | non-null path of `/assets/Shuffle/Shuffle1.png`                                | no           |
-| TC10        | card name `Skip`, file count = 4, mock `random` nextInt returns 0            | non-null path of `/assets/Skip/Skip1.png`                                      | no           |
-| TC11        | card name `TargetedAttack`, file count = 5, mock `random` nextInt returns 0  | non-null path of `/assets/TargetedAttack/TargetedAttack1.png`                  | no           |
+| TC1         | card name `Attack`, file count = 4, mock `random` nextInt returns 0          | non-null path of `/assets/Attack/Attack1.png`                                  | yes          |
+| TC2         | card name `CatCards`, file count = 5, mock `random` nextInt returns 0        | non-null path of `/assets/CatCards/CatCards1.png`                              | yes          |
+| TC3         | card name `Defuse`, file count = 6, mock `random` nextInt returns 0          | non-null path of `/assets/Defuse/Defuse1.png`                                  | yes          |
+| TC4         | card name `ExplodingKitten`, file count = 4, mock `random` nextInt returns 0 | non-null path of `/assets/ExplodingKitten/ExplodingKitten1.png`                | yes          |
+| TC5         | card name `Favor`, file count = 4, mock `random` nextInt returns 0           | non-null path of `/assets/Favor/Favor1.png`                                    | yes          |
+| TC6         | card name `Nope`, file count = 5, mock `random` nextInt returns 0            | non-null path of `/assets/Nope/Nope1.png`                                      | yes          |
+| TC7         | card name `Reverse`, file count = 6, mock `random` nextInt returns 0         | non-null path of `/assets/Reverse/Reverse1.png`                                | yes          |
+| TC8         | card name `SeeTheFuture`, file count = 5, mock `random` nextInt returns 0    | non-null path of `/assets/SeeTheFuture/SeeTheFuture1.png`                      | yes          |
+| TC9         | card name `Shuffle`, file count = 4, mock `random` nextInt returns 0         | non-null path of `/assets/Shuffle/Shuffle1.png`                                | yes          |
+| TC10        | card name `Skip`, file count = 4, mock `random` nextInt returns 0            | non-null path of `/assets/Skip/Skip1.png`                                      | yes          |
+| TC11        | card name `TargetedAttack`, file count = 5, mock `random` nextInt returns 0  | non-null path of `/assets/TargetedAttack/TargetedAttack1.png`                  | yes          |
 | TC12        | card name `Empty`, file count = 4, mock `random` nextInt returns 0           | throws `IllegalArgumentException` with message `cardServices.cardDoesNotExist` | no           |
 
 ---
