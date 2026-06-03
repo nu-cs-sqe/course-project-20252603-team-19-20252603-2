@@ -1,0 +1,547 @@
+/* 1. ROOT GAME BOARD BACKGROUND (Crimson felt matching screenshots) */
+.game-root {
+    -fx-background-color: #7a0606; /* Deep Crimson Red */
+}
+
+/* 2. HEADER NAVIGATION BAR */
+.game-header {
+    -fx-background-color: #000000;
+    -fx-padding: 10px 20px;
+    -fx-border-color: transparent transparent #000000 transparent;
+    -fx-border-width: 0 0 4px 0;
+
+    -fx-pref-height: 50px;
+    -fx-max-height: 50px;
+    -fx-min-height: 50px;
+}
+
+.game-header-title {
+    -fx-fill: linear-gradient(to right, #ef4444 0%, #facc15 100%);
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+/* 3. YOUR TURN INDICATOR BADGE */
+.turn-indicator-box {
+    -fx-background-color: #22c55e; /* Vibrant action green */
+    -fx-padding: 5px 12px;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 6px;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-alignment: center;
+}
+
+.turn-indicator-text {
+    -fx-fill: #000000;
+    -fx-text-fill: #000000;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.quit-text {
+    -fx-fill: #ef4444;
+    -fx-text-fill: #ef4444;
+    -fx-background-color: transparent;
+    -fx-font-family: Arial Black;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+}
+
+.quit-btn {
+    -fx-fill: #ef4444; /* Fiery red text for standard Text nodes */
+    -fx-text-fill: #ef4444; /* Fiery red text for Button/Hyperlink nodes */
+    -fx-background-color: transparent;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 0;
+}
+
+.quit-btn:hover {
+    -fx-fill: #f87171; /* Soft red hover for Text nodes */
+    -fx-text-fill: #f87171; /* Soft red hover for Buttons */
+}
+
+/* 4. OPPONENT PANEL SECTION */
+.opponents-bar {
+    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-border-color: transparent transparent #000000 transparent;
+    -fx-border-width: 0 0 3px 0;
+    -fx-padding: 15px;
+
+    -fx-pref-height: 140px;
+    -fx-max-height: 140px;
+    -fx-min-height: 140px;
+}
+
+.opponent-avatar {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 50%; /* Perfect Circle */
+    -fx-border-radius: 44%;
+    -fx-border-color: #000000;
+    -fx-border-width: 4px;
+    -fx-min-width: 48px;
+    -fx-min-height: 48px;
+    -fx-max-width: 48px;
+    -fx-max-height: 48px;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(two-pass-box, #000000, 0, 1.0, 4, 4);
+}
+
+.opponent-avatar-text {
+    -fx-fill: #000000;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 20px;
+}
+
+.opponent-label {
+    -fx-fill: #ffffff;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 11px;
+}
+
+.opponent-card-count {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 10px;
+}
+
+.table-felt {
+    -fx-background-color: transparent; /* Inherits the deep crimson root background */
+    -fx-padding: 20px 40px;
+
+    /* Layout boundaries matching the 1000x800 blueprint */
+    -fx-min-height: 380px;
+    -fx-max-height: 380px;
+    -fx-pref-height: 380px;
+}
+
+/* 5. TABLE ELEMENTS (DECK STACKS) */
+/* The Card Asset Background Layering */
+.deck-card-button {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 16px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #000000;
+    -fx-border-width: 4px;
+    -fx-min-width: 144px;
+    -fx-min-height: 208px;        /* Matches simulator h-52 exactly! */
+    -fx-max-width: 144px;
+    -fx-max-height: 208px;        /* Matches simulator h-52 exactly! */
+    -fx-padding: 15px;
+    -fx-alignment: center;
+    -fx-background-insets: 1px;
+    -fx-cursor: hand;
+}
+
+/* Comic Book Tactile Lift Effect - shifts up/left and deepens shadow */
+.deck-card-button:hover {
+    -fx-translate-y: -1px;
+    -fx-translate-x: -1px;
+}
+
+/* Underlay Silhouette cards to represent 3D stack depth in a StackPane */
+.deck-stack-underlay-1 {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #000000;
+    -fx-border-width: 5px;
+    -fx-min-width: 144px;
+    -fx-min-height: 208px;
+    -fx-max-width: 144px;
+    -fx-max-height: 208px;
+    -fx-translate-x: 6px; /* Offset to bottom-right */
+    -fx-translate-y: 6px;
+}
+
+.deck-stack-underlay-2 {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #000000;
+    -fx-border-width: 5px;
+    -fx-min-width: 144px;
+    -fx-min-height: 208px;
+    -fx-max-width: 144px;
+    -fx-max-height: 208px;
+    -fx-translate-x: 12px; /* Further offset to bottom-right */
+    -fx-translate-y: 12px;
+}
+
+/* Big Bold Red Title Text */
+.deck-title-text {
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-fill: #b91c1c;
+    -fx-max-width: infinity;
+    -fx-alignment: center;
+}
+
+/* Soft Gray Capsule Badge */
+.deck-pill-badge {
+    -fx-background-color: #f1f5f9; /* Soft light gray/blue fill */
+    -fx-padding: 6px 18px;
+    -fx-background-radius: 15px;
+
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #94a3b8;
+
+    -fx-alignment: center;
+}
+
+/* Solid Yellow Action Button underneath the deck stack */
+.draw-action-button {
+    -fx-background-color: #facc15; /* Golden Yellow */
+    -fx-text-fill: #000000;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 12px;
+    -fx-border-color: #000000;
+    -fx-border-width: 4px;
+    -fx-padding: 10px 24px;
+    -fx-cursor: hand;
+    -fx-background-insets: 2px;
+    -fx-effect: dropshadow(two-pass-box, black, 0, 1.0, 4, 4);
+}
+
+.draw-action-button:hover {
+    -fx-background-color: #fde047;
+    -fx-translate-y: 1px;
+    -fx-effect: dropshadow(one-pass-box, black, 0, 1.0, 3, 3);
+}
+
+.draw-action-button:pressed {
+    -fx-translate-y: 3px;
+    -fx-effect: none;
+}
+
+/* 6. TABLE CHATTER PARCHMENT PANEL (Expanded vertically for 800px height) */
+.table-chatter-card {
+    -fx-background-color: #fdfbf7; /* Warm white parchment */
+    -fx-background-radius: 22px;
+    -fx-border-radius: 18px;
+    -fx-border-color: #000000;
+    -fx-border-width: 4px;
+    -fx-padding: 20px;
+    -fx-min-width: 300px;
+    -fx-max-width: 300px;
+    -fx-min-height: 260px; /* Increased from 240px for more chat lines! */
+    -fx-max-height: 260px;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 8, 8);
+}
+
+.table-chatter-title {
+    -fx-fill: #000000;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Dotted horizontal rows inside Table Chatter feed */
+.chatter-feed-row {
+    -fx-border-color: transparent transparent #d1d5db transparent;
+    -fx-border-style: dashed;
+    -fx-border-width: 0 0 1px 0;
+    -fx-padding: 6px 0;
+    -fx-alignment: center-left;
+}
+
+.chatter-feed-text {
+    -fx-fill: #374151; /* Dark charcoal ink */
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* 1. THE MAIN SCROLLPANE VIEWPORT */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent; /* Ensures inner viewport is also transparent */
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* 2. THE VERTICAL SCROLLBAR CONTAINER */
+.scroll-pane .scroll-bar {
+    -fx-background-color: transparent;
+    -fx-width: 8px; /* Snug, clean scroll bar width */
+    -fx-padding: 0;
+}
+
+/* 3. THE SCROLLBAR THUMB (The draggable handle) */
+.scroll-pane .scroll-bar .thumb {
+    -fx-background-color: #cbd5e1; /* Slate-300 clean grey */
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+}
+
+.scroll-pane .scroll-bar .thumb:hover {
+    -fx-background-color: #94a3b8; /* Slate-400 slightly darker grey on hover */
+}
+
+.scroll-pane .scroll-bar .thumb:pressed {
+    -fx-background-color: #64748b; /* Slate-500 even darker when actively dragging */
+}
+
+/* 4. THE SCROLLBAR TRACK (The background column) */
+.scroll-pane .scroll-bar .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* 5. DECREMENT & INCREMENT BUTTONS (The top and bottom arrow buttons) */
+/* We style these transparent to hide them and keep the comic layout looking flat and minimal */
+.scroll-pane .scroll-bar .decrement-button,
+.scroll-pane .scroll-bar .increment-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-pane .scroll-bar .decrement-arrow,
+.scroll-pane .scroll-bar .increment-arrow {
+    -fx-shape: null; /* Removes the native arrow rendering shape */
+    -fx-padding: 0;
+}
+
+/* 7. DISCARD PILE THEMATIC CARD WITH MULTI-STACK LAYERS */
+.discard-card-pile {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #000000;
+    -fx-border-width: 4px;
+
+    -fx-min-width: 180px;
+    -fx-min-height: 260px;
+    -fx-max-width: 180px;
+    -fx-max-height: 260px;
+
+    -fx-padding: 10px 10px 0 10px;
+    -fx-alignment: bottom-center; /* Aligned to bottom-center as requested */
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 6, 6);
+}
+
+.discard-footer-banner {
+    -fx-background-color: #000000;
+    -fx-padding: 8px 0;
+    -fx-alignment: center;
+
+    -fx-min-width: 180px;
+    -fx-max-width: 180px;
+
+    -fx-background-radius: 0 0 6px 6px;
+
+    -fx-translate-y: 0px;
+}
+
+.discard-footer-text {
+    -fx-fill: #ffffff;
+    -fx-font-family: "Arial Black", sans-serif;
+    -fx-font-size: 14px; /* Matches requested size */
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+/* --------------------------------------------------------------------------
+   8. 3-COLUMN PLAYER HAND CONTAINER (Scaled for 1000x800 resolution)
+   -------------------------------------------------------------------------- */
+.player-hand-bar {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-border-color: #000000 transparent transparent transparent;
+    -fx-border-width: 4px 0 0 0;
+    -fx-padding: 15px 25px;
+
+    -fx-pref-height: 230px;
+    -fx-max-height: 230px;
+    -fx-min-height: 230px;
+}
+
+/* Column 1 Layout */
+.hand-info-col-1 {
+    -fx-alignment: top-left;
+    -fx-spacing: 6px;
+    -fx-max-width: 190px;
+    -fx-min-width: 190px;
+}
+
+.hand-info-title {
+    -fx-text-fill: #facc15; /* Golden yellow */
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px;
+}
+
+.hand-info-badge {
+    -fx-background-color: rgba(0, 0, 0, 0.3);
+    -fx-background-radius: 12px;
+    -fx-padding: 4px 10px;
+}
+
+.hand-info-badge-text {
+    -fx-fill: #ffffff;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 10px;
+}
+
+/* Column 2 Layout (Cards list viewport, generous vertical padding headroom) */
+.hand-cards-col-2 {
+    -fx-alignment: center;
+    -fx-padding: 20px 0 0 0;
+    -fx-max-width: 570px;
+    -fx-min-width: 570px;
+    -fx-translate-y: -5px;
+}
+
+/* Column 3 Layout */
+.hand-action-col-3 {
+    -fx-alignment: top-right;
+    -fx-max-width: 190px;
+    -fx-min-width: 190px;
+}
+
+.btn-play-card {
+    /* 🎨 COLOR & TEXT: Pop-art high-contrast styling */
+    -fx-background-color: #facc15; /* Bright Golden Yellow */
+    -fx-text-fill: #000000;         /* Ink Black text */
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+
+    /* 📦 BORDERS: Cardboard asymmetric cuts */
+    -fx-background-radius: 12px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #000000;
+    -fx-border-width: 4px;
+    -fx-padding: 12px 24px;
+    -fx-cursor: hand;
+
+    -fx-background-insets: 2px;
+
+    /* 👤 3D DEPTH: Heavy solid black drop shadow */
+    -fx-effect: dropshadow(two-pass-box, #000000, 0, 1.0, 6, 6);
+}
+
+/* --- HOVER INTERACTION --- */
+.btn-play-card:hover {
+    -fx-background-color: #fde047; /* Glowing yellow */
+    -fx-translate-y: 1px;          /* Nudges down slightly */
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 3, 3); /* Compresses shadow */
+}
+
+/* --- ACTIVE CLICK INTERACTION --- */
+.btn-play-card:pressed {
+    -fx-translate-y: 3px;          /* Flattens completely onto the felt */
+    -fx-effect: none;              /* Removes shadow while pressed */
+}
+
+/* --- 🟫 DISABLED / INACTIVE STATE ---
+   Recreates the exact dark chocolate-crimson state from your hand screenshots
+   when no card is currently selected.
+*/
+.btn-play-card:disabled {
+    -fx-background-color: #241311; /* Dark chocolate/crimson backdrop */
+    -fx-text-fill: #4d3230;        /* Muted brown-red text */
+    -fx-border-color: #160a09;     /* Deep outline shadow border */
+    -fx-cursor: default;           /* Restores standard pointer arrow */
+    -fx-translate-y: 0px;          /* Locked flat at rest */
+    -fx-effect: none;              /* No active drop shadow */
+    -fx-opacity: 0.9;              /* Solid paint feel */
+}
+
+/* 9. INDIVIDUAL PLAY HAND CARDS (Scaled slightly larger to match taller aspect) */
+.hand-cards-container {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-spacing: -36px;
+    -fx-alignment: center;
+    -fx-padding: 20px 0 0 0;
+    -fx-translate-y: -5px;
+}
+
+.hand-card {
+    -fx-background-color: transparent;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #000000;
+    -fx-border-width: 4px;
+    -fx-min-width: 120px;
+    -fx-min-height: 160px;
+    -fx-max-width: 120px;
+    -fx-max-height: 160px;
+    -fx-padding: 8px;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 6, 6);
+}
+
+.hand-card:hover {
+    -fx-translate-y: -16px;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 8, 8);
+    -fx-view-order: -1.0;
+}
+
+.hand-card-selected {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 8px;
+    -fx-border-color: #facc15;
+    -fx-border-width: 3px;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 3, 3);
+    -fx-view-order: -2.0;
+    -fx-translate-y: -12px;
+}
+
+.discard-card {
+    -fx-min-width: 175px;
+    -fx-min-height: 260px;
+    -fx-max-width: 175px;
+    -fx-max-height: 260px;
+    -fx-alignment: center;
+}
+
+.thick-black-line {
+    -fx-background-color: #000000;
+    -fx-min-height: 5px;
+    -fx-max-height: 5px;
+}
+
+.opponent-avatar-active {
+    -fx-border-color: #facc15; /* 🚀 Theme-matching Golden Yellow */
+    -fx-border-width: 3px;      /* Thicker ink stroke for visual pop */
+    -fx-border-radius: 10px;
+    -fx-padding: 4px;
+
+    /* Optional: Adds a warm comic-book golden outer glow */
+    -fx-effect: dropshadow(three-pass-box, rgba(250, 204, 21, 0.5), 8, 0, 0, 0);
+}
+
+.opponent-active-highlight {
+    -fx-scale-x: 1.1;                               /* scale-110 (Horizontal) */
+    -fx-scale-y: 1.1;                               /* scale-110 (Vertical) */
+    -fx-background-color: rgba(255, 255, 255, 0.1);  /* bg-white/10 */
+    -fx-background-radius: 12px;                    /* rounded-lg */
+    -fx-border-color: #facc15;                      /* ring-yellow-400 */
+    -fx-border-width: 2px;                          /* ring-2 */
+    -fx-border-radius: 10px;                        /* Snug border corner alignment */
+    -fx-padding: 6px;                               /* p-1 padding conversion */
+    -fx-effect: dropshadow(three-pass-box, rgba(250, 204, 21, 0.4), 8, 0, 0, 0); /* Outer golden glow */
+}

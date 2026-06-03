@@ -6,7 +6,9 @@ plugins {
     checkstyle
     jacoco
     id("com.github.spotbugs") version "6.0.25"
+    id("org.openjfx.javafxplugin") version "0.1.0"
     id("info.solidsoft.pitest") version "1.15.0"
+    application
 }
 
 group = "nu.csse.sqe"
@@ -14,6 +16,11 @@ version = "1.0"
 
 repositories {
     mavenCentral()
+}
+
+javafx {
+    version = "17.0.10" // Highly stable version that fully supports Java 11
+    modules = listOf("javafx.controls") // Pulls in critical UI components like Button, Scene, and Stage
 }
 
 dependencies {
@@ -24,7 +31,7 @@ dependencies {
     testImplementation(platform("io.cucumber:cucumber-bom:7.20.1"))
     testImplementation("io.cucumber:cucumber-java")
     testImplementation("io.cucumber:cucumber-junit-platform-engine")
-
+    testImplementation("org.easymock:easymock:5.4.0")
 }
 
 java {
@@ -114,6 +121,10 @@ tasks.jacocoTestReport {
     reports {
         xml.required.set(true)
     }
+}
+
+application {
+    mainClass.set("ui.MainApp") // 👈 Points Gradle to your main class
 }
 
 // PIT mutation testing (info.solidsoft.pitest). Mirrors the Code-Coverage lab

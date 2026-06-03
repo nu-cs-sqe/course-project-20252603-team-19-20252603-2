@@ -1,0 +1,98 @@
+.root-pane {
+    -fx-background-color: #7a0606; /* Deep Crimson Red */
+}
+
+/* --- TITLES (Fiery Comic Book Drop Shadows) --- */
+.title-exploding {
+    -fx-fill: linear-gradient(to top, #d92121 0%, #f28e1c 50%, #ffeb3b 100%);
+    -fx-font-family: "Impact", "Arial Black", sans-serif;
+    -fx-font-size: 72px;
+    -fx-font-weight: 900;
+    -fx-effect: dropshadow(one-pass-box, black, 0, 1.0, 3, 3);
+}
+
+.title-kittens {
+    -fx-fill: #ffffff;
+    -fx-font-family: "Impact", "Arial Black", sans-serif;
+    -fx-font-size: 80px;
+    -fx-font-weight: 900;
+    /* Simulate original tall vertical stretching */
+    -fx-scale-y: 1.15;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.8), 0, 1.0, 4, 4);
+}
+
+/* --- ICONIC DESCRIPTION TEXT --- */
+.description-box {
+    -fx-padding: 10px 0 20px 0;
+}
+
+.subtitle-card-game {
+    -fx-fill: #ffffff;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 32px;
+    -fx-font-weight: 900;
+    -fx-scale-y: 1.25;
+}
+
+.sub-line-detail {
+    -fx-fill: #ffffff;
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* --- INTERACTIVE BUTTONS (Thick Borders + Offset Hard Shadows) --- */
+.btn-main {
+    -fx-background-color: #FFD400; /* yellow */
+    -fx-text-fill: #000000;
+    -fx-font-size: 20px;
+    -fx-font-family: "Arial Black";
+    -fx-font-weight: bold;
+    -fx-background-radius: 20;
+    -fx-border-radius: 10;
+    -fx-border-color: #000000;
+    -fx-border-width: 5;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-padding: 10 20;
+    -fx-effect: dropshadow(one-pass-box, black, 0, 1.0, 8, 8);
+}
+
+.btn-main:hover {
+    -fx-background-color: #fde047; /* Lighter yellow */
+    -fx-translate-y: 2px;
+    -fx-effect: dropshadow(one-pass-box, black, 0, 1.0, 4, 4);
+}
+
+.btn-main:pressed {
+    -fx-translate-y: 6px;
+    -fx-effect: none;
+}
+
+.btn-sec {
+    -fx-background-color: #ef4444; /* Retro Red */
+    -fx-text-fill: #ffffff;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #000000;
+    -fx-border-width: 5px;
+    -fx-padding: 10px 20px;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(one-pass-box, black, 0, 1.0, 8, 8);
+}
+
+.btn-sec:hover {
+    -fx-background-color: #f87171; /* Lighter red */
+    -fx-translate-y: 1px;
+    -fx-effect: dropshadow(one-pass-box, black, 0, 1.0, 3, 3);
+}
+
+.btn-sec:pressed {
+    -fx-translate-y: 4px;
+    -fx-effect: none;
+}
