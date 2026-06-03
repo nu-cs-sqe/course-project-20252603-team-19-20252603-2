@@ -25,4 +25,11 @@ class GameModelTest {
 
         assertEquals(expectedLocalPlayer, model.getLocalPlayerName());
     }
+
+    @Test
+    void startGame_fivePlayers_gameStarted() {
+        GameModel model = new GameModel();
+        model.startGame(List.of("P0", "P1", "P2", "P3", "P4"));
+        assertTrue(model.isGameStarted());
+    }
 }
