@@ -85,6 +85,7 @@ public class GameView extends StackPane {
 	private static final int discardCardHeight = 260;
 	private static final int peekCardWidth = 140;
 	private static final int peekCardHeight = 200;
+	private static final int maxNumberOfCardSelected = 3;
 
 	public GameView() {
 		this.getStyleClass().add("game-root");
@@ -680,11 +681,21 @@ public class GameView extends StackPane {
 		}
 	}
 
+	private void handleExtraCard() {
+		if (this.selectedHandCards.size() > maxNumberOfCardSelected) {
+			CardView card = this.selectedHandCards.get(0);
+			card.getStyleClass().remove("hand-card-selected");
+			card.getStyleClass().add("hand-card");
+			this.selectedHandCards.remove(0);
+		}
+	}
+
 	private void selectCard(CardView card) {
 		card.getStyleClass().remove("hand-card");
 		card.getStyleClass().add("hand-card-selected");
 		this.selectedHandCards.add(card);
 		this.playCardButton.setDisable(false);
+		handleExtraCard();
 	}
 
 	private void deselectCard(CardView card) {

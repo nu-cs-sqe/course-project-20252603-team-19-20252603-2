@@ -2,6 +2,8 @@ package ui.controller;
 
 import domain.Card;
 import domain.CardType;
+
+import java.util.Locale;
 import java.util.ResourceBundle;
 import ui.model.AppModel;
 import ui.model.GameModel;
@@ -30,6 +32,10 @@ public class GameController {
 				view.updateHandCount(
 						model.getLocalHandSize(),
 						model.getLocalPlayerName()
+				);
+				view.updateDrawCount(
+						appModel.getResourceBundle(),
+						model.getForcedTurns()
 				);
 				view.clearLog();
 				view.clearDiscardCard();
@@ -89,7 +95,10 @@ public class GameController {
 			String cardName = handCards.get(0).getCardName(
 					appModel.getResourceBundle()
 			);
-			String log = playerName + " " + action + " " + cardName;
+			String log = playerName + action + cardName;
+			if (appModel.getSelectedLocale() == Locale.ENGLISH) {
+				log = playerName + " " + action + " " + cardName;
+			}
 
 			view.addLog(log);
 
