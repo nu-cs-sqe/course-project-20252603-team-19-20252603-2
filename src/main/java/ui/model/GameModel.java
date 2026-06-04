@@ -44,6 +44,11 @@ public class GameModel {
 		localPlayerId = engine.getCurrentPlayerId();
 	}
 
+	public void playReverse() {
+		engine.playReverse();
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
 	public List<Card> getLocalHand() {
 		return engine.getPlayerHand(localPlayerId);
 	}

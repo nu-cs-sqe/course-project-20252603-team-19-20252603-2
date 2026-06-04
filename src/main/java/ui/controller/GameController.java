@@ -98,11 +98,18 @@ public class GameController {
 					model.playSkip();
 				}
 
+				if (handCard.getCardType() == CardType.REVERSE) {
+					model.playReverse();
+				}
+
 				view.removeCardFromHand();
 				view.updateCardCount(model.getDeckSize());
 				view.updateHandCount(
 						model.getLocalHandSize(),
 						model.getLocalPlayerName()
+				);
+				view.updatePlayerCards(
+						model.getLocalHand()
 				);
 				view.showOpponents(model.getOpponents());
 			}
