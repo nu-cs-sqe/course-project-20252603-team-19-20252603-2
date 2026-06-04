@@ -1,9 +1,8 @@
 package ui.controller;
 
 import domain.Card;
-import java.util.ResourceBundle;
-
 import domain.CardType;
+import java.util.ResourceBundle;
 import ui.model.AppModel;
 import ui.model.GameModel;
 import ui.navigation.ScreenRouter;
@@ -82,7 +81,9 @@ public class GameController {
 			String action = appModel.getResourceBundle().getString(
 					"gameView.playAction"
 			);
-			String cardName = handCards.get(0).getCardName(appModel.getResourceBundle());
+			String cardName = handCards.get(0).getCardName(
+					appModel.getResourceBundle()
+			);
 			String log = playerName + " " + action + " " + cardName;
 
 			view.addLog(log);

@@ -77,6 +77,8 @@ public class GameView extends StackPane {
 	private static final int feedContainerSpacing = 5;
 	private static final int tableChatterSectionSpacing = 10;
 	private static final int playerEventLogSpacing = 8;
+	private static final int seeTheFutureTextBoxSpacing = 10;
+	private static final int seeTheFutureSectionSpacing = 20;
 	private static final int discardCardWidth = 175;
 	private static final int discardCardHeight = 260;
 	private static final int peekCardWidth = 140;
@@ -509,7 +511,7 @@ public class GameView extends StackPane {
 	}
 
 	private VBox createSeeTheFutureText() {
-		VBox seeTheFutureTextBox = new VBox(10);
+		VBox seeTheFutureTextBox = new VBox(seeTheFutureTextBoxSpacing);
 		seeTheFutureTextBox.setAlignment(Pos.CENTER);
 
 		seeTheFutureTitle = new Text();
@@ -555,7 +557,7 @@ public class GameView extends StackPane {
 				seeTheFutureCardSection,
 				seeTheFutureDismissButton
 		);
-		seeTheFutureSection.setSpacing(20);
+		seeTheFutureSection.setSpacing(seeTheFutureSectionSpacing);
 
 		seeTheFutureDialogScreen.getChildren().add(
 				seeTheFutureSection
