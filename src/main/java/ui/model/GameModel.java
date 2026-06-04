@@ -49,6 +49,11 @@ public class GameModel {
 		localPlayerId = engine.getCurrentPlayerId();
 	}
 
+	public void playAttack() {
+		engine.playAttack();
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
 	public List<Card> getLocalHand() {
 		return engine.getPlayerHand(localPlayerId);
 	}

@@ -102,6 +102,10 @@ public class GameController {
 					model.playReverse();
 				}
 
+				if (handCard.getCardType() == CardType.ATTACK) {
+					model.playAttack();
+				}
+
 				view.removeCardFromHand();
 				view.updateCardCount(model.getDeckSize());
 				view.updateHandCount(
