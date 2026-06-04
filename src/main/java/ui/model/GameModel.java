@@ -54,6 +54,11 @@ public class GameModel {
 		localPlayerId = engine.getCurrentPlayerId();
 	}
 
+	public void playShuffle() {
+		engine.playShuffle();
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
 	public int getForcedTurns() {
 		return engine.getForcedTurns();
 	}

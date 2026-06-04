@@ -109,6 +109,9 @@ public class GameController {
 				if (handCard.getCardType() == CardType.ATTACK) {
 					model.playAttack();
 				}
+				if (handCard.getCardType() == CardType.SHUFFLE) {
+					model.playShuffle();
+				}
 
 				view.removeCardFromHand();
 				view.updateCardCount(model.getDeckSize());
