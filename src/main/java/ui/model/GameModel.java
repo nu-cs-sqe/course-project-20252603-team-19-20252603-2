@@ -59,6 +59,10 @@ public class GameModel {
 		localPlayerId = engine.getCurrentPlayerId();
 	}
 
+	public List<Card> playSeeTheFuture() {
+		return engine.playSeeTheFuture();
+	}
+
 	public int getForcedTurns() {
 		return engine.getForcedTurns();
 	}

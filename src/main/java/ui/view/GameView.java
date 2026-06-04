@@ -41,9 +41,11 @@ public class GameView extends StackPane {
 	private HBox playerBar;
 	private HBox gamePlaySection;
 	private HBox cardSection;
+	private HBox seeTheFutureCardSection;
 	private HBox playerHandSection;
 	private VBox feedContainer;
 	private VBox discardPile;
+	private VBox seeTheFutureScreen;
 	private ScrollPane scrollPane;
 	private StackPane discardPileSection;
 
@@ -52,6 +54,8 @@ public class GameView extends StackPane {
 	private Text turnIndicatorText;
 	private Text tableChatterTitle;
 	private Text discardPileFooterText;
+	private Text seeTheFutureTitle;
+	private Text seeTheFutureSubTitle;
 	private Label deckCountLabel;
 	private Label localHandLabel;
 
@@ -59,6 +63,7 @@ public class GameView extends StackPane {
 	private Button deck;
 	private Button drawCard;
 	private Button playCardButton;
+	private Button seeTheFutureDismissButton;
 
 	private List<CardView> selectedHandCards;
 
@@ -74,6 +79,8 @@ public class GameView extends StackPane {
 	private static final int playerEventLogSpacing = 8;
 	private static final int discardCardWidth = 175;
 	private static final int discardCardHeight = 260;
+	private static final int peekCardWidth = 140;
+	private static final int peekCardHeight = 200;
 
 	public GameView() {
 		this.getStyleClass().add("game-root");
@@ -107,7 +114,14 @@ public class GameView extends StackPane {
 		gamePlaySection.getStyleClass().add("table-felt");
 		cardSection.getStyleClass().add("player-hand-bar");
 
-		this.getChildren().addAll(gameContainer);
+		seeTheFutureScreen = createSeeTheFutureScreen();
+		seeTheFutureScreen.setVisible(false);
+		seeTheFutureScreen.setManaged(false);
+
+		this.getChildren().addAll(
+				gameContainer,
+				seeTheFutureScreen
+		);
 
 		String stylePath = "/styles/game-style.css";
 		this.getStylesheets().add(
@@ -488,6 +502,72 @@ public class GameView extends StackPane {
 		return cardSection;
 	}
 
+	private StackPane createSeeTheFuttureDialogWindow() {
+		StackPane seeTheFutureDialogWindow = new StackPane();
+		seeTheFutureDialogWindow.getStyleClass().add("future-dialog-box");
+		return seeTheFutureDialogWindow;
+	}
+
+	private VBox createSeeTheFutureText() {
+		VBox seeTheFutureTextBox = new VBox(10);
+		seeTheFutureTextBox.setAlignment(Pos.CENTER);
+
+		seeTheFutureTitle = new Text();
+		seeTheFutureSubTitle = new Text();
+
+		seeTheFutureTitle.getStyleClass().add("future-title-text");
+		seeTheFutureSubTitle.getStyleClass().add("future-subtitle-text");
+
+		seeTheFutureTextBox.getChildren().addAll(
+				seeTheFutureTitle,
+				seeTheFutureSubTitle
+		);
+
+		return seeTheFutureTextBox;
+	}
+
+	private HBox createSeeTheFutureCardSection() {
+		seeTheFutureCardSection = new HBox();
+		seeTheFutureCardSection.getStyleClass().add("future-cards-hbox");
+		seeTheFutureCardSection.setMaxWidth(Double.MAX_VALUE);
+		return seeTheFutureCardSection;
+	}
+
+	private Button createSeeTheFutureDismissButton() {
+		seeTheFutureDismissButton = new Button();
+		seeTheFutureDismissButton.getStyleClass().add("future-dismiss-button");
+		seeTheFutureDismissButton.setAlignment(Pos.CENTER);
+		seeTheFutureDismissButton.setMaxWidth(Double.MAX_VALUE);
+		return seeTheFutureDismissButton;
+	}
+
+	private VBox createSeeTheFutureScreen() {
+		VBox seeTheFutureScreen = new VBox();
+		seeTheFutureScreen.getStyleClass().add("future-overlay-backdrop");
+
+		StackPane seeTheFutureDialogScreen = createSeeTheFuttureDialogWindow();
+		VBox seeTheFutureTextBox = createSeeTheFutureText();
+		HBox seeTheFutureCardSection = createSeeTheFutureCardSection();
+		Button seeTheFutureDismissButton = createSeeTheFutureDismissButton();
+
+		VBox seeTheFutureSection = new VBox(
+				seeTheFutureTextBox,
+				seeTheFutureCardSection,
+				seeTheFutureDismissButton
+		);
+		seeTheFutureSection.setSpacing(20);
+
+		seeTheFutureDialogScreen.getChildren().add(
+				seeTheFutureSection
+		);
+
+		seeTheFutureScreen.getChildren().add(
+				seeTheFutureDialogScreen
+		);
+
+		return seeTheFutureScreen;
+	}
+
 	public void updateDisplay(ResourceBundle bundle) {
 		logoText.setText(bundle.getString("gameView.logo"));
 		quitButton.setText(bundle.getString("gameView.quit"));
@@ -498,6 +578,9 @@ public class GameView extends StackPane {
 		playCardButton.setText(bundle.getString("gameView.playCard"));
 		cardCountText = bundle.getString("gameView.cardCount");
 		cardsText = bundle.getString("gameView.cards");
+		seeTheFutureTitle.setText(bundle.getString("seeTheFuture.title"));
+		seeTheFutureSubTitle.setText(bundle.getString("seeTheFuture.subTitle"));
+		seeTheFutureDismissButton.setText(bundle.getString("seeTheFuture.dismissButton"));
 	}
 
 	public void showOpponents(List<PlayerDisplayInfo> opponents) {
@@ -536,6 +619,40 @@ public class GameView extends StackPane {
 		this.playerHandSection.getChildren().clear();
 		for (Card card : hand) {
 			addPlayerCard(card);
+		}
+	}
+
+	public void updateSeeTheFutureScreen(boolean visible) {
+		seeTheFutureScreen.setVisible(visible);
+		seeTheFutureScreen.setManaged(visible);
+	}
+
+	public void updateSeeTheFutureCards(ResourceBundle bundle, List<Card> cards) {
+		seeTheFutureCardSection.getChildren().clear();
+		for (Card card : cards) {
+			String cardName = cardCollection.get(card.getCardType());
+			CardView peekCard = new CardView(cardName);
+			peekCard.getStyleClass().remove("hand-card");
+			peekCard.getStyleClass().add(
+					"future-peeked-card"
+			);
+
+			peekCard.setMaxSize(peekCardWidth, peekCardHeight);
+			peekCard.setMinSize(peekCardWidth, peekCardHeight);
+			peekCard.setPrefSize(peekCardWidth, peekCardHeight);
+
+			ImageView imageView = (ImageView) peekCard.getChildren().get(0);
+			imageView.setFitWidth(peekCardWidth);
+			imageView.setFitHeight(peekCardHeight);
+			imageView.setPreserveRatio(false);
+
+			Rectangle clip = (Rectangle) imageView.getClip();
+			clip.setWidth(peekCardWidth);
+			clip.setHeight(peekCardHeight);
+
+			imageView.setClip(clip);
+
+			seeTheFutureCardSection.getChildren().add(peekCard);
 		}
 	}
 
@@ -627,6 +744,8 @@ public class GameView extends StackPane {
 		clip.setWidth(discardCardWidth);
 		clip.setHeight(discardCardHeight);
 
+		imageView.setClip(clip);
+
 		this.discardPileSection.getChildren().add(
 				card
 		);
@@ -650,6 +769,12 @@ public class GameView extends StackPane {
 	public void setOnPlayButtonAction(Consumer<List<CardView>> handler) {
 		this.playCardButton.setOnAction(e -> {
 			handler.accept(new ArrayList<>(this.selectedHandCards));
+		});
+	}
+
+	public void setOnSeeTheFutureDismissButton(Runnable handler) {
+		this.seeTheFutureDismissButton.setOnAction(e -> {
+			handler.run();
 		});
 	}
 }

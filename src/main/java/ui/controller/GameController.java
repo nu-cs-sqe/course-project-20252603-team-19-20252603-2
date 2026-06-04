@@ -109,8 +109,17 @@ public class GameController {
 				if (handCard.getCardType() == CardType.ATTACK) {
 					model.playAttack();
 				}
+
 				if (handCard.getCardType() == CardType.SHUFFLE) {
 					model.playShuffle();
+				}
+
+				if (handCard.getCardType() == CardType.SEE_THE_FUTURE) {
+					view.updateSeeTheFutureScreen(true);
+					view.updateSeeTheFutureCards(
+							appModel.getResourceBundle(),
+							model.playSeeTheFuture()
+					);
 				}
 
 				view.removeCardFromHand();
@@ -128,6 +137,9 @@ public class GameController {
 				);
 				view.showOpponents(model.getOpponents());
 			}
+		});
+		view.setOnSeeTheFutureDismissButton(() -> {
+			view.updateSeeTheFutureScreen(false);
 		});
 	}
 
