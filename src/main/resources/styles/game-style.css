@@ -134,9 +134,9 @@
     -fx-border-radius: 10px;
     -fx-border-color: #000000;
     -fx-border-width: 4px;
-    -fx-min-width: 144px;
+    -fx-min-width: 169px;
     -fx-min-height: 208px;        /* Matches simulator h-52 exactly! */
-    -fx-max-width: 144px;
+    -fx-max-width: 169px;
     -fx-max-height: 208px;        /* Matches simulator h-52 exactly! */
     -fx-padding: 15px;
     -fx-alignment: center;
@@ -157,9 +157,9 @@
     -fx-border-radius: 10px;
     -fx-border-color: #000000;
     -fx-border-width: 5px;
-    -fx-min-width: 144px;
+    -fx-min-width: 169px;
     -fx-min-height: 208px;
-    -fx-max-width: 144px;
+    -fx-max-width: 169px;
     -fx-max-height: 208px;
     -fx-translate-x: 6px; /* Offset to bottom-right */
     -fx-translate-y: 6px;
@@ -171,9 +171,9 @@
     -fx-border-radius: 10px;
     -fx-border-color: #000000;
     -fx-border-width: 5px;
-    -fx-min-width: 144px;
+    -fx-min-width: 169px;
     -fx-min-height: 208px;
-    -fx-max-width: 144px;
+    -fx-max-width: 169px;
     -fx-max-height: 208px;
     -fx-translate-x: 12px; /* Further offset to bottom-right */
     -fx-translate-y: 12px;
@@ -544,4 +544,169 @@
     -fx-border-radius: 10px;                        /* Snug border corner alignment */
     -fx-padding: 6px;                               /* p-1 padding conversion */
     -fx-effect: dropshadow(three-pass-box, rgba(250, 204, 21, 0.4), 8, 0, 0, 0); /* Outer golden glow */
+}
+
+/* --------------------------------------------------------------------------
+   1. BACKDROP OVERLAY
+   Applied to a root StackPane covering the entire game window.
+   -------------------------------------------------------------------------- */
+.future-overlay-backdrop {
+    -fx-background-color: rgba(0, 0, 0, 0.5); /* Deep translucent black */
+    -fx-alignment: center;
+}
+
+/* --------------------------------------------------------------------------
+   2. DIALOG CONTAINER
+   The central floating modal box.
+   -------------------------------------------------------------------------- */
+.future-dialog-box {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 24px;
+    -fx-border-radius: 20px;
+    -fx-border-color: #000000;
+    -fx-border-width: 5px;
+    -fx-padding: 24px;
+
+    -fx-min-width: 518px;
+    -fx-max-width: 518px;
+
+    -fx-min-height: 400px;
+    -fx-max-height: 400px;
+
+    -fx-alignment: center;
+}
+
+/* --------------------------------------------------------------------------
+   3. HEADERS & TEXTS
+   -------------------------------------------------------------------------- */
+.future-title-text {
+    -fx-fill: #000000; /* Vibrant Future Purple */
+    -fx-text-fill: #000000;
+    -fx-font-family: Arial Black;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.future-subtitle-text {
+    -fx-fill: #57534e; /* Slate/stone gray description */
+    -fx-text-fill: #57534e;
+    -fx-font-family: Arial Black;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* --------------------------------------------------------------------------
+   4. PEEKED CARDS GRID
+   Holds the 3 cards side-by-side with comic offsets.
+   -------------------------------------------------------------------------- */
+.future-cards-hbox {
+    -fx-spacing: 65px;
+    -fx-alignment: center;
+    -fx-padding: 16px 0;
+    -fx-min-height: 200px;
+    -fx-max-height: 200px;
+}
+
+.future-peeked-card {
+    -fx-min-width: 96px;
+    -fx-min-height: 200px;
+    -fx-max-width: 96px;
+    -fx-max-height: 200px;
+    -fx-padding: 8px;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.15), 0, 1.0, 3, 3);
+}
+
+/* --------------------------------------------------------------------------
+   5. ACTION BUTTONS
+   -------------------------------------------------------------------------- */
+.future-dismiss-button {
+    -fx-background-color: #facc15; /* Golden Yellow */
+    -fx-text-fill: #000000;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #000000;
+    -fx-border-width: 3px;
+    -fx-padding: 10px 24px;
+    -fx-max-width: 475px;
+    -fx-min-width: 475px;
+    -fx-cursor: hand;
+    -fx-background-insets: 2px;
+}
+
+.future-dismiss-button:hover {
+    -fx-background-color: #fde047;
+}
+
+.future-dismiss-button:pressed {
+    -fx-translate-y: 3px;
+    -fx-effect: none;
+}
+
+/* --------------------------------------------------------------------------
+   1. MAIN CONTAINER
+   The wrapper for the entire player profile (dimmed out)
+   -------------------------------------------------------------------------- */
+.exploded-player-container {
+    -fx-opacity: 0.6; /* Dims the entire player profile */
+    -fx-alignment: center;
+    -fx-spacing: 4px;
+}
+
+/* --------------------------------------------------------------------------
+   2. AVATAR CIRCLE
+   The white background with the red border and solid shadow
+   -------------------------------------------------------------------------- */
+.exploded-avatar-circle {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #dc2626; /* Tailwind red-600 */
+    -fx-border-width: 3px;
+    -fx-background-radius: 50em; /* Perfect circle */
+    -fx-border-radius: 50em;
+
+    /* Exact 40x40 dimensions from prototype (w-10 h-10) */
+    -fx-min-width: 40px;
+    -fx-min-height: 40px;
+    -fx-max-width: 40px;
+    -fx-max-height: 40px;
+
+    -fx-alignment: center;
+    /* Solid flat black shadow (2px 2px) */
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 2, 2);
+}
+
+/* --------------------------------------------------------------------------
+   3. THE BIG 'X' OVERLAY
+   Sits exactly on top of the player's initial
+   -------------------------------------------------------------------------- */
+.exploded-overlay-x {
+    -fx-background-color: rgba(0, 0, 0, 0.1); /* Subtle dark tint over the white */
+    -fx-background-radius: 50em;
+    -fx-text-fill: #dc2626; /* Match the red border */
+    -fx-font-family: "Impact", "Arial Black", sans-serif;
+    -fx-font-size: 28px; /* Massive text to fill the circle */
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+}
+
+/* --------------------------------------------------------------------------
+   4. PLAYER NAME & STATUS BADGE
+   -------------------------------------------------------------------------- */
+.exploded-player-name {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-strikethrough: true; /* Puts a line right through their name! */
+}
+
+.exploded-status-badge {
+    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 9px;
+    -fx-font-weight: bold;
+    -fx-padding: 2px 6px;
+    -fx-background-radius: 10px; /* Pill shape */
 }
