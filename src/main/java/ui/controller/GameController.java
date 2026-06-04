@@ -76,7 +76,7 @@ public class GameController {
 			String action = appModel.getResourceBundle().getString(
 					"gameView.playAction"
 			);
-			String cardName = handCards.get(0).getCardName();
+			String cardName = handCards.get(0).getCardName(appModel.getResourceBundle());
 			String log = playerName + " " + action + " " + cardName;
 
 			view.addLog(log);
