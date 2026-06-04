@@ -54,6 +54,10 @@ public class GameModel {
 		localPlayerId = engine.getCurrentPlayerId();
 	}
 
+	public int getForcedTurns() {
+		return engine.getForcedTurns();
+	}
+
 	public List<Card> getLocalHand() {
 		return engine.getPlayerHand(localPlayerId);
 	}

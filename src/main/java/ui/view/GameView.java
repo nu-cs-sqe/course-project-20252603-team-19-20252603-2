@@ -516,6 +516,11 @@ public class GameView extends StackPane {
 		updateDeckCount(cardCount);
 	}
 
+	public void updateDrawCount(ResourceBundle bundle, int drawCount) {
+		String draws = bundle.getString("gameView.drawCard") + " X" + drawCount;
+		drawCard.setText(draws);
+	}
+
 	public void updatePlayerTurn(ResourceBundle bundle, String player) {
 		String turn = player + " " + bundle.getString("gameView.turn");
 		turnIndicatorText.setText(turn);

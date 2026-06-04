@@ -64,6 +64,10 @@ public class GameController {
 					model.getLocalHandSize(),
 					model.getLocalPlayerName()
 			);
+			view.updateDrawCount(
+					appModel.getResourceBundle(),
+					model.getForcedTurns()
+			);
 			view.updatePlayerTurn(
 					appModel.getResourceBundle(),
 					model.getLocalPlayerName()
@@ -111,6 +115,10 @@ public class GameController {
 				view.updateHandCount(
 						model.getLocalHandSize(),
 						model.getLocalPlayerName()
+				);
+				view.updateDrawCount(
+						appModel.getResourceBundle(),
+						model.getForcedTurns()
 				);
 				view.updatePlayerCards(
 						model.getLocalHand()
