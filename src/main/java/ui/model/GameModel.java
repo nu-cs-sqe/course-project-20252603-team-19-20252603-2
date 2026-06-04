@@ -34,13 +34,13 @@ public class GameModel {
 		return engine.getDrawPileSize();
 	}
 
-	public void removeCard(CardType cardType) {
-		int index = engine.getPlayer(localPlayerId).getIndexOfCard(cardType);
-		engine.getPlayer(localPlayerId).removeCardFromHand(index);
+	public void endTurnByDrawing() {
+		engine.endTurnByDrawing();
+		localPlayerId = engine.getCurrentPlayerId();
 	}
 
-	public void finishTurn() {
-		engine.advanceToNextPlayer();
+	public void playSkip() {
+		engine.playSkip();
 		localPlayerId = engine.getCurrentPlayerId();
 	}
 

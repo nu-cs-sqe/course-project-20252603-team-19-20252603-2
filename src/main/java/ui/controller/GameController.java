@@ -2,6 +2,8 @@ package ui.controller;
 
 import domain.Card;
 import java.util.ResourceBundle;
+
+import domain.CardType;
 import ui.model.AppModel;
 import ui.model.GameModel;
 import ui.navigation.ScreenRouter;
@@ -55,7 +57,7 @@ public class GameController {
 
 			view.addPlayerCard(drawn);
 
-			model.finishTurn();
+			model.endTurnByDrawing();
 			view.showOpponents(model.getOpponents());
 			view.updatePlayerCards(model.getLocalHand());
 			view.updateHandCount(
@@ -92,7 +94,9 @@ public class GameController {
 
 				view.addCardToDiscardPile(handCard);
 
-				model.removeCard(handCard.getCardType());
+				if (handCard.getCardType() == CardType.SKIP) {
+					model.playSkip();
+				}
 
 				view.removeCardFromHand();
 				view.updateCardCount(model.getDeckSize());
