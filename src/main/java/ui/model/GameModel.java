@@ -63,6 +63,11 @@ public class GameModel {
 		return engine.playSeeTheFuture();
 	}
 
+	public void explodeCurrentPlayer() {
+		engine.explodeCurrentPlayer();
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
 	public int getForcedTurns() {
 		return engine.getForcedTurns();
 	}
@@ -93,10 +98,12 @@ public class GameModel {
 
 	private PlayerDisplayInfo toDisplayInfo(int playerId) {
 		Player player = engine.getPlayer(playerId);
-		return new PlayerDisplayInfo(
+		PlayerDisplayInfo playerInfo = new PlayerDisplayInfo(
 				playerNames.get(playerId),
 				player.getHandSize(),
 				engine.getCurrentPlayerId() == playerId
 		);
+		playerInfo.setAlive(player.isAlive());
+		return playerInfo;
 	}
 }

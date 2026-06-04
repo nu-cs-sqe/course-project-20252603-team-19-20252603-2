@@ -56,8 +56,10 @@ public class GameView extends StackPane {
 	private Text discardPileFooterText;
 	private Text seeTheFutureTitle;
 	private Text seeTheFutureSubTitle;
+	private Text playerAvatarLabel;
 	private Label deckCountLabel;
 	private Label localHandLabel;
+	private Label playerAvatarCardCount;
 
 	private Button quitButton;
 	private Button deck;
@@ -219,20 +221,40 @@ public class GameView extends StackPane {
 		return playerAvatarCardCount;
 	}
 
-	private VBox createPlayer(PlayerDisplayInfo opponent) {
-		VBox player = new VBox(playerSpacing);
-
-		if (opponent.isCurrentTurn()) {
+	private void checkCurrentTurn(PlayerDisplayInfo opponent, VBox player) {
+		if (opponent.isCurrentTurn() && opponent.isAlive()) {
 			player.getStyleClass().add("opponent-avatar-active");
 			player.getStyleClass().add("opponent-active-highlight");
 		} else {
 			player.getStyleClass().remove("opponent-avatar-active");
 			player.getStyleClass().remove("opponent-active-highlight");
 		}
+	}
+
+	private void checkPlayerAlive(PlayerDisplayInfo opponent, VBox player, VBox playerAvatar) {
+		if (opponent.isAlive()) {
+			player.getStyleClass().remove("exploded-player-container");
+			playerAvatar.getStyleClass().remove("exploded-avatar-circle");
+			playerAvatarLabel.getStyleClass().remove("exploded-player-name");
+			playerAvatarCardCount.getStyleClass().remove("exploded-status-badge");
+		} else {
+			player.getStyleClass().add("exploded-player-container");
+			playerAvatar.getStyleClass().add("exploded-avatar-circle");
+			playerAvatarLabel.getStyleClass().add("exploded-player-name");
+			playerAvatarCardCount.getStyleClass().add("exploded-status-badge");
+		}
+	}
+
+	private VBox createPlayer(PlayerDisplayInfo opponent) {
+		VBox player = new VBox(playerSpacing);
+
+		checkCurrentTurn(opponent, player);
 
 		VBox playerAvatar = createPlayerAvatar(opponent.getName());
-		Text playerAvatarLabel = createPlayerAvatarLabel(opponent.getName());
-		Label playerAvatarCardCount = createPlayerAvatarCardCount(opponent.getHandSize());
+		playerAvatarLabel = createPlayerAvatarLabel(opponent.getName());
+		playerAvatarCardCount = createPlayerAvatarCardCount(opponent.getHandSize());
+
+		checkPlayerAlive(opponent, player, playerAvatar);
 
 		player.getChildren().addAll(
 				playerAvatar,

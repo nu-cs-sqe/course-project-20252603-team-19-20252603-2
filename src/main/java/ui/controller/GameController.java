@@ -54,9 +54,14 @@ public class GameController {
 			String message = bundle.getString("gameView.drawAction");
 			view.addLog(playerName + " " + message);
 
+			if (drawn.getCardType() == CardType.EXPLODING_KITTEN) {
+				model.explodeCurrentPlayer();
+			} else {
+				model.endTurnByDrawing();
+			}
+
 			view.addPlayerCard(drawn);
 
-			model.endTurnByDrawing();
 			view.showOpponents(model.getOpponents());
 			view.updatePlayerCards(model.getLocalHand());
 			view.updateHandCount(
