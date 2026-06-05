@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -46,8 +47,11 @@ public class GameView extends StackPane {
 	private VBox feedContainer;
 	private VBox discardPile;
 	private VBox seeTheFutureScreen;
+	private VBox targetedAttackScreen;
+	private VBox targetedAttackPlayerButtons;
 	private ScrollPane scrollPane;
 	private StackPane discardPileSection;
+	private StackPane targetedAttackDialogScreen;
 
 	private Text logoText;
 	private Text deckTitleText;
@@ -56,6 +60,8 @@ public class GameView extends StackPane {
 	private Text discardPileFooterText;
 	private Text seeTheFutureTitle;
 	private Text seeTheFutureSubTitle;
+	private Text targetedAttackTitle;
+	private Text targetedAttackSubTitle;
 	private Text playerAvatarLabel;
 	private Label deckCountLabel;
 	private Label localHandLabel;
@@ -81,11 +87,16 @@ public class GameView extends StackPane {
 	private static final int playerEventLogSpacing = 8;
 	private static final int seeTheFutureTextBoxSpacing = 10;
 	private static final int seeTheFutureSectionSpacing = 20;
+	private static final int targetedAttackTextBoxSpacing = 10;
+	private static final int targetedAttackSectionSpacing = 10;
 	private static final int discardCardWidth = 175;
 	private static final int discardCardHeight = 260;
 	private static final int peekCardWidth = 140;
 	private static final int peekCardHeight = 200;
+	private static final int targetedAttackDialogWindowHeight = 145;
+	private static final int targetedAttackButtonHeight = 60;
 	private static final int maxNumberOfCardSelected = 3;
+	private static final int targetedAttackTitleWrap = 400;
 
 	public GameView() {
 		this.getStyleClass().add("game-root");
@@ -123,9 +134,14 @@ public class GameView extends StackPane {
 		seeTheFutureScreen.setVisible(false);
 		seeTheFutureScreen.setManaged(false);
 
+		targetedAttackScreen = createTargetedAttackScreen();
+		targetedAttackScreen.setVisible(false);
+		targetedAttackScreen.setManaged(false);
+
 		this.getChildren().addAll(
 				gameContainer,
-				seeTheFutureScreen
+				seeTheFutureScreen,
+				targetedAttackScreen
 		);
 
 		String stylePath = "/styles/game-style.css";
@@ -527,7 +543,7 @@ public class GameView extends StackPane {
 		return cardSection;
 	}
 
-	private StackPane createSeeTheFuttureDialogWindow() {
+	private StackPane createSeeTheFutureDialogWindow() {
 		StackPane seeTheFutureDialogWindow = new StackPane();
 		seeTheFutureDialogWindow.getStyleClass().add("future-dialog-box");
 		return seeTheFutureDialogWindow;
@@ -542,6 +558,9 @@ public class GameView extends StackPane {
 
 		seeTheFutureTitle.getStyleClass().add("future-title-text");
 		seeTheFutureSubTitle.getStyleClass().add("future-subtitle-text");
+
+		seeTheFutureTitle.setTextAlignment(TextAlignment.CENTER);
+		seeTheFutureSubTitle.setTextAlignment(TextAlignment.CENTER);
 
 		seeTheFutureTextBox.getChildren().addAll(
 				seeTheFutureTitle,
@@ -570,7 +589,7 @@ public class GameView extends StackPane {
 		VBox seeTheFutureScreen = new VBox();
 		seeTheFutureScreen.getStyleClass().add("future-overlay-backdrop");
 
-		StackPane seeTheFutureDialogScreen = createSeeTheFuttureDialogWindow();
+		StackPane seeTheFutureDialogScreen = createSeeTheFutureDialogWindow();
 		VBox seeTheFutureTextBox = createSeeTheFutureText();
 		HBox seeTheFutureCardSection = createSeeTheFutureCardSection();
 		Button seeTheFutureDismissButton = createSeeTheFutureDismissButton();
@@ -593,6 +612,70 @@ public class GameView extends StackPane {
 		return seeTheFutureScreen;
 	}
 
+	private StackPane createTargetedAttackDialogScreen() {
+		StackPane targetedAttackDialog = new StackPane();
+		targetedAttackDialog.getStyleClass().add("targeted-dialog-box");
+		targetedAttackDialog.setMaxHeight(targetedAttackDialogWindowHeight);
+		targetedAttackDialog.setMinHeight(targetedAttackDialogWindowHeight);
+		return targetedAttackDialog;
+	}
+
+	private VBox createTargetedAttackText() {
+		VBox targetedAttackTextBox = new VBox(targetedAttackTextBoxSpacing);
+		targetedAttackTextBox.setAlignment(Pos.CENTER);
+
+		targetedAttackTitle = new Text();
+		targetedAttackSubTitle = new Text();
+
+		targetedAttackTitle.getStyleClass().add("targeted-title-text");
+		targetedAttackSubTitle.getStyleClass().add("targeted-subtitle-text");
+
+		targetedAttackTitle.setTextAlignment(TextAlignment.CENTER);
+		targetedAttackSubTitle.setTextAlignment(TextAlignment.CENTER);
+
+		targetedAttackSubTitle.setWrappingWidth(targetedAttackTitleWrap);
+
+		targetedAttackTextBox.getChildren().addAll(
+				targetedAttackTitle,
+				targetedAttackSubTitle
+		);
+
+		return targetedAttackTextBox;
+	}
+
+	private VBox createTargetedAttackPlayerButtons() {
+		targetedAttackPlayerButtons = new VBox();
+		targetedAttackPlayerButtons.getStyleClass().add(
+				"targeted-button-vbox"
+		);
+		return targetedAttackPlayerButtons;
+	}
+
+	private VBox createTargetedAttackScreen() {
+		VBox targetedAttackScreen = new VBox();
+		targetedAttackScreen.getStyleClass().add("targeted-overlay-backdrop");
+
+		targetedAttackDialogScreen = createTargetedAttackDialogScreen();
+		VBox targetedAttackTextBox = createTargetedAttackText();
+		VBox targetedAttackPlayerButtons = createTargetedAttackPlayerButtons();
+
+		VBox targetedAttackSection = new VBox(
+				targetedAttackTextBox,
+				targetedAttackPlayerButtons
+		);
+		targetedAttackSection.setSpacing(targetedAttackSectionSpacing);
+
+		targetedAttackDialogScreen.getChildren().add(
+				targetedAttackSection
+		);
+
+		targetedAttackScreen.getChildren().add(
+				targetedAttackDialogScreen
+		);
+
+		return targetedAttackScreen;
+	}
+
 	public void updateDisplay(ResourceBundle bundle) {
 		logoText.setText(bundle.getString("gameView.logo"));
 		quitButton.setText(bundle.getString("gameView.quit"));
@@ -606,6 +689,8 @@ public class GameView extends StackPane {
 		seeTheFutureTitle.setText(bundle.getString("seeTheFuture.title"));
 		seeTheFutureSubTitle.setText(bundle.getString("seeTheFuture.subTitle"));
 		seeTheFutureDismissButton.setText(bundle.getString("seeTheFuture.dismissButton"));
+		targetedAttackTitle.setText(bundle.getString("targetedAttack.title"));
+		targetedAttackSubTitle.setText(bundle.getString("targetedAttack.subTitle"));
 	}
 
 	public void showOpponents(List<PlayerDisplayInfo> opponents) {
@@ -652,6 +737,11 @@ public class GameView extends StackPane {
 		seeTheFutureScreen.setManaged(visible);
 	}
 
+	public void updateTargetedAttackScreen(boolean visible) {
+		targetedAttackScreen.setVisible(visible);
+		targetedAttackScreen.setManaged(visible);
+	}
+
 	public void updateSeeTheFutureCards(ResourceBundle bundle, List<Card> cards) {
 		seeTheFutureCardSection.getChildren().clear();
 		for (Card card : cards) {
@@ -678,6 +768,30 @@ public class GameView extends StackPane {
 			imageView.setClip(clip);
 
 			seeTheFutureCardSection.getChildren().add(peekCard);
+		}
+	}
+
+	public void updateTargetedAttackPlayers(
+			List<PlayerDisplayInfo> players, IntConsumer handler
+	) {
+		int newHeight = players.size()
+				* targetedAttackButtonHeight
+				+ targetedAttackDialogWindowHeight;
+		targetedAttackDialogScreen.setMinHeight(newHeight);
+		targetedAttackDialogScreen.setMaxHeight(newHeight);
+
+		targetedAttackPlayerButtons.getChildren().clear();
+		for (PlayerDisplayInfo player : players) {
+			String playerName = player.getName();
+			int playerId = player.getPlayerId();
+
+			Button playerButton = new Button(playerName);
+			playerButton.getStyleClass().add("targeted-action-button");
+			playerButton.setOnAction(e -> handler.accept(playerId));
+
+			targetedAttackPlayerButtons.getChildren().add(
+					playerButton
+			);
 		}
 	}
 

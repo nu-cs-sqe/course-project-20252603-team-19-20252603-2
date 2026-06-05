@@ -1,7 +1,6 @@
 package ui.model;
 
 import domain.Card;
-import domain.CardType;
 import domain.GameEngine;
 import domain.Player;
 import java.util.ArrayList;
@@ -63,6 +62,11 @@ public class GameModel {
 		return engine.playSeeTheFuture();
 	}
 
+	public void playTargetedAttack(int targetId) {
+		engine.playTargetedAttack(targetId);
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
 	public void explodeCurrentPlayer() {
 		engine.explodeCurrentPlayer();
 		localPlayerId = engine.getCurrentPlayerId();
@@ -84,6 +88,10 @@ public class GameModel {
 		return playerNames.get(localPlayerId);
 	}
 
+	public int getLocalPlayerId() {
+		return localPlayerId;
+	}
+
 	public void resetPlayerId() {
 		localPlayerId = 0;
 	}
@@ -101,8 +109,9 @@ public class GameModel {
 		PlayerDisplayInfo playerInfo = new PlayerDisplayInfo(
 				playerNames.get(playerId),
 				player.getHandSize(),
-				engine.getCurrentPlayerId() == playerId
+				playerId
 		);
+		playerInfo.setCurrentTurn(engine.getCurrentPlayerId() == playerId);
 		playerInfo.setAlive(player.isAlive());
 		return playerInfo;
 	}
