@@ -1,6 +1,7 @@
 package ui.model;
 
 import domain.Card;
+import domain.CardType;
 import domain.GameEngine;
 import domain.Player;
 import java.util.ArrayList;
@@ -75,6 +76,19 @@ public class GameModel {
 		engine.playCatPair(targetId);
 	}
 
+	public void defuseExplodingKitten(int reinsertIndex) {
+		engine.defuseDrawnKitten(reinsertIndex);
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
+	public boolean isGameOver() {
+		return engine.isGameOver();
+	}
+
+	public int getWinnerId() {
+		return engine.getWinnerId();
+	}
+
 	public String getPlayerName(int playerId) {
 		return playerNames.get(playerId);
 	}
@@ -102,6 +116,11 @@ public class GameModel {
 
 	public int getLocalPlayerId() {
 		return localPlayerId;
+	}
+
+	public boolean currentPlayerHasDefuse() {
+		return engine.getPlayer(engine.getCurrentPlayerId())
+				.hasCard(CardType.DEFUSE);
 	}
 
 	public List<Card> getSelectedHand(int playerId) {

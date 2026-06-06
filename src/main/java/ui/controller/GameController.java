@@ -18,7 +18,7 @@ public class GameController {
 	private final Runnable refreshAction;
 	private final Runnable startGameAction;
 
-	private static final int catPair = 2;
+	private static final int CAT_PAIR_SIZE = 2;
 
 	public GameController(GameView view, AppModel appModel, ScreenRouter router) {
 		this.model = new GameModel();
@@ -65,12 +65,15 @@ public class GameController {
 			view.addLog(playerName + " " + message);
 
 			if (drawn.getCardType() == CardType.EXPLODING_KITTEN) {
-				model.explodeCurrentPlayer();
+				handleExplodingKitten(view, appModel);
 			} else {
+				view.addPlayerCard(drawn);
 				model.endTurnByDrawing();
 			}
 
-			view.addPlayerCard(drawn);
+			if (model.isGameOver()) {
+				System.out.println(model.getWinnerId());
+			}
 
 			view.showOpponents(model.getOpponents());
 			view.updatePlayerCards(model.getLocalHand());
@@ -98,6 +101,24 @@ public class GameController {
 			playCard(handCards, view, appModel);
 		});
 		view.setOnSeeTheFutureDismissButton(view::hideSeeTheFutureScreen);
+		view.setOnDefuseButton((reinsertIndex) -> {
+			model.defuseExplodingKitten(reinsertIndex);
+			view.hideDefuseScreen();
+			refreshAfterPlay(view, appModel);
+			if (model.isGameOver()) {
+				System.out.println(model.getWinnerId());
+			}
+			CardView defuseCard = new CardView("Defuse");
+			discardCard(defuseCard, view);
+		});
+		view.setOnExplodeButton(() -> {
+			model.explodeCurrentPlayer();
+			view.hideDefuseScreen();
+			refreshAfterPlay(view, appModel);
+			if (model.isGameOver()) {
+				System.out.println(model.getWinnerId());
+			}
+		});
 	}
 
 	public void startGame() {
@@ -117,6 +138,18 @@ public class GameController {
 			log = playerName + " " + action + " " + cardName;
 		}
 		return log;
+	}
+
+	private void discardCard(CardView card, GameView view) {
+		card.setOnMouseEntered(null);
+		card.setOnMouseExited(null);
+		card.setOnMouseClicked(null);
+
+		card.getStyleClass().remove("hand-card");
+		card.getStyleClass().remove("hand-card-selected");
+		card.getStyleClass().add("discard-card");
+
+		view.addCardToDiscardPile(card);
 	}
 
 	private void discardCard(List<CardView> cards, GameView view) {
@@ -166,7 +199,7 @@ public class GameController {
 	private void playCard(List<CardView> cards, GameView view, AppModel appModel) {
 		CardView card = cards.get(0);
 
-		if (cards.size() == catPair) {
+		if (cards.size() == CAT_PAIR_SIZE) {
 			view.showCatCardScreen();
 			view.updateCatCardsPlayer(
 					livingOpponents(),
@@ -258,5 +291,16 @@ public class GameController {
 		}
 
 		refreshAfterPlay(view, appModel);
+	}
+
+	private void handleExplodingKitten(GameView view, AppModel appModel) {
+		if (model.currentPlayerHasDefuse()) {
+			view.showDefuseScreen(
+					appModel.getResourceBundle(),
+					model.getDeckSize()-1
+			);
+		} else {
+			model.explodeCurrentPlayer();
+		}
 	}
 }

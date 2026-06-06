@@ -994,3 +994,162 @@
 .catCard-target-button:pressed {
     -fx-background-color: #ca8a04;
 }
+
+/* Very dark red, high opacity background overlay */
+.defuse-overlay {
+    -fx-background-color: rgba(69, 10, 10, 0.95);
+    -fx-alignment: center;
+}
+
+/* Main white modal card */
+.defuse-modal-card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #000000;
+    -fx-border-width: 5px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 24px;
+    -fx-padding: 24px;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(two-pass-box, #000000, 0, 1.0, 10, 10);
+    -fx-max-width: 400px;
+    -fx-min-width: 400px;
+    -fx-max-height: 400px;
+    -fx-min-height: 400px;
+}
+
+.defuse-section {
+    -fx-alignment: center;
+    -fx-spacing: 15px;
+}
+
+/* "KITTEN IGNITED!" Header */
+.defuse-header {
+    -fx-fill: #dc2626;
+    -fx-font-family: Impact;
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+}
+
+/* Grey container holding the slider */
+.slider-container {
+    -fx-background-color: #f5f5f4;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 12px;
+    -fx-spacing: 20px;
+    -fx-max-height: 150px;
+    -fx-min-height: 150px;
+    -fx-alignment: center;
+}
+
+/* Label above slider */
+.slider-label {
+    -fx-fill: #44403c;
+    -fx-font-family: Arial Black;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+}
+
+/* JavaFX Native Slider Styling */
+.depth-slider {
+    -fx-pref-width: 300px;
+    -fx-min-width: 300px;
+    -fx-max-width: 300px;
+    -fx-min-height: 24px;
+    -fx-pref-height: 24px;
+}
+
+.depth-slider .track {
+    -fx-background-color: #d6d3d1;
+    -fx-background-insets: 0;
+    -fx-background-radius: 3px;
+    -fx-pref-height: 8px;
+    -fx-min-height: 8px;
+}
+
+.depth-slider .thumb {
+    -fx-background-color: #dc2626;
+    -fx-background-insets: 0;
+    -fx-pref-width: 18px;
+    -fx-pref-height: 18px;
+    -fx-background-radius: 9px;
+    -fx-cursor: hand;
+}
+
+/* Text indicators below the slider */
+.stat-text {
+    -fx-fill: #78716c;
+    -fx-font-family: Arial Black;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.stat-text-chosen {
+    -fx-fill: #dc2626;
+    -fx-font-family: Arial Black;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Action Buttons */
+.btn-defuse {
+    -fx-background-color: #22c55e;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-font-family: Arial Black;
+    -fx-border-color: #000000;
+    -fx-border-width: 3px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 14px;
+    -fx-padding: 12px 16px;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 6, 6);
+    -fx-cursor: hand;
+    -fx-pref-width: 330px;
+    -fx-max-width: 330px;
+    -fx-min-width: 330px;
+    -fx-background-insets: 2px;
+    -fx-alignment: center;
+}
+
+.btn-defuse:hover {
+    -fx-background-color: #4ade80;
+}
+
+.btn-defuse:pressed {
+    -fx-background-color: #16a34a;
+    -fx-effect: none;
+}
+
+.btn-explode {
+    -fx-background-color: #e7e5e4;
+    -fx-text-fill: #44403c;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-font-family: Arial Black;
+    -fx-border-color: #000000;
+    -fx-border-width: 3px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 14px;
+    -fx-padding: 12px 16px;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 6, 6);
+    -fx-cursor: hand;
+    -fx-pref-width: 330px;
+    -fx-max-width: 330px;
+    -fx-min-width: 330px;
+    -fx-background-insets: 2px;
+    -fx-alignment: center;
+}
+
+.btn-explode:hover {
+    -fx-background-color: #d6d3d1;
+}
+
+.btn-explode:pressed {
+    -fx-background-color: #a8a29e;
+    -fx-effect: none;
+}
