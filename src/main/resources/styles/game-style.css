@@ -780,3 +780,140 @@
     -fx-alignment: center;
     -fx-padding: 16px 0 0 0;
 }
+
+.favor-overlay-backdrop {
+    -fx-background-color: rgba(0, 0, 0, 0.5); /* React: bg-black/85 */
+    -fx-alignment: center;
+}
+
+.favor-title-text {
+    -fx-fill: #ec4899; /* React: text-pink-600 (#ec4899) */
+    -fx-text-fill: #ec4899;
+    -fx-font-family: Impact;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+}
+
+.favor-subtitle-text {
+    -fx-fill: #57534e; /* React: text-stone-600 */
+    -fx-text-fill: #57534e;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+/* --------------------------------------------------------------------------
+   2. DEMAND FAVOR MODAL (Target Selector - Narrower width)
+   -------------------------------------------------------------------------- */
+.favor-request-box {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 24px;
+    -fx-border-radius: 20px;
+    -fx-border-color: #000000;
+    -fx-border-width: 5px;
+    -fx-padding: 24px;
+
+    -fx-min-width: 450px;
+    -fx-max-width: 450px;
+
+    -fx-alignment: center;
+}
+
+/* Container spacing for the target selection list */
+.favor-button-vbox {
+    -fx-spacing: 8px; /* space-y-2 */
+    -fx-alignment: center;
+    -fx-padding: 16px 0 0 0;
+}
+
+/* Button to select a target player */
+.favor-target-button {
+    -fx-background-color: #ec4899; /* Pink-500 base */
+    -fx-text-fill: #ffffff;
+    -fx-font-family: Arial Black;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 10px;
+    -fx-border-color: #000000;
+    -fx-border-width: 3px;
+    -fx-padding: 10px 24px;
+    -fx-min-width: 400px;
+    -fx-max-width: 400px;
+    -fx-cursor: hand;
+    -fx-cursor: hand;
+    -fx-background-insets: 2px;
+}
+
+.favor-target-button:hover {
+    -fx-background-color: #f472b6; /* Lighter pink (pink-400) */
+}
+
+.favor-target-button:pressed {
+    -fx-translate-y: 3px;
+    -fx-effect: none;
+}
+
+/* --------------------------------------------------------------------------
+   3. GRANT FAVOR MODAL (Handoff Selector - Wider width)
+   -------------------------------------------------------------------------- */
+.favor-grant-box {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 24px;
+    -fx-border-radius: 20px;
+    -fx-border-color: #000000;
+    -fx-border-width: 4px;
+    -fx-padding: 24px;
+
+    /* 🎯 EXACT PROTOTYPE DIMENSIONS (React: max-w-md = 448px) */
+    -fx-min-width: 500px;
+    -fx-max-width: 500px;
+
+    -fx-min-height: 375px;
+    -fx-max-height: 375px;
+
+    -fx-alignment: center;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 10, 10);
+}
+
+.favor-card-hbox {
+    -fx-background-color: transparent;
+    -fx-spacing: -36px;
+    -fx-alignment: center;
+    -fx-padding: 16px 0 8px 0;
+}
+
+.favor-card-scroll {
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+    -fx-min-width: 460px;
+    -fx-max-width: 460px;
+    -fx-padding: 16px 0 8px 0;
+}
+
+/* The card handoff select items designed inside the prompt */
+.favor-card-button {
+    -fx-background-color: #f5f5f4; /* Stone-100 base */
+    -fx-text-fill: #000000;
+    -fx-font-family: "System";
+    -fx-font-size: 12px;
+    -fx-font-weight: 900;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-padding: 8px;
+    -fx-cursor: hand;
+}
+
+.favor-card-button:hover {
+    -fx-background-color: #fce7f3; /* Pink-100 tint */
+    -fx-text-fill: #ec4899; /* Text switches to theme pink */
+    -fx-border-color: #ec4899; /* Border switches to theme pink */
+}
+
+.favor-card-button:pressed {
+    -fx-translate-y: 2px;
+}

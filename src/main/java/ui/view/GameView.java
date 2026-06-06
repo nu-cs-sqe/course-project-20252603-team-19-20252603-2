@@ -44,14 +44,20 @@ public class GameView extends StackPane {
 	private HBox cardSection;
 	private HBox seeTheFutureCardSection;
 	private HBox playerHandSection;
+	private HBox grantFavorCardSection;
 	private VBox feedContainer;
 	private VBox discardPile;
 	private VBox seeTheFutureScreen;
 	private VBox targetedAttackScreen;
+	private VBox demandFavorScreen;
+	private VBox grantFavorScreen;
 	private VBox targetedAttackPlayerButtons;
+	private VBox demandFavorPlayerButtons;
 	private ScrollPane scrollPane;
 	private StackPane discardPileSection;
 	private StackPane targetedAttackDialogScreen;
+	private StackPane demandFavorDialogScreen;
+	private StackPane grantFavorDialogScreen;
 
 	private Text logoText;
 	private Text deckTitleText;
@@ -62,6 +68,10 @@ public class GameView extends StackPane {
 	private Text seeTheFutureSubTitle;
 	private Text targetedAttackTitle;
 	private Text targetedAttackSubTitle;
+	private Text demandFavorTitle;
+	private Text demandFavorSubTitle;
+	private Text grantFavorTitle;
+	private Text grantFavorSubTitle;
 	private Text playerAvatarLabel;
 	private Label deckCountLabel;
 	private Label localHandLabel;
@@ -89,14 +99,21 @@ public class GameView extends StackPane {
 	private static final int seeTheFutureSectionSpacing = 20;
 	private static final int targetedAttackTextBoxSpacing = 10;
 	private static final int targetedAttackSectionSpacing = 10;
+	private static final int demandFavorTextBoxSpacing = 10;
+	private static final int demandFavorSectionSpacing = 10;
+	private static final int grantFavorTextBoxSpacing = 10;
 	private static final int discardCardWidth = 175;
 	private static final int discardCardHeight = 260;
 	private static final int peekCardWidth = 140;
 	private static final int peekCardHeight = 200;
 	private static final int targetedAttackDialogWindowHeight = 145;
 	private static final int targetedAttackButtonHeight = 60;
+	private static final int demandFavorDialogWindowHeight = 145;
+	private static final int demandFavorButtonHeight = 60;
 	private static final int maxNumberOfCardSelected = 3;
 	private static final int targetedAttackTitleWrap = 400;
+	private static final int demandFavorTitleWrap = 400;
+	private static final int grantFavorTitleWrap = 400;
 
 	public GameView() {
 		this.getStyleClass().add("game-root");
@@ -138,10 +155,20 @@ public class GameView extends StackPane {
 		targetedAttackScreen.setVisible(false);
 		targetedAttackScreen.setManaged(false);
 
+		demandFavorScreen = createDemandFavorScreen();
+		demandFavorScreen.setVisible(false);
+		demandFavorScreen.setManaged(false);
+
+		grantFavorScreen = createGrantFavorScreen();
+		grantFavorScreen.setVisible(false);
+		grantFavorScreen.setManaged(false);
+
 		this.getChildren().addAll(
 				gameContainer,
 				seeTheFutureScreen,
-				targetedAttackScreen
+				targetedAttackScreen,
+				demandFavorScreen,
+				grantFavorScreen
 		);
 
 		String stylePath = "/styles/game-style.css";
@@ -644,7 +671,7 @@ public class GameView extends StackPane {
 	}
 
 	private VBox createTargetedAttackPlayerButtons() {
-		targetedAttackPlayerButtons = new VBox();
+		VBox targetedAttackPlayerButtons = new VBox();
 		targetedAttackPlayerButtons.getStyleClass().add(
 				"targeted-button-vbox"
 		);
@@ -657,7 +684,7 @@ public class GameView extends StackPane {
 
 		targetedAttackDialogScreen = createTargetedAttackDialogScreen();
 		VBox targetedAttackTextBox = createTargetedAttackText();
-		VBox targetedAttackPlayerButtons = createTargetedAttackPlayerButtons();
+		targetedAttackPlayerButtons = createTargetedAttackPlayerButtons();
 
 		VBox targetedAttackSection = new VBox(
 				targetedAttackTextBox,
@@ -676,6 +703,141 @@ public class GameView extends StackPane {
 		return targetedAttackScreen;
 	}
 
+	private StackPane createDemandFavorDialogScreen() {
+		StackPane demandFavorDialog = new StackPane();
+		demandFavorDialog.getStyleClass().add("favor-request-box");
+		demandFavorDialog.setMaxHeight(demandFavorDialogWindowHeight);
+		demandFavorDialog.setMinHeight(demandFavorDialogWindowHeight);
+		return demandFavorDialog;
+	}
+
+	private VBox createDemandFavorText() {
+		VBox demandFavorTextBox = new VBox(demandFavorTextBoxSpacing);
+		demandFavorTextBox.setAlignment(Pos.CENTER);
+
+		demandFavorTitle = new Text();
+		demandFavorSubTitle = new Text();
+
+		demandFavorTitle.getStyleClass().add("favor-title-text");
+		demandFavorSubTitle.getStyleClass().add("favor-subtitle-text");
+
+		demandFavorTitle.setTextAlignment(TextAlignment.CENTER);
+		demandFavorSubTitle.setTextAlignment(TextAlignment.CENTER);
+
+		demandFavorSubTitle.setWrappingWidth(demandFavorTitleWrap);
+
+		demandFavorTextBox.getChildren().addAll(
+				demandFavorTitle,
+				demandFavorSubTitle
+		);
+
+		return demandFavorTextBox;
+	}
+
+	private VBox createDemandFavorPlayerButtons() {
+		VBox demandFavorPlayerButtons = new VBox();
+		demandFavorPlayerButtons.getStyleClass().add(
+				"favor-button-vbox"
+		);
+		return demandFavorPlayerButtons;
+	}
+
+	private VBox createDemandFavorScreen() {
+		VBox demandFavorScreen = new VBox();
+		demandFavorScreen.getStyleClass().add("favor-overlay-backdrop");
+
+		demandFavorDialogScreen = createDemandFavorDialogScreen();
+		VBox demandFavorTextBox = createDemandFavorText();
+		demandFavorPlayerButtons = createDemandFavorPlayerButtons();
+
+		VBox demandFavorSection = new VBox(
+				demandFavorTextBox,
+				demandFavorPlayerButtons
+		);
+		demandFavorSection.setSpacing(demandFavorSectionSpacing);
+
+		demandFavorDialogScreen.getChildren().add(
+				demandFavorSection
+		);
+
+		demandFavorScreen.getChildren().add(
+				demandFavorDialogScreen
+		);
+
+		return demandFavorScreen;
+	}
+
+	private StackPane createGrantFavorDialogScreen() {
+		StackPane grantFavorDialog = new StackPane();
+		grantFavorDialog.getStyleClass().add("favor-grant-box");
+		grantFavorDialog.setMaxHeight(demandFavorDialogWindowHeight);
+		grantFavorDialog.setMinHeight(demandFavorDialogWindowHeight);
+		return grantFavorDialog;
+	}
+
+	private VBox createGrantFavorText() {
+		VBox grantFavorTextBox = new VBox(grantFavorTextBoxSpacing);
+		grantFavorTextBox.setAlignment(Pos.CENTER);
+
+		grantFavorTitle = new Text();
+		grantFavorSubTitle = new Text();
+
+		grantFavorTitle.getStyleClass().add("favor-title-text");
+		grantFavorSubTitle.getStyleClass().add("favor-subtitle-text");
+
+		grantFavorSubTitle.setWrappingWidth(grantFavorTitleWrap);
+
+		grantFavorTitle.setTextAlignment(TextAlignment.CENTER);
+		grantFavorSubTitle.setTextAlignment(TextAlignment.CENTER);
+
+		grantFavorTextBox.getChildren().addAll(
+				grantFavorTitle,
+				grantFavorSubTitle
+		);
+
+		return grantFavorTextBox;
+	}
+
+	private ScrollPane createGrantFavorCardSection() {
+		this.grantFavorCardSection = new HBox();
+		this.grantFavorCardSection.getStyleClass().add("favor-card-hbox");
+
+		ScrollPane scrollWrapper = new ScrollPane(grantFavorCardSection);
+		scrollWrapper.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		scrollWrapper.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		scrollWrapper.setFitToHeight(true);
+		scrollWrapper.setFitToWidth(true);
+		scrollWrapper.setPannable(true);
+
+		scrollWrapper.getStyleClass().add("favor-card-scroll");
+
+		return scrollWrapper;
+	}
+
+	private VBox createGrantFavorScreen() {
+		VBox grantFavorScreen = new VBox();
+		grantFavorScreen.getStyleClass().add("favor-overlay-backdrop");
+
+		grantFavorDialogScreen = createGrantFavorDialogScreen();
+		VBox grantFavorTextBox = createGrantFavorText();
+		ScrollPane grantFavorCardSection = createGrantFavorCardSection();
+
+		VBox grantFavorSection = new VBox(
+				grantFavorTextBox,
+				grantFavorCardSection
+		);
+
+		grantFavorDialogScreen.getChildren().add(
+				grantFavorSection
+		);
+
+		grantFavorScreen.getChildren().add(
+				grantFavorDialogScreen
+		);
+
+		return grantFavorScreen;
+	}
+
 	public void updateDisplay(ResourceBundle bundle) {
 		logoText.setText(bundle.getString("gameView.logo"));
 		quitButton.setText(bundle.getString("gameView.quit"));
@@ -691,6 +853,9 @@ public class GameView extends StackPane {
 		seeTheFutureDismissButton.setText(bundle.getString("seeTheFuture.dismissButton"));
 		targetedAttackTitle.setText(bundle.getString("targetedAttack.title"));
 		targetedAttackSubTitle.setText(bundle.getString("targetedAttack.subTitle"));
+		demandFavorTitle.setText(bundle.getString("favor.demandTitle"));
+		demandFavorSubTitle.setText(bundle.getString("favor.demandSubTitle"));
+		grantFavorTitle.setText(bundle.getString("favor.grantTitle"));
 	}
 
 	public void showOpponents(List<PlayerDisplayInfo> opponents) {
@@ -725,6 +890,15 @@ public class GameView extends StackPane {
 		localHandLabel.setText(handText);
 	}
 
+	public void updateGrantFavorSubTitle(
+			ResourceBundle bundle, String fromPlayer, String toPlayer
+	) {
+		String subTitle = fromPlayer + " "
+				+ bundle.getString("favor.grantSubTitle") + " "
+				+ toPlayer;
+		grantFavorSubTitle.setText(subTitle);
+	}
+
 	public void updatePlayerCards(List<Card> hand) {
 		this.playerHandSection.getChildren().clear();
 		for (Card card : hand) {
@@ -732,14 +906,51 @@ public class GameView extends StackPane {
 		}
 	}
 
-	public void updateSeeTheFutureScreen(boolean visible) {
-		seeTheFutureScreen.setVisible(visible);
-		seeTheFutureScreen.setManaged(visible);
+	public void updateFavorCards(List<Card> hand, IntConsumer handler) {
+		this.grantFavorCardSection.getChildren().clear();
+		for (int idx = 0; idx < hand.size(); idx++) {
+			addFavorCard(hand.get(idx), handler, idx);
+		}
 	}
 
-	public void updateTargetedAttackScreen(boolean visible) {
-		targetedAttackScreen.setVisible(visible);
-		targetedAttackScreen.setManaged(visible);
+	public void showSeeTheFutureScreen() {
+		seeTheFutureScreen.setVisible(true);
+		seeTheFutureScreen.setManaged(true);
+	}
+
+	public void hideSeeTheFutureScreen() {
+		seeTheFutureScreen.setVisible(false);
+		seeTheFutureScreen.setManaged(false);
+	}
+
+	public void showTargetedAttackScreen() {
+		targetedAttackScreen.setVisible(true);
+		targetedAttackScreen.setManaged(true);
+	}
+
+	public void hideTargetedAttackScreen() {
+		targetedAttackScreen.setVisible(false);
+		targetedAttackScreen.setManaged(false);
+	}
+
+	public void showDemandFavorScreen() {
+		demandFavorScreen.setVisible(true);
+		demandFavorScreen.setManaged(true);
+	}
+
+	public void hideDemandFavorScreen() {
+		demandFavorScreen.setVisible(false);
+		demandFavorScreen.setManaged(false);
+	}
+
+	public void showGrantFavorScreen() {
+		grantFavorScreen.setVisible(true);
+		grantFavorScreen.setManaged(true);
+	}
+
+	public void hideGrantFavorScreen() {
+		grantFavorScreen.setVisible(false);
+		grantFavorScreen.setManaged(false);
 	}
 
 	public void updateSeeTheFutureCards(ResourceBundle bundle, List<Card> cards) {
@@ -752,20 +963,7 @@ public class GameView extends StackPane {
 					"future-peeked-card"
 			);
 
-			peekCard.setMaxSize(peekCardWidth, peekCardHeight);
-			peekCard.setMinSize(peekCardWidth, peekCardHeight);
-			peekCard.setPrefSize(peekCardWidth, peekCardHeight);
-
-			ImageView imageView = (ImageView) peekCard.getChildren().get(0);
-			imageView.setFitWidth(peekCardWidth);
-			imageView.setFitHeight(peekCardHeight);
-			imageView.setPreserveRatio(false);
-
-			Rectangle clip = (Rectangle) imageView.getClip();
-			clip.setWidth(peekCardWidth);
-			clip.setHeight(peekCardHeight);
-
-			imageView.setClip(clip);
+			preprocessCard(peekCard, peekCardWidth, peekCardHeight);
 
 			seeTheFutureCardSection.getChildren().add(peekCard);
 		}
@@ -790,6 +988,30 @@ public class GameView extends StackPane {
 			playerButton.setOnAction(e -> handler.accept(playerId));
 
 			targetedAttackPlayerButtons.getChildren().add(
+					playerButton
+			);
+		}
+	}
+
+	public void updateDemandFavorPlayers(
+			List<PlayerDisplayInfo> players, IntConsumer handler
+	) {
+		int newHeight = players.size()
+				* demandFavorButtonHeight
+				+ demandFavorDialogWindowHeight;
+		demandFavorDialogScreen.setMinHeight(newHeight);
+		demandFavorDialogScreen.setMaxHeight(newHeight);
+
+		demandFavorPlayerButtons.getChildren().clear();
+		for (PlayerDisplayInfo player : players) {
+			String playerName = player.getName();
+			int playerId = player.getPlayerId();
+
+			Button playerButton = new Button(playerName);
+			playerButton.getStyleClass().add("favor-target-button");
+			playerButton.setOnAction(e -> handler.accept(playerId));
+
+			demandFavorPlayerButtons.getChildren().add(
 					playerButton
 			);
 		}
@@ -853,6 +1075,13 @@ public class GameView extends StackPane {
 		this.playerHandSection.getChildren().add(playerCard);
 	}
 
+	private void addFavorCard(Card card, IntConsumer handler, int index) {
+		String assetFolder = cardCollection.get(card.getCardType());
+		CardView favorCard = new CardView(assetFolder);
+		favorCard.setOnMouseClicked(e -> handler.accept(index));
+		this.grantFavorCardSection.getChildren().add(favorCard);
+	}
+
 	public void clearLog() {
 		this.scrollPane.setVvalue(0.0);
 		this.feedContainer.getChildren().clear();
@@ -880,20 +1109,7 @@ public class GameView extends StackPane {
 	}
 
 	public void addCardToDiscardPile(CardView card) {
-		card.setMaxSize(discardCardWidth, discardCardHeight);
-		card.setMinSize(discardCardWidth, discardCardHeight);
-		card.setPrefSize(discardCardWidth, discardCardHeight);
-
-		ImageView imageView = (ImageView) card.getChildren().get(0);
-		imageView.setFitWidth(discardCardWidth);
-		imageView.setFitHeight(discardCardHeight);
-		imageView.setPreserveRatio(false);
-
-		Rectangle clip = (Rectangle) imageView.getClip();
-		clip.setWidth(discardCardWidth);
-		clip.setHeight(discardCardHeight);
-
-		imageView.setClip(clip);
+		preprocessCard(card, discardCardWidth, discardCardHeight);
 
 		this.discardPileSection.getChildren().add(
 				card
@@ -908,6 +1124,23 @@ public class GameView extends StackPane {
 		}
 		this.selectedHandCards.clear();
 		this.playCardButton.setDisable(true);
+	}
+
+	private void preprocessCard(CardView card, int width, int height) {
+		card.setMaxSize(width, height);
+		card.setMinSize(width, height);
+		card.setPrefSize(width, height);
+
+		ImageView imageView = (ImageView) card.getChildren().get(0);
+		imageView.setFitWidth(width);
+		imageView.setFitHeight(height);
+		imageView.setPreserveRatio(false);
+
+		Rectangle clip = (Rectangle) imageView.getClip();
+		clip.setWidth(width);
+		clip.setHeight(height);
+
+		imageView.setClip(clip);
 	}
 
 	public void setOnDrawAction(Runnable handler) {

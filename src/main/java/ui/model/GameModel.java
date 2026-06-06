@@ -67,6 +67,14 @@ public class GameModel {
 		localPlayerId = engine.getCurrentPlayerId();
 	}
 
+	public void playFavor(int targetId, int cardIndex) {
+		engine.playFavor(targetId, cardIndex);
+	}
+
+	public String getPlayerName(int playerId) {
+		return playerNames.get(playerId);
+	}
+
 	public void explodeCurrentPlayer() {
 		engine.explodeCurrentPlayer();
 		localPlayerId = engine.getCurrentPlayerId();
@@ -90,6 +98,10 @@ public class GameModel {
 
 	public int getLocalPlayerId() {
 		return localPlayerId;
+	}
+
+	public List<Card> getSelectedHand(int playerId) {
+		return engine.getPlayerHand(playerId);
 	}
 
 	public void resetPlayerId() {

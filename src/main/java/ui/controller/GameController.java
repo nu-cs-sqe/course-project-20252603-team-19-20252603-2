@@ -97,9 +97,7 @@ public class GameController {
 				playCard(handCard, view, appModel);
 			}
 		});
-		view.setOnSeeTheFutureDismissButton(() -> {
-			view.updateSeeTheFutureScreen(false);
-		});
+		view.setOnSeeTheFutureDismissButton(view::hideSeeTheFutureScreen);
 	}
 
 	public void startGame() {
@@ -144,14 +142,18 @@ public class GameController {
 				appModel.getResourceBundle(),
 				model.getForcedTurns()
 		);
-		view.updatePlayerCards(
-				model.getLocalHand()
-		);
+		view.updatePlayerCards(model.getLocalHand());
 		view.updatePlayerTurn(
 				appModel.getResourceBundle(),
 				model.getLocalPlayerName()
 		);
 		view.showOpponents(model.getOpponents());
+	}
+
+	private List<PlayerDisplayInfo> livingOpponents() {
+		return model.getOpponents().stream()
+				.filter(this::isLivingOpponent)
+				.collect(Collectors.toList());
 	}
 
 	private boolean isLivingOpponent(PlayerDisplayInfo player) {
@@ -160,27 +162,30 @@ public class GameController {
 	}
 
 	private void playCard(CardView card, GameView view, AppModel appModel) {
-		discardCard(card, view);
-
 		if (card.getCardType() == CardType.SKIP) {
+			discardCard(card, view);
 			model.playSkip();
 		}
 
 		if (card.getCardType() == CardType.REVERSE) {
+			discardCard(card, view);
 			model.playReverse();
 		}
 
 		if (card.getCardType() == CardType.ATTACK) {
+			discardCard(card, view);
 			model.playAttack();
 		}
 
 		if (card.getCardType() == CardType.SHUFFLE) {
+			discardCard(card, view);
 			model.playShuffle();
 		}
 
 		if (card.getCardType() == CardType.SEE_THE_FUTURE) {
+			discardCard(card, view);
 			List<Card> topThreeCards = model.playSeeTheFuture();
-			view.updateSeeTheFutureScreen(true);
+			view.showSeeTheFutureScreen();
 			view.updateSeeTheFutureCards(
 					appModel.getResourceBundle(),
 					topThreeCards
@@ -188,17 +193,49 @@ public class GameController {
 		}
 
 		if (card.getCardType() == CardType.TARGETED_ATTACK) {
-			List<PlayerDisplayInfo> players = model.getOpponents().stream()
-					.filter(this::isLivingOpponent)
-					.collect(Collectors.toList());
-
-			view.updateTargetedAttackScreen(true);
+			view.showTargetedAttackScreen();
 			view.updateTargetedAttackPlayers(
-					players,
-					(playerId) -> {
-						view.updateTargetedAttackScreen(false);
-						model.playTargetedAttack(playerId);
+					livingOpponents(),
+					(targetId) -> {
+						discardCard(card, view);
+						view.hideTargetedAttackScreen();
+						model.playTargetedAttack(targetId);
 						refreshAfterPlay(view, appModel);
+					}
+			);
+		}
+
+		if (card.getCardType() == CardType.FAVOR) {
+			ResourceBundle bundle = appModel.getResourceBundle();
+			view.showDemandFavorScreen();
+			view.updateDemandFavorPlayers(
+					livingOpponents(),
+					(targetId) -> {
+						view.hideDemandFavorScreen();
+						view.showGrantFavorScreen();
+						view.updateGrantFavorSubTitle(
+								bundle,
+								model.getPlayerName(targetId),
+								model.getLocalPlayerName()
+						);
+						view.updateFavorCards(
+								model.getSelectedHand(targetId),
+								(cardIndex) -> {
+									discardCard(
+											card,
+											view
+									);
+									view.hideGrantFavorScreen();
+									model.playFavor(
+											targetId,
+											cardIndex
+									);
+									refreshAfterPlay(
+											view,
+											appModel
+									);
+								}
+						);
 					}
 			);
 		}
