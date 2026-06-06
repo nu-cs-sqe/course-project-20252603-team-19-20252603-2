@@ -42,42 +42,38 @@ public class GameView extends StackPane {
 	private HBox playerBar;
 	private HBox gamePlaySection;
 	private HBox cardSection;
-	private HBox seeTheFutureCardSection;
 	private HBox playerHandSection;
-	private HBox grantFavorCardSection;
 	private VBox feedContainer;
 	private VBox discardPile;
-	private VBox seeTheFutureScreen;
-	private VBox targetedAttackScreen;
-	private VBox demandFavorScreen;
-	private VBox grantFavorScreen;
-	private VBox catCardScreen;
-	private VBox targetedAttackPlayerButtons;
-	private VBox demandFavorPlayerButtons;
-	private VBox catCardPlayerButtons;
+	private VBox modalOverlayScreen;
+	private VBox modalSection;
+	private VBox modalTextBox;
+	private VBox modalBody;
+	private VBox modalPlayerButtons;
 	private ScrollPane scrollPane;
+	private ScrollPane modalCardScroll;
 	private StackPane discardPileSection;
-	private StackPane targetedAttackDialogScreen;
-	private StackPane demandFavorDialogScreen;
-	private StackPane grantFavorDialogScreen;
-	private StackPane catCardDialogScreen;
+	private StackPane modalDialogScreen;
+	private HBox modalCardRow;
 
 	private Text logoText;
 	private Text deckTitleText;
 	private Text turnIndicatorText;
 	private Text tableChatterTitle;
 	private Text discardPileFooterText;
-	private Text seeTheFutureTitle;
-	private Text seeTheFutureSubTitle;
-	private Text targetedAttackTitle;
-	private Text targetedAttackSubTitle;
-	private Text demandFavorTitle;
-	private Text demandFavorSubTitle;
-	private Text grantFavorTitle;
-	private Text grantFavorSubTitle;
-	private Text catCardTitle;
-	private Text catCardSubTitle;
+	private Text modalTitle;
+	private Text modalSubTitle;
 	private Text playerAvatarLabel;
+	private String seeTheFutureTitleText;
+	private String seeTheFutureSubTitleText;
+	private String seeTheFutureDismissText;
+	private String targetedAttackTitleText;
+	private String targetedAttackSubTitleText;
+	private String demandFavorTitleText;
+	private String demandFavorSubTitleText;
+	private String grantFavorTitleText;
+	private String catCardTitleText;
+	private String catCardSubTitleText;
 	private Label deckCountLabel;
 	private Label localHandLabel;
 	private Label playerAvatarCardCount;
@@ -86,7 +82,7 @@ public class GameView extends StackPane {
 	private Button deck;
 	private Button drawCard;
 	private Button playCardButton;
-	private Button seeTheFutureDismissButton;
+	private Button modalDismissButton;
 
 	private List<CardView> selectedHandCards;
 
@@ -157,33 +153,13 @@ public class GameView extends StackPane {
 		gamePlaySection.getStyleClass().add("table-felt");
 		cardSection.getStyleClass().add("player-hand-bar");
 
-		seeTheFutureScreen = createSeeTheFutureScreen();
-		seeTheFutureScreen.setVisible(false);
-		seeTheFutureScreen.setManaged(false);
-
-		targetedAttackScreen = createTargetedAttackScreen();
-		targetedAttackScreen.setVisible(false);
-		targetedAttackScreen.setManaged(false);
-
-		demandFavorScreen = createDemandFavorScreen();
-		demandFavorScreen.setVisible(false);
-		demandFavorScreen.setManaged(false);
-
-		grantFavorScreen = createGrantFavorScreen();
-		grantFavorScreen.setVisible(false);
-		grantFavorScreen.setManaged(false);
-
-		catCardScreen = createCatCardScreen();
-		catCardScreen.setVisible(false);
-		catCardScreen.setManaged(false);
+		modalOverlayScreen = createModalOverlay();
+		modalOverlayScreen.setVisible(false);
+		modalOverlayScreen.setManaged(false);
 
 		this.getChildren().addAll(
 				gameContainer,
-				seeTheFutureScreen,
-				targetedAttackScreen,
-				demandFavorScreen,
-				grantFavorScreen,
-				catCardScreen
+				modalOverlayScreen
 		);
 
 		String stylePath = "/styles/game-style.css";
@@ -585,336 +561,216 @@ public class GameView extends StackPane {
 		return cardSection;
 	}
 
-	private StackPane createSeeTheFutureDialogWindow() {
-		StackPane seeTheFutureDialogWindow = new StackPane();
-		seeTheFutureDialogWindow.getStyleClass().add("future-dialog-box");
-		return seeTheFutureDialogWindow;
+	private VBox createModalOverlay() {
+		VBox overlay = new VBox();
+		overlay.getStyleClass().add("card-overlay-backdrop");
+		overlay.setAlignment(Pos.CENTER);
+		overlay.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+		modalDialogScreen = new StackPane();
+
+		modalTitle = new Text();
+		modalSubTitle = new Text();
+		modalTitle.setTextAlignment(TextAlignment.CENTER);
+		modalSubTitle.setTextAlignment(TextAlignment.CENTER);
+
+		modalTextBox = new VBox(seeTheFutureTextBoxSpacing);
+		modalTextBox.getStyleClass().add("modal-header-box");
+		modalTextBox.setAlignment(Pos.CENTER);
+		modalTextBox.getChildren().addAll(modalTitle, modalSubTitle);
+
+		modalBody = new VBox();
+		modalBody.getStyleClass().add("modal-body");
+		modalBody.setAlignment(Pos.CENTER);
+
+		modalDismissButton = new Button();
+		modalDismissButton.getStyleClass().add("future-dismiss-button");
+		modalDismissButton.setAlignment(Pos.CENTER);
+		modalDismissButton.setMaxWidth(Double.MAX_VALUE);
+
+		modalCardRow = new HBox();
+		modalCardRow.getStyleClass().add("future-cards-hbox");
+		modalCardRow.setMaxWidth(Double.MAX_VALUE);
+
+		modalCardScroll = new ScrollPane(modalCardRow);
+		modalCardScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		modalCardScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		modalCardScroll.setFitToHeight(true);
+		modalCardScroll.setFitToWidth(true);
+		modalCardScroll.setPannable(true);
+		modalCardScroll.getStyleClass().add("favor-card-scroll");
+
+		modalPlayerButtons = new VBox();
+
+		modalSection = new VBox(modalTextBox, modalBody, modalDismissButton);
+		modalSection.getStyleClass().add("modal-content-section");
+		modalDialogScreen.getChildren().add(modalSection);
+		overlay.getChildren().add(modalDialogScreen);
+
+		return overlay;
 	}
 
-	private VBox createSeeTheFutureText() {
-		VBox seeTheFutureTextBox = new VBox(seeTheFutureTextBoxSpacing);
-		seeTheFutureTextBox.setAlignment(Pos.CENTER);
-
-		seeTheFutureTitle = new Text();
-		seeTheFutureSubTitle = new Text();
-
-		seeTheFutureTitle.getStyleClass().add("future-title-text");
-		seeTheFutureSubTitle.getStyleClass().add("future-subtitle-text");
-
-		seeTheFutureTitle.setTextAlignment(TextAlignment.CENTER);
-		seeTheFutureSubTitle.setTextAlignment(TextAlignment.CENTER);
-
-		seeTheFutureTextBox.getChildren().addAll(
-				seeTheFutureTitle,
-				seeTheFutureSubTitle
-		);
-
-		return seeTheFutureTextBox;
+	private void applyModalDialogStyle(
+			String dialogStyle, Integer minHeight, Integer maxHeight
+	) {
+		modalDialogScreen.getStyleClass().clear();
+		modalDialogScreen.getStyleClass().add(dialogStyle);
+		if (minHeight != null) {
+			modalDialogScreen.setMinHeight(minHeight);
+			modalDialogScreen.setMaxHeight(maxHeight);
+		} else {
+			modalDialogScreen.setMinHeight(Region.USE_COMPUTED_SIZE);
+			modalDialogScreen.setMaxHeight(Region.USE_COMPUTED_SIZE);
+		}
 	}
 
-	private HBox createSeeTheFutureCardSection() {
-		seeTheFutureCardSection = new HBox();
-		seeTheFutureCardSection.getStyleClass().add("future-cards-hbox");
-		seeTheFutureCardSection.setMaxWidth(Double.MAX_VALUE);
-		return seeTheFutureCardSection;
+	private void applyModalTextStyle(
+			String titleStyle, String subtitleStyle, int subtitleWrap
+	) {
+		modalTitle.getStyleClass().clear();
+		modalTitle.getStyleClass().add(titleStyle);
+		modalSubTitle.getStyleClass().clear();
+		modalSubTitle.getStyleClass().add(subtitleStyle);
+		if (subtitleWrap > 0) {
+			modalSubTitle.setWrappingWidth(subtitleWrap);
+		} else {
+			modalSubTitle.setWrappingWidth(0);
+		}
 	}
 
-	private Button createSeeTheFutureDismissButton() {
-		seeTheFutureDismissButton = new Button();
-		seeTheFutureDismissButton.getStyleClass().add("future-dismiss-button");
-		seeTheFutureDismissButton.setAlignment(Pos.CENTER);
-		seeTheFutureDismissButton.setMaxWidth(Double.MAX_VALUE);
-		return seeTheFutureDismissButton;
+	private void hideModalDismissButton() {
+		modalDismissButton.setVisible(false);
+		modalDismissButton.setManaged(false);
 	}
 
-	private VBox createSeeTheFutureScreen() {
-		VBox seeTheFutureScreen = new VBox();
-		seeTheFutureScreen.getStyleClass().add("future-overlay-backdrop");
-
-		StackPane seeTheFutureDialogScreen = createSeeTheFutureDialogWindow();
-		VBox seeTheFutureTextBox = createSeeTheFutureText();
-		HBox seeTheFutureCardSection = createSeeTheFutureCardSection();
-		Button seeTheFutureDismissButton = createSeeTheFutureDismissButton();
-
-		VBox seeTheFutureSection = new VBox(
-				seeTheFutureTextBox,
-				seeTheFutureCardSection,
-				seeTheFutureDismissButton
-		);
-		seeTheFutureSection.setSpacing(seeTheFutureSectionSpacing);
-
-		seeTheFutureDialogScreen.getChildren().add(
-				seeTheFutureSection
-		);
-
-		seeTheFutureScreen.getChildren().add(
-				seeTheFutureDialogScreen
-		);
-
-		return seeTheFutureScreen;
+	private void showModalDismissButton() {
+		modalDismissButton.setVisible(true);
+		modalDismissButton.setManaged(true);
 	}
 
-	private StackPane createTargetedAttackDialogScreen() {
-		StackPane targetedAttackDialog = new StackPane();
-		targetedAttackDialog.getStyleClass().add("targeted-dialog-box");
-		targetedAttackDialog.setMaxHeight(targetedAttackDialogWindowHeight);
-		targetedAttackDialog.setMinHeight(targetedAttackDialogWindowHeight);
-		return targetedAttackDialog;
+	private void setModalCardRowStyle(String styleClass) {
+		modalCardRow.getStyleClass().clear();
+		modalCardRow.getStyleClass().add(styleClass);
 	}
 
-	private VBox createTargetedAttackText() {
-		VBox targetedAttackTextBox = new VBox(targetedAttackTextBoxSpacing);
-		targetedAttackTextBox.setAlignment(Pos.CENTER);
-
-		targetedAttackTitle = new Text();
-		targetedAttackSubTitle = new Text();
-
-		targetedAttackTitle.getStyleClass().add("targeted-title-text");
-		targetedAttackSubTitle.getStyleClass().add("targeted-subtitle-text");
-
-		targetedAttackTitle.setTextAlignment(TextAlignment.CENTER);
-		targetedAttackSubTitle.setTextAlignment(TextAlignment.CENTER);
-
-		targetedAttackSubTitle.setWrappingWidth(targetedAttackTitleWrap);
-
-		targetedAttackTextBox.getChildren().addAll(
-				targetedAttackTitle,
-				targetedAttackSubTitle
-		);
-
-		return targetedAttackTextBox;
+	private void setModalPlayerButtonStyle(String styleClass) {
+		modalPlayerButtons.getStyleClass().clear();
+		modalPlayerButtons.getStyleClass().add(styleClass);
 	}
 
-	private VBox createTargetedAttackPlayerButtons() {
-		VBox targetedAttackPlayerButtons = new VBox();
-		targetedAttackPlayerButtons.getStyleClass().add(
-				"targeted-button-vbox"
+	private void prepareSeeTheFutureModal() {
+		modalTextBox.setSpacing(seeTheFutureTextBoxSpacing);
+		applyModalDialogStyle("future-dialog-box", null, null);
+		applyModalTextStyle(
+				"future-title-text", "future-subtitle-text", 0
 		);
-		return targetedAttackPlayerButtons;
+		modalTitle.setText(seeTheFutureTitleText);
+		modalSubTitle.setText(seeTheFutureSubTitleText);
+		modalDismissButton.setText(seeTheFutureDismissText);
+		modalSection.setSpacing(seeTheFutureSectionSpacing);
+		showModalDismissButton();
+		modalBody.getChildren().clear();
+		modalCardRow.getChildren().clear();
+		setModalCardRowStyle("future-cards-hbox");
+		modalBody.getChildren().add(modalCardRow);
 	}
 
-	private VBox createTargetedAttackScreen() {
-		VBox targetedAttackScreen = new VBox();
-		targetedAttackScreen.getStyleClass().add("targeted-overlay-backdrop");
-
-		targetedAttackDialogScreen = createTargetedAttackDialogScreen();
-		VBox targetedAttackTextBox = createTargetedAttackText();
-		targetedAttackPlayerButtons = createTargetedAttackPlayerButtons();
-
-		VBox targetedAttackSection = new VBox(
-				targetedAttackTextBox,
-				targetedAttackPlayerButtons
+	private void prepareTargetedAttackModal() {
+		modalTextBox.setSpacing(targetedAttackTextBoxSpacing);
+		applyModalDialogStyle(
+				"targeted-dialog-box",
+				targetedAttackDialogWindowHeight,
+				targetedAttackDialogWindowHeight
 		);
-		targetedAttackSection.setSpacing(targetedAttackSectionSpacing);
-
-		targetedAttackDialogScreen.getChildren().add(
-				targetedAttackSection
+		applyModalTextStyle(
+				"targeted-title-text",
+				"targeted-subtitle-text",
+				targetedAttackTitleWrap
 		);
-
-		targetedAttackScreen.getChildren().add(
-				targetedAttackDialogScreen
-		);
-
-		return targetedAttackScreen;
+		modalTitle.setText(targetedAttackTitleText);
+		modalSubTitle.setText(targetedAttackSubTitleText);
+		modalSection.setSpacing(targetedAttackSectionSpacing);
+		hideModalDismissButton();
+		modalBody.getChildren().clear();
+		modalPlayerButtons.getChildren().clear();
+		setModalPlayerButtonStyle("targeted-button-vbox");
+		modalBody.getChildren().add(modalPlayerButtons);
 	}
 
-	private StackPane createDemandFavorDialogScreen() {
-		StackPane demandFavorDialog = new StackPane();
-		demandFavorDialog.getStyleClass().add("favor-request-box");
-		demandFavorDialog.setMaxHeight(demandFavorDialogWindowHeight);
-		demandFavorDialog.setMinHeight(demandFavorDialogWindowHeight);
-		return demandFavorDialog;
+	private void prepareDemandFavorModal() {
+		modalTextBox.setSpacing(demandFavorTextBoxSpacing);
+		applyModalDialogStyle(
+				"favor-request-box",
+				demandFavorDialogWindowHeight,
+				demandFavorDialogWindowHeight
+		);
+		applyModalTextStyle(
+				"favor-title-text",
+				"favor-subtitle-text",
+				demandFavorTitleWrap
+		);
+		modalTitle.setText(demandFavorTitleText);
+		modalSubTitle.setText(demandFavorSubTitleText);
+		modalSection.setSpacing(demandFavorSectionSpacing);
+		hideModalDismissButton();
+		modalBody.getChildren().clear();
+		modalPlayerButtons.getChildren().clear();
+		setModalPlayerButtonStyle("favor-button-vbox");
+		modalBody.getChildren().add(modalPlayerButtons);
 	}
 
-	private VBox createDemandFavorText() {
-		VBox demandFavorTextBox = new VBox(demandFavorTextBoxSpacing);
-		demandFavorTextBox.setAlignment(Pos.CENTER);
-
-		demandFavorTitle = new Text();
-		demandFavorSubTitle = new Text();
-
-		demandFavorTitle.getStyleClass().add("favor-title-text");
-		demandFavorSubTitle.getStyleClass().add("favor-subtitle-text");
-
-		demandFavorTitle.setTextAlignment(TextAlignment.CENTER);
-		demandFavorSubTitle.setTextAlignment(TextAlignment.CENTER);
-
-		demandFavorSubTitle.setWrappingWidth(demandFavorTitleWrap);
-
-		demandFavorTextBox.getChildren().addAll(
-				demandFavorTitle,
-				demandFavorSubTitle
+	private void prepareGrantFavorModal() {
+		modalTextBox.setSpacing(grantFavorTextBoxSpacing);
+		applyModalDialogStyle(
+				"favor-grant-box",
+				demandFavorDialogWindowHeight,
+				demandFavorDialogWindowHeight
 		);
-
-		return demandFavorTextBox;
+		applyModalTextStyle(
+				"favor-title-text",
+				"favor-subtitle-text",
+				grantFavorTitleWrap
+		);
+		modalTitle.setText(grantFavorTitleText);
+		modalSection.setSpacing(grantFavorTextBoxSpacing);
+		hideModalDismissButton();
+		modalBody.getChildren().clear();
+		modalCardRow.getChildren().clear();
+		setModalCardRowStyle("favor-card-hbox");
+		modalBody.getChildren().add(modalCardScroll);
 	}
 
-	private VBox createDemandFavorPlayerButtons() {
-		VBox demandFavorPlayerButtons = new VBox();
-		demandFavorPlayerButtons.getStyleClass().add(
-				"favor-button-vbox"
+	private void prepareCatCardModal() {
+		modalTextBox.setSpacing(catCardTextBoxSpacing);
+		applyModalDialogStyle(
+				"catcard-dialog-box",
+				catCardDialogWindowHeight,
+				catCardDialogWindowHeight
 		);
-		return demandFavorPlayerButtons;
+		applyModalTextStyle(
+				"catcard-title-text",
+				"catcard-subtitle-text",
+				catCardTitleWrap
+		);
+		modalTitle.setText(catCardTitleText);
+		modalSubTitle.setText(catCardSubTitleText);
+		modalSection.setSpacing(catCardSectionSpacing);
+		hideModalDismissButton();
+		modalBody.getChildren().clear();
+		modalPlayerButtons.getChildren().clear();
+		setModalPlayerButtonStyle("opponent-list");
+		modalBody.getChildren().add(modalPlayerButtons);
 	}
 
-	private VBox createDemandFavorScreen() {
-		VBox demandFavorScreen = new VBox();
-		demandFavorScreen.getStyleClass().add("favor-overlay-backdrop");
-
-		demandFavorDialogScreen = createDemandFavorDialogScreen();
-		VBox demandFavorTextBox = createDemandFavorText();
-		demandFavorPlayerButtons = createDemandFavorPlayerButtons();
-
-		VBox demandFavorSection = new VBox(
-				demandFavorTextBox,
-				demandFavorPlayerButtons
-		);
-		demandFavorSection.setSpacing(demandFavorSectionSpacing);
-
-		demandFavorDialogScreen.getChildren().add(
-				demandFavorSection
-		);
-
-		demandFavorScreen.getChildren().add(
-				demandFavorDialogScreen
-		);
-
-		return demandFavorScreen;
+	private void showModal() {
+		modalOverlayScreen.setVisible(true);
+		modalOverlayScreen.setManaged(true);
 	}
 
-	private StackPane createGrantFavorDialogScreen() {
-		StackPane grantFavorDialog = new StackPane();
-		grantFavorDialog.getStyleClass().add("favor-grant-box");
-		grantFavorDialog.setMaxHeight(demandFavorDialogWindowHeight);
-		grantFavorDialog.setMinHeight(demandFavorDialogWindowHeight);
-		return grantFavorDialog;
-	}
-
-	private VBox createGrantFavorText() {
-		VBox grantFavorTextBox = new VBox(grantFavorTextBoxSpacing);
-		grantFavorTextBox.setAlignment(Pos.CENTER);
-
-		grantFavorTitle = new Text();
-		grantFavorSubTitle = new Text();
-
-		grantFavorTitle.getStyleClass().add("favor-title-text");
-		grantFavorSubTitle.getStyleClass().add("favor-subtitle-text");
-
-		grantFavorSubTitle.setWrappingWidth(grantFavorTitleWrap);
-
-		grantFavorTitle.setTextAlignment(TextAlignment.CENTER);
-		grantFavorSubTitle.setTextAlignment(TextAlignment.CENTER);
-
-		grantFavorTextBox.getChildren().addAll(
-				grantFavorTitle,
-				grantFavorSubTitle
-		);
-
-		return grantFavorTextBox;
-	}
-
-	private ScrollPane createGrantFavorCardSection() {
-		this.grantFavorCardSection = new HBox();
-		this.grantFavorCardSection.getStyleClass().add("favor-card-hbox");
-
-		ScrollPane scrollWrapper = new ScrollPane(grantFavorCardSection);
-		scrollWrapper.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		scrollWrapper.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		scrollWrapper.setFitToHeight(true);
-		scrollWrapper.setFitToWidth(true);
-		scrollWrapper.setPannable(true);
-
-		scrollWrapper.getStyleClass().add("favor-card-scroll");
-
-		return scrollWrapper;
-	}
-
-	private VBox createGrantFavorScreen() {
-		VBox grantFavorScreen = new VBox();
-		grantFavorScreen.getStyleClass().add("favor-overlay-backdrop");
-
-		grantFavorDialogScreen = createGrantFavorDialogScreen();
-		VBox grantFavorTextBox = createGrantFavorText();
-		ScrollPane grantFavorCardSection = createGrantFavorCardSection();
-
-		VBox grantFavorSection = new VBox(
-				grantFavorTextBox,
-				grantFavorCardSection
-		);
-
-		grantFavorDialogScreen.getChildren().add(
-				grantFavorSection
-		);
-
-		grantFavorScreen.getChildren().add(
-				grantFavorDialogScreen
-		);
-
-		return grantFavorScreen;
-	}
-
-	private StackPane createCatCardDialogScreen() {
-		StackPane catCardDialog = new StackPane();
-		catCardDialog.getStyleClass().add("catcard-dialog-box");
-		catCardDialog.setMaxHeight(catCardDialogWindowHeight);
-		catCardDialog.setMinHeight(catCardDialogWindowHeight);
-		return catCardDialog;
-	}
-
-	private VBox createCatCardText() {
-		VBox catCardTextBox = new VBox(catCardTextBoxSpacing);
-		catCardTextBox.setAlignment(Pos.CENTER);
-
-		catCardTitle = new Text();
-		catCardSubTitle = new Text();
-
-		catCardTitle.getStyleClass().add("catcard-title-text");
-		catCardSubTitle.getStyleClass().add("catcard-subtitle-text");
-
-		catCardTitle.setTextAlignment(TextAlignment.CENTER);
-		catCardSubTitle.setTextAlignment(TextAlignment.CENTER);
-
-		catCardSubTitle.setWrappingWidth(demandFavorTitleWrap);
-
-		catCardTextBox.getChildren().addAll(
-				catCardTitle,
-				catCardSubTitle
-		);
-
-		return catCardTextBox;
-	}
-
-	private VBox createCatCardPlayerButtons() {
-		VBox catCardPlayerButtons = new VBox();
-		catCardPlayerButtons.getStyleClass().add(
-				"opponent-list"
-		);
-		return catCardPlayerButtons;
-	}
-
-	private VBox createCatCardScreen() {
-		VBox catCatScreen = new VBox();
-		catCatScreen.getStyleClass().add("catcard-overlay-backdrop");
-
-		catCardDialogScreen = createCatCardDialogScreen();
-		VBox catCardTextBox = createCatCardText();
-		catCardPlayerButtons = createCatCardPlayerButtons();
-
-		VBox catCardSection = new VBox(
-				catCardTextBox,
-				catCardPlayerButtons
-		);
-		catCardSection.setSpacing(catCardSectionSpacing);
-
-		catCardDialogScreen.getChildren().add(
-				catCardSection
-		);
-
-		catCatScreen.getChildren().add(
-				catCardDialogScreen
-		);
-
-		return catCatScreen;
+	private void hideModal() {
+		modalOverlayScreen.setVisible(false);
+		modalOverlayScreen.setManaged(false);
+		modalBody.getChildren().clear();
 	}
 
 	public void updateDisplay(ResourceBundle bundle) {
@@ -927,16 +783,16 @@ public class GameView extends StackPane {
 		playCardButton.setText(bundle.getString("gameView.playCard"));
 		cardCountText = bundle.getString("gameView.cardCount");
 		cardsText = bundle.getString("gameView.cards");
-		seeTheFutureTitle.setText(bundle.getString("seeTheFuture.title"));
-		seeTheFutureSubTitle.setText(bundle.getString("seeTheFuture.subTitle"));
-		seeTheFutureDismissButton.setText(bundle.getString("seeTheFuture.dismissButton"));
-		targetedAttackTitle.setText(bundle.getString("targetedAttack.title"));
-		targetedAttackSubTitle.setText(bundle.getString("targetedAttack.subTitle"));
-		demandFavorTitle.setText(bundle.getString("favor.demandTitle"));
-		demandFavorSubTitle.setText(bundle.getString("favor.demandSubTitle"));
-		grantFavorTitle.setText(bundle.getString("favor.grantTitle"));
-		catCardTitle.setText(bundle.getString("catCardPair.title"));
-		catCardSubTitle.setText(bundle.getString("catCardPair.subTitle"));
+		seeTheFutureTitleText = bundle.getString("seeTheFuture.title");
+		seeTheFutureSubTitleText = bundle.getString("seeTheFuture.subTitle");
+		seeTheFutureDismissText = bundle.getString("seeTheFuture.dismissButton");
+		targetedAttackTitleText = bundle.getString("targetedAttack.title");
+		targetedAttackSubTitleText = bundle.getString("targetedAttack.subTitle");
+		demandFavorTitleText = bundle.getString("favor.demandTitle");
+		demandFavorSubTitleText = bundle.getString("favor.demandSubTitle");
+		grantFavorTitleText = bundle.getString("favor.grantTitle");
+		catCardTitleText = bundle.getString("catCardPair.title");
+		catCardSubTitleText = bundle.getString("catCardPair.subTitle");
 	}
 
 	public void showOpponents(List<PlayerDisplayInfo> opponents) {
@@ -977,7 +833,7 @@ public class GameView extends StackPane {
 		String subTitle = fromPlayer + " "
 				+ bundle.getString("favor.grantSubTitle") + " "
 				+ toPlayer;
-		grantFavorSubTitle.setText(subTitle);
+		modalSubTitle.setText(subTitle);
 	}
 
 	public void updatePlayerCards(List<Card> hand) {
@@ -988,64 +844,59 @@ public class GameView extends StackPane {
 	}
 
 	public void updateFavorCards(List<Card> hand, IntConsumer handler) {
-		this.grantFavorCardSection.getChildren().clear();
+		this.modalCardRow.getChildren().clear();
 		for (int idx = 0; idx < hand.size(); idx++) {
 			addFavorCard(hand.get(idx), handler, idx);
 		}
 	}
 
 	public void showSeeTheFutureScreen() {
-		seeTheFutureScreen.setVisible(true);
-		seeTheFutureScreen.setManaged(true);
+		prepareSeeTheFutureModal();
+		showModal();
 	}
 
 	public void hideSeeTheFutureScreen() {
-		seeTheFutureScreen.setVisible(false);
-		seeTheFutureScreen.setManaged(false);
+		hideModal();
 	}
 
 	public void showTargetedAttackScreen() {
-		targetedAttackScreen.setVisible(true);
-		targetedAttackScreen.setManaged(true);
+		prepareTargetedAttackModal();
+		showModal();
 	}
 
 	public void hideTargetedAttackScreen() {
-		targetedAttackScreen.setVisible(false);
-		targetedAttackScreen.setManaged(false);
+		hideModal();
 	}
 
 	public void showDemandFavorScreen() {
-		demandFavorScreen.setVisible(true);
-		demandFavorScreen.setManaged(true);
+		prepareDemandFavorModal();
+		showModal();
 	}
 
 	public void hideDemandFavorScreen() {
-		demandFavorScreen.setVisible(false);
-		demandFavorScreen.setManaged(false);
+		hideModal();
 	}
 
 	public void showGrantFavorScreen() {
-		grantFavorScreen.setVisible(true);
-		grantFavorScreen.setManaged(true);
+		prepareGrantFavorModal();
+		showModal();
 	}
 
 	public void hideGrantFavorScreen() {
-		grantFavorScreen.setVisible(false);
-		grantFavorScreen.setManaged(false);
+		hideModal();
 	}
 
 	public void showCatCardScreen() {
-		catCardScreen.setVisible(true);
-		catCardScreen.setManaged(true);
+		prepareCatCardModal();
+		showModal();
 	}
 
 	public void hideCatCardScreen() {
-		catCardScreen.setVisible(false);
-		catCardScreen.setManaged(false);
+		hideModal();
 	}
 
 	public void updateSeeTheFutureCards(ResourceBundle bundle, List<Card> cards) {
-		seeTheFutureCardSection.getChildren().clear();
+		modalCardRow.getChildren().clear();
 		for (Card card : cards) {
 			String cardName = cardCollection.get(card.getCardType());
 			CardView peekCard = new CardView(cardName);
@@ -1056,7 +907,7 @@ public class GameView extends StackPane {
 
 			preprocessCard(peekCard, peekCardWidth, peekCardHeight);
 
-			seeTheFutureCardSection.getChildren().add(peekCard);
+			modalCardRow.getChildren().add(peekCard);
 		}
 	}
 
@@ -1066,10 +917,10 @@ public class GameView extends StackPane {
 		int newHeight = players.size()
 				* targetedAttackButtonHeight
 				+ targetedAttackDialogWindowHeight;
-		targetedAttackDialogScreen.setMinHeight(newHeight);
-		targetedAttackDialogScreen.setMaxHeight(newHeight);
+		modalDialogScreen.setMinHeight(newHeight);
+		modalDialogScreen.setMaxHeight(newHeight);
 
-		targetedAttackPlayerButtons.getChildren().clear();
+		modalPlayerButtons.getChildren().clear();
 		for (PlayerDisplayInfo player : players) {
 			String playerName = player.getName();
 			int playerId = player.getPlayerId();
@@ -1078,7 +929,7 @@ public class GameView extends StackPane {
 			playerButton.getStyleClass().add("targeted-action-button");
 			playerButton.setOnAction(e -> handler.accept(playerId));
 
-			targetedAttackPlayerButtons.getChildren().add(
+			modalPlayerButtons.getChildren().add(
 					playerButton
 			);
 		}
@@ -1090,10 +941,10 @@ public class GameView extends StackPane {
 		int newHeight = players.size()
 				* demandFavorButtonHeight
 				+ demandFavorDialogWindowHeight;
-		demandFavorDialogScreen.setMinHeight(newHeight);
-		demandFavorDialogScreen.setMaxHeight(newHeight);
+		modalDialogScreen.setMinHeight(newHeight);
+		modalDialogScreen.setMaxHeight(newHeight);
 
-		demandFavorPlayerButtons.getChildren().clear();
+		modalPlayerButtons.getChildren().clear();
 		for (PlayerDisplayInfo player : players) {
 			String playerName = player.getName();
 			int playerId = player.getPlayerId();
@@ -1102,7 +953,7 @@ public class GameView extends StackPane {
 			playerButton.getStyleClass().add("favor-target-button");
 			playerButton.setOnAction(e -> handler.accept(playerId));
 
-			demandFavorPlayerButtons.getChildren().add(
+			modalPlayerButtons.getChildren().add(
 					playerButton
 			);
 		}
@@ -1114,10 +965,10 @@ public class GameView extends StackPane {
 		int newHeight = players.size()
 				* catCardButtonHeight
 				+ catCardDialogWindowHeight;
-		catCardDialogScreen.setMinHeight(newHeight);
-		catCardDialogScreen.setMaxHeight(newHeight);
+		modalDialogScreen.setMinHeight(newHeight);
+		modalDialogScreen.setMaxHeight(newHeight);
 
-		catCardPlayerButtons.getChildren().clear();
+		modalPlayerButtons.getChildren().clear();
 		for (PlayerDisplayInfo player : players) {
 			String playerName = player.getName();
 			int playerId = player.getPlayerId();
@@ -1126,7 +977,7 @@ public class GameView extends StackPane {
 			playerButton.getStyleClass().add("catCard-target-button");
 			playerButton.setOnAction(e -> handler.accept(playerId));
 
-			catCardPlayerButtons.getChildren().add(
+			modalPlayerButtons.getChildren().add(
 					playerButton
 			);
 		}
@@ -1193,8 +1044,10 @@ public class GameView extends StackPane {
 	private void addFavorCard(Card card, IntConsumer handler, int index) {
 		String assetFolder = cardCollection.get(card.getCardType());
 		CardView favorCard = new CardView(assetFolder);
+		favorCard.getStyleClass().remove("hand-card");
+		favorCard.getStyleClass().add("favor-select-card");
 		favorCard.setOnMouseClicked(e -> handler.accept(index));
-		this.grantFavorCardSection.getChildren().add(favorCard);
+		this.modalCardRow.getChildren().add(favorCard);
 	}
 
 	public void clearLog() {
@@ -1270,7 +1123,7 @@ public class GameView extends StackPane {
 	}
 
 	public void setOnSeeTheFutureDismissButton(Runnable handler) {
-		this.seeTheFutureDismissButton.setOnAction(e -> {
+		this.modalDismissButton.setOnAction(e -> {
 			handler.run();
 		});
 	}
