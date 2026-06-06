@@ -18,6 +18,8 @@ public class GameController {
 	private final Runnable refreshAction;
 	private final Runnable startGameAction;
 
+	private static final int catPair = 2;
+
 	public GameController(GameView view, AppModel appModel, ScreenRouter router) {
 		this.model = new GameModel();
 		this.refreshAction = () -> {
@@ -93,9 +95,7 @@ public class GameController {
 			String log = computeLog(handCards, appModel);
 			view.addLog(log);
 
-			for (CardView handCard : handCards) {
-				playCard(handCard, view, appModel);
-			}
+			playCard(handCards, view, appModel);
 		});
 		view.setOnSeeTheFutureDismissButton(view::hideSeeTheFutureScreen);
 	}
@@ -119,16 +119,18 @@ public class GameController {
 		return log;
 	}
 
-	private void discardCard(CardView card, GameView view) {
-		card.setOnMouseEntered(null);
-		card.setOnMouseExited(null);
-		card.setOnMouseClicked(null);
+	private void discardCard(List<CardView> cards, GameView view) {
+		for (CardView card : cards) {
+			card.setOnMouseEntered(null);
+			card.setOnMouseExited(null);
+			card.setOnMouseClicked(null);
 
-		card.getStyleClass().remove("hand-card");
-		card.getStyleClass().remove("hand-card-selected");
-		card.getStyleClass().add("discard-card");
+			card.getStyleClass().remove("hand-card");
+			card.getStyleClass().remove("hand-card-selected");
+			card.getStyleClass().add("discard-card");
 
-		view.addCardToDiscardPile(card);
+			view.addCardToDiscardPile(card);
+		}
 	}
 
 	private void refreshAfterPlay(GameView view, AppModel appModel) {
@@ -161,29 +163,44 @@ public class GameController {
 				&& player.isAlive();
 	}
 
-	private void playCard(CardView card, GameView view, AppModel appModel) {
+	private void playCard(List<CardView> cards, GameView view, AppModel appModel) {
+		CardView card = cards.get(0);
+
+		if (cards.size() == catPair) {
+			view.showCatCardScreen();
+			view.updateCatCardsPlayer(
+					livingOpponents(),
+					(targetId) -> {
+						discardCard(cards, view);
+						view.hideCatCardScreen();
+						model.playCatPair(targetId);
+						refreshAfterPlay(view, appModel);
+					}
+			);
+		}
+
 		if (card.getCardType() == CardType.SKIP) {
-			discardCard(card, view);
+			discardCard(cards, view);
 			model.playSkip();
 		}
 
 		if (card.getCardType() == CardType.REVERSE) {
-			discardCard(card, view);
+			discardCard(cards, view);
 			model.playReverse();
 		}
 
 		if (card.getCardType() == CardType.ATTACK) {
-			discardCard(card, view);
+			discardCard(cards, view);
 			model.playAttack();
 		}
 
 		if (card.getCardType() == CardType.SHUFFLE) {
-			discardCard(card, view);
+			discardCard(cards, view);
 			model.playShuffle();
 		}
 
 		if (card.getCardType() == CardType.SEE_THE_FUTURE) {
-			discardCard(card, view);
+			discardCard(cards, view);
 			List<Card> topThreeCards = model.playSeeTheFuture();
 			view.showSeeTheFutureScreen();
 			view.updateSeeTheFutureCards(
@@ -197,7 +214,7 @@ public class GameController {
 			view.updateTargetedAttackPlayers(
 					livingOpponents(),
 					(targetId) -> {
-						discardCard(card, view);
+						discardCard(cards, view);
 						view.hideTargetedAttackScreen();
 						model.playTargetedAttack(targetId);
 						refreshAfterPlay(view, appModel);
@@ -222,7 +239,7 @@ public class GameController {
 								model.getSelectedHand(targetId),
 								(cardIndex) -> {
 									discardCard(
-											card,
+											cards,
 											view
 									);
 									view.hideGrantFavorScreen();

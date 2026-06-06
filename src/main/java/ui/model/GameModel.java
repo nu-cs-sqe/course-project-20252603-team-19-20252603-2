@@ -71,6 +71,10 @@ public class GameModel {
 		engine.playFavor(targetId, cardIndex);
 	}
 
+	public void playCatPair(int targetId) {
+		engine.playCatPair(targetId);
+	}
+
 	public String getPlayerName(int playerId) {
 		return playerNames.get(playerId);
 	}

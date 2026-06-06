@@ -51,13 +51,16 @@ public class GameView extends StackPane {
 	private VBox targetedAttackScreen;
 	private VBox demandFavorScreen;
 	private VBox grantFavorScreen;
+	private VBox catCardScreen;
 	private VBox targetedAttackPlayerButtons;
 	private VBox demandFavorPlayerButtons;
+	private VBox catCardPlayerButtons;
 	private ScrollPane scrollPane;
 	private StackPane discardPileSection;
 	private StackPane targetedAttackDialogScreen;
 	private StackPane demandFavorDialogScreen;
 	private StackPane grantFavorDialogScreen;
+	private StackPane catCardDialogScreen;
 
 	private Text logoText;
 	private Text deckTitleText;
@@ -72,6 +75,8 @@ public class GameView extends StackPane {
 	private Text demandFavorSubTitle;
 	private Text grantFavorTitle;
 	private Text grantFavorSubTitle;
+	private Text catCardTitle;
+	private Text catCardSubTitle;
 	private Text playerAvatarLabel;
 	private Label deckCountLabel;
 	private Label localHandLabel;
@@ -102,6 +107,8 @@ public class GameView extends StackPane {
 	private static final int demandFavorTextBoxSpacing = 10;
 	private static final int demandFavorSectionSpacing = 10;
 	private static final int grantFavorTextBoxSpacing = 10;
+	private static final int catCardTextBoxSpacing = 10;
+	private static final int catCardSectionSpacing = 10;
 	private static final int discardCardWidth = 175;
 	private static final int discardCardHeight = 260;
 	private static final int peekCardWidth = 140;
@@ -110,10 +117,13 @@ public class GameView extends StackPane {
 	private static final int targetedAttackButtonHeight = 60;
 	private static final int demandFavorDialogWindowHeight = 145;
 	private static final int demandFavorButtonHeight = 60;
+	private static final int catCardDialogWindowHeight = 145;
+	private static final int catCardButtonHeight = 60;
 	private static final int maxNumberOfCardSelected = 3;
 	private static final int targetedAttackTitleWrap = 400;
 	private static final int demandFavorTitleWrap = 400;
 	private static final int grantFavorTitleWrap = 400;
+	private static final int catCardTitleWrap = 400;
 
 	public GameView() {
 		this.getStyleClass().add("game-root");
@@ -163,12 +173,17 @@ public class GameView extends StackPane {
 		grantFavorScreen.setVisible(false);
 		grantFavorScreen.setManaged(false);
 
+		catCardScreen = createCatCardScreen();
+		catCardScreen.setVisible(false);
+		catCardScreen.setManaged(false);
+
 		this.getChildren().addAll(
 				gameContainer,
 				seeTheFutureScreen,
 				targetedAttackScreen,
 				demandFavorScreen,
-				grantFavorScreen
+				grantFavorScreen,
+				catCardScreen
 		);
 
 		String stylePath = "/styles/game-style.css";
@@ -838,6 +853,70 @@ public class GameView extends StackPane {
 		return grantFavorScreen;
 	}
 
+	private StackPane createCatCardDialogScreen() {
+		StackPane catCardDialog = new StackPane();
+		catCardDialog.getStyleClass().add("catcard-dialog-box");
+		catCardDialog.setMaxHeight(catCardDialogWindowHeight);
+		catCardDialog.setMinHeight(catCardDialogWindowHeight);
+		return catCardDialog;
+	}
+
+	private VBox createCatCardText() {
+		VBox catCardTextBox = new VBox(catCardTextBoxSpacing);
+		catCardTextBox.setAlignment(Pos.CENTER);
+
+		catCardTitle = new Text();
+		catCardSubTitle = new Text();
+
+		catCardTitle.getStyleClass().add("catcard-title-text");
+		catCardSubTitle.getStyleClass().add("catcard-subtitle-text");
+
+		catCardTitle.setTextAlignment(TextAlignment.CENTER);
+		catCardSubTitle.setTextAlignment(TextAlignment.CENTER);
+
+		catCardSubTitle.setWrappingWidth(demandFavorTitleWrap);
+
+		catCardTextBox.getChildren().addAll(
+				catCardTitle,
+				catCardSubTitle
+		);
+
+		return catCardTextBox;
+	}
+
+	private VBox createCatCardPlayerButtons() {
+		VBox catCardPlayerButtons = new VBox();
+		catCardPlayerButtons.getStyleClass().add(
+				"opponent-list"
+		);
+		return catCardPlayerButtons;
+	}
+
+	private VBox createCatCardScreen() {
+		VBox catCatScreen = new VBox();
+		catCatScreen.getStyleClass().add("catcard-overlay-backdrop");
+
+		catCardDialogScreen = createCatCardDialogScreen();
+		VBox catCardTextBox = createCatCardText();
+		catCardPlayerButtons = createCatCardPlayerButtons();
+
+		VBox catCardSection = new VBox(
+				catCardTextBox,
+				catCardPlayerButtons
+		);
+		catCardSection.setSpacing(catCardSectionSpacing);
+
+		catCardDialogScreen.getChildren().add(
+				catCardSection
+		);
+
+		catCatScreen.getChildren().add(
+				catCardDialogScreen
+		);
+
+		return catCatScreen;
+	}
+
 	public void updateDisplay(ResourceBundle bundle) {
 		logoText.setText(bundle.getString("gameView.logo"));
 		quitButton.setText(bundle.getString("gameView.quit"));
@@ -856,6 +935,8 @@ public class GameView extends StackPane {
 		demandFavorTitle.setText(bundle.getString("favor.demandTitle"));
 		demandFavorSubTitle.setText(bundle.getString("favor.demandSubTitle"));
 		grantFavorTitle.setText(bundle.getString("favor.grantTitle"));
+		catCardTitle.setText(bundle.getString("catCardPair.title"));
+		catCardSubTitle.setText(bundle.getString("catCardPair.subTitle"));
 	}
 
 	public void showOpponents(List<PlayerDisplayInfo> opponents) {
@@ -953,6 +1034,16 @@ public class GameView extends StackPane {
 		grantFavorScreen.setManaged(false);
 	}
 
+	public void showCatCardScreen() {
+		catCardScreen.setVisible(true);
+		catCardScreen.setManaged(true);
+	}
+
+	public void hideCatCardScreen() {
+		catCardScreen.setVisible(false);
+		catCardScreen.setManaged(false);
+	}
+
 	public void updateSeeTheFutureCards(ResourceBundle bundle, List<Card> cards) {
 		seeTheFutureCardSection.getChildren().clear();
 		for (Card card : cards) {
@@ -1012,6 +1103,30 @@ public class GameView extends StackPane {
 			playerButton.setOnAction(e -> handler.accept(playerId));
 
 			demandFavorPlayerButtons.getChildren().add(
+					playerButton
+			);
+		}
+	}
+
+	public void updateCatCardsPlayer(
+			List<PlayerDisplayInfo> players, IntConsumer handler
+	) {
+		int newHeight = players.size()
+				* catCardButtonHeight
+				+ catCardDialogWindowHeight;
+		catCardDialogScreen.setMinHeight(newHeight);
+		catCardDialogScreen.setMaxHeight(newHeight);
+
+		catCardPlayerButtons.getChildren().clear();
+		for (PlayerDisplayInfo player : players) {
+			String playerName = player.getName();
+			int playerId = player.getPlayerId();
+
+			Button playerButton = new Button(playerName);
+			playerButton.getStyleClass().add("catCard-target-button");
+			playerButton.setOnAction(e -> handler.accept(playerId));
+
+			catCardPlayerButtons.getChildren().add(
 					playerButton
 			);
 		}
