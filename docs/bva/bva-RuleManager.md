@@ -61,12 +61,12 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | actor holds 2 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)` | returns normally | no |
-| TC2 | actor holds 0 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | no |
-| TC3 | actor holds 1 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | no |
-| TC4 | actor holds 3 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)` | returns normally | no |
-| TC5 | actor holds 2 `ATTACK`, `requireCatPair(actor, ATTACK)` | returns normally (any matching pair) | no |
-| TC6 | actor holds 1 `ATTACK` + 1 `CAT_CARDS`, `requireCatPair(actor, ATTACK)` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | no |
+| TC1 | actor holds 2 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)` | returns normally | yes |
+| TC2 | actor holds 0 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | yes |
+| TC3 | actor holds 1 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | yes |
+| TC4 | actor holds 3 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)` | returns normally | yes |
+| TC5 | actor holds 2 `ATTACK`, `requireCatPair(actor, ATTACK)` | returns normally (any matching pair) | yes |
+| TC6 | actor holds 1 `ATTACK` + 1 `CAT_CARDS`, `requireCatPair(actor, ATTACK)` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | yes |
 
 ---
 

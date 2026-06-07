@@ -21,16 +21,20 @@ public final class RuleManager {
         }
     }
 
-    public void requireCatPair(Player actor) {
-        int catCount = 0;
-        for (Card card : actor.getHand()) {
-            if (card.getCardType() == CardType.CAT_CARDS) {
-                catCount++;
-            }
-        }
-        if (catCount < CAT_PAIR_SIZE) {
+    public void requireCatPair(Player actor, CardType cardType) {
+        if (countOfType(actor, cardType) < CAT_PAIR_SIZE) {
             throw new IllegalStateException(CAT_PAIR_NEED_TWO_KEY);
         }
+    }
+
+    private static int countOfType(Player actor, CardType cardType) {
+        int count = 0;
+        for (Card card : actor.getHand()) {
+            if (card.getCardType() == cardType) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public void requireSomethingToNope(CardType lastPlayedCard) {

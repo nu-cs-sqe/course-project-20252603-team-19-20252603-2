@@ -95,7 +95,7 @@ class RuleManagerTest {
     }
 
     @Test
-    void requireCatPair_twoOfANonCatType_returnsNormally() {
+    void requireCatPair_twoOfNonCatType_returnsNormally() {
         Player actor = new Player(0);
         actor.addCardToHand(new Card(CardType.ATTACK));
         actor.addCardToHand(new Card(CardType.ATTACK));
