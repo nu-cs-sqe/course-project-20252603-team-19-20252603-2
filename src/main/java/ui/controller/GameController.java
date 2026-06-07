@@ -71,10 +71,6 @@ public class GameController {
 				model.endTurnByDrawing();
 			}
 
-			if (model.isGameOver()) {
-				System.out.println(model.getWinnerId());
-			}
-
 			view.showOpponents(model.getOpponents());
 			view.updatePlayerCards(model.getLocalHand());
 			view.updateHandCount(
@@ -105,9 +101,7 @@ public class GameController {
 			model.defuseExplodingKitten(reinsertIndex);
 			view.hideDefuseScreen();
 			refreshAfterPlay(view, appModel);
-			if (model.isGameOver()) {
-				System.out.println(model.getWinnerId());
-			}
+			handleGameOver(appModel, router);
 			CardView defuseCard = new CardView("Defuse");
 			discardCard(defuseCard, view);
 		});
@@ -115,10 +109,17 @@ public class GameController {
 			model.explodeCurrentPlayer();
 			view.hideDefuseScreen();
 			refreshAfterPlay(view, appModel);
-			if (model.isGameOver()) {
-				System.out.println(model.getWinnerId());
-			}
+			handleGameOver(appModel, router);
 		});
+	}
+
+	private void handleGameOver(AppModel appModel, ScreenRouter router) {
+		if (model.isGameOver()) {
+			appModel.setWinnerPlayerName(
+					model.getPlayerName(model.getWinnerId())
+			);
+			router.showWinner();
+		}
 	}
 
 	public void startGame() {
@@ -297,7 +298,7 @@ public class GameController {
 		if (model.currentPlayerHasDefuse()) {
 			view.showDefuseScreen(
 					appModel.getResourceBundle(),
-					model.getDeckSize()-1
+					model.getDeckSize() - 1
 			);
 		} else {
 			model.explodeCurrentPlayer();

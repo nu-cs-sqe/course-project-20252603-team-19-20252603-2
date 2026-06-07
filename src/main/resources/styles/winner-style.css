@@ -1,0 +1,123 @@
+/* WINNER SURVIVOR SCREEN - JAVAFX CSS */
+
+/* The deep blue full-screen background overlay */
+.win-overlay {
+    -fx-background-color: #1e3a8a;
+    -fx-alignment: center;
+}
+
+/* The main white trophy card modal */
+.win-modal-card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #000000;
+    -fx-border-width: 5px;
+    -fx-border-radius: 25px 15px 30px 20px; /* Asymmetric comic-book rounding */
+    -fx-background-radius: 30px 20px 35px 25px;
+    -fx-padding: 32px;
+    -fx-spacing: 24px;
+    -fx-alignment: center;
+    -fx-max-width: 384px;
+    -fx-min-width: 384px;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 10, 10);
+}
+
+/* Large Trophy Icon */
+.win-trophy-image {
+    -fx-fit-width: 80px;
+    -fx-fit-height: 80px;
+    -fx-smooth: true;
+}
+
+/* "GAME OVER!" Main Header */
+.win-header {
+    -fx-fill: #16a34a;
+    -fx-font-family: Arial Black;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+}
+
+/* "YOU OUTLASTED EVERYONE" Text */
+.win-status {
+    -fx-text-fill: #57534e;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-font-family: Arial Black;
+    -fx-text-alignment: center;
+}
+
+/* Sub-text for kitty dust */
+.win-sub-details {
+    -fx-text-fill: #78716c;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-font-family: Arial Black;
+    -fx-text-alignment: center;
+}
+
+/* Buttons Container */
+.win-button-box {
+    -fx-spacing: 15px;
+    -fx-alignment: center;
+}
+
+/* Yellow "PLAY AGAIN" Button */
+.btn-play-again {
+    -fx-background-color: #facc15;
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-font-family: Arial Black;
+    -fx-border-color: #000000;
+    -fx-border-width: 3px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 14px;
+    -fx-padding: 8px 16px;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 3, 3);
+    -fx-cursor: hand;
+    -fx-background-insets: 2px;
+    -fx-max-width: 300px;
+    -fx-min-width: 300px;
+}
+
+/* Grey "MAIN MENU" Button */
+.btn-menu {
+    -fx-background-color: #e7e5e4;
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-font-family: Arial Black;
+    -fx-border-color: #000000;
+    -fx-border-width: 3px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 14px;
+    -fx-padding: 8px 16px;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 3, 3);
+    -fx-cursor: hand;
+    -fx-background-insets: 2px;
+    -fx-max-width: 300px;
+    -fx-min-width: 300px;
+}
+
+/* --- PLAY AGAIN HOVER STATES --- */
+.btn-play-again:hover {
+    -fx-background-color: #fde047; /* Lighter yellow on hover */
+}
+
+/* Moves the button down 2px and shrinks the shadow to look "pushed" */
+.btn-play-again:pressed {
+    -fx-background-color: #eab308; /* Darker amber gold */
+    -fx-translate-y: 2px;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 1, 1);
+}
+
+/* --- MAIN MENU HOVER STATES --- */
+.btn-menu:hover {
+    -fx-background-color: #d6d3d1; /* Lighter slate grey on hover */
+}
+
+/* Moves the button down 2px and shrinks the shadow to look "pushed" */
+.btn-menu:pressed {
+    -fx-background-color: #a8a29e; /* Deeper grey */
+    -fx-translate-y: 2px;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 1, 1);
+}

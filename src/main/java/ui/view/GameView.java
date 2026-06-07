@@ -133,6 +133,7 @@ public class GameView extends StackPane {
 	private static final int demandFavorButtonHeight = 60;
 	private static final int catCardDialogWindowHeight = 145;
 	private static final int catCardButtonHeight = 60;
+	private static final int defuseSliderHeight = 24;
 	private static final int maxNumberOfCardSelected = 3;
 	private static final int targetedAttackTitleWrap = 400;
 	private static final int demandFavorTitleWrap = 400;
@@ -832,8 +833,8 @@ public class GameView extends StackPane {
 		defuseSlider.setPrefWidth(defuseContentWidth);
 		defuseSlider.setMinWidth(defuseContentWidth);
 		defuseSlider.setMaxWidth(defuseContentWidth);
-		defuseSlider.setMinHeight(24);
-		defuseSlider.setPrefHeight(24);
+		defuseSlider.setMinHeight(defuseSliderHeight);
+		defuseSlider.setPrefHeight(defuseSliderHeight);
 		defuseSlider.valueProperty().addListener(
 				(observable, oldValue, newValue) ->
 						updateDefuseSliderLabels()

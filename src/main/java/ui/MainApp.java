@@ -7,6 +7,7 @@ import ui.controller.GameController;
 import ui.controller.GameSetupController;
 import ui.controller.InstructionController;
 import ui.controller.StartController;
+import ui.controller.WinnerController;
 import ui.model.AppModel;
 import ui.navigation.JavaFxScreenRouter;
 import ui.navigation.ScreenRouter;
@@ -14,6 +15,7 @@ import ui.view.GameSetupView;
 import ui.view.GameView;
 import ui.view.InstructionView;
 import ui.view.StartView;
+import ui.view.WinnerView;
 
 public class MainApp extends Application {
 
@@ -30,6 +32,7 @@ public class MainApp extends Application {
 		InstructionView instructionView = new InstructionView();
 		GameSetupView gameSetupView = new GameSetupView();
 		GameView gameView = new GameView();
+		WinnerView winnerView = new WinnerView();
 
 		Scene scene = new Scene(startView, mainWindowWidth, mainWindowHeight);
 
@@ -43,6 +46,9 @@ public class MainApp extends Application {
 		);
 		GameController gameController = new GameController(
 				gameView, appModel, router
+		);
+		WinnerController winnerController = new WinnerController(
+				winnerView, appModel, router
 		);
 
 		router.configureNavigation(new ScreenRouter() {
@@ -67,6 +73,12 @@ public class MainApp extends Application {
 			public void showGame() {
 				gameController.startGame();
 				scene.setRoot(gameView);
+			}
+
+			@Override
+			public void showWinner() {
+				winnerController.refreshView();
+				scene.setRoot(winnerView);
 			}
 		});
 

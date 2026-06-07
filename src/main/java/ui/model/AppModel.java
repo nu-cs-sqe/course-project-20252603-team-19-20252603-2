@@ -14,6 +14,8 @@ public class AppModel {
 
 	private final GameSetupModel setupModel = new GameSetupModel();
 
+	private String winnerPlayerName;
+
 	public void toggleLanguage() {
 		if (selectedLocale.equals(ENGLISH)) {
 			selectedLocale = CHINESE;
@@ -46,5 +48,13 @@ public class AppModel {
 			List<String> rawInputs, String defaultNamePrefix
 	) {
 		setupModel.capturePlayerNamesFromInputs(rawInputs, defaultNamePrefix);
+	}
+
+	public void setWinnerPlayerName(String winnerPlayerName) {
+		this.winnerPlayerName = winnerPlayerName;
+	}
+
+	public String getWinnerPlayerName() {
+		return winnerPlayerName;
 	}
 }
