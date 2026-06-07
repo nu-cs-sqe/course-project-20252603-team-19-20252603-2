@@ -43,4 +43,12 @@ public final class ActionController {
         Card stolen = from.removeCardFromHand(index);
         to.addCardToHand(stolen);
     }
+
+    public void stealDesiredCard(Player from, Player to, CardType desiredCard) {
+        if (!from.hasCard(desiredCard)) {
+            return;
+        }
+        Card stolen = from.removeCardFromHand(from.getIndexOfCard(desiredCard));
+        to.addCardToHand(stolen);
+    }
 }

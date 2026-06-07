@@ -159,6 +159,18 @@ public final class GameEngine {
         actionController.stealRandomCard(target, current);
     }
 
+    public void playCatTriple(int targetId, CardType selectedCard, CardType desiredCard) {
+        Player current = getPlayer(getCurrentPlayerId());
+        Player target = getPlayer(targetId);
+        ruleManager.requireValidTarget(current, target);
+        ruleManager.requireCatTriple(current, selectedCard);
+        discardOneFromCurrent(selectedCard);
+        discardOneFromCurrent(selectedCard);
+        discardOneFromCurrent(selectedCard);
+        lastPlayedCard = selectedCard;
+        actionController.stealDesiredCard(target, current, desiredCard);
+    }
+
     public void defuseDrawnKitten(int reinsertIndex) {
         Player current = getPlayer(getCurrentPlayerId());
         int kittenIndex = current.getIndexOfCard(CardType.EXPLODING_KITTEN);

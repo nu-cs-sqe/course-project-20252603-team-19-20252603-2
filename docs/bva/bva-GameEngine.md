@@ -517,9 +517,9 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | current given 3 ATTACK, `playCatTriple(1, ATTACK, DEFUSE)` (target has a Defuse) | target loses the Defuse, current gains it, current keeps the turn, `getLastPlayedCard()==ATTACK` | no |
-| TC2 | current given 3 ATTACK, `playCatTriple(1, ATTACK, EXPLODING_KITTEN)` (target lacks it) | no card stolen; `getLastPlayedCard()==ATTACK` | no |
-| TC3 | current holds fewer than 3 ATTACK, `playCatTriple(1, ATTACK, DEFUSE)` | throws `IllegalStateException` with message `"rule.catTriple.needThree"` | no |
+| TC1 | current given 3 ATTACK, `playCatTriple(1, ATTACK, DEFUSE)` (target has a Defuse) | target loses the Defuse, current gains it, current keeps the turn, `getLastPlayedCard()==ATTACK` | yes |
+| TC2 | current given 3 ATTACK, `playCatTriple(1, ATTACK, EXPLODING_KITTEN)` (target lacks it) | no card stolen; `getLastPlayedCard()==ATTACK` | yes |
+| TC3 | current holds fewer than 3 ATTACK, `playCatTriple(1, ATTACK, DEFUSE)` | throws `IllegalStateException` with message `"rule.catTriple.needThree"` | yes |
 
 ---
 

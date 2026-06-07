@@ -120,8 +120,8 @@ This file holds the BVA analysis for every public method of the `ActionControlle
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | victim holds a DEFUSE, `stealDesiredCard(from, to, DEFUSE)` | the DEFUSE moves to the thief; victim hand shrinks by 1 | no |
-| TC2 | victim lacks the desired type | no-op; both hands unchanged | no |
+| TC1 | victim holds a DEFUSE, `stealDesiredCard(from, to, DEFUSE)` | the DEFUSE moves to the thief; victim hand shrinks by 1 | yes |
+| TC2 | victim lacks the desired type | no-op; both hands unchanged | yes |
 
 ---
 

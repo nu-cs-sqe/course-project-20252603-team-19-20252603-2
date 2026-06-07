@@ -3,10 +3,12 @@ package domain;
 public final class RuleManager {
 
     private static final int CAT_PAIR_SIZE = 2;
+    private static final int CAT_TRIPLE_SIZE = 3;
 
     private static final String CANNOT_PLAY_DIRECTLY_KEY = "rule.play.cannotPlayDirectly";
     private static final String INVALID_TARGET_KEY = "rule.target.invalid";
     private static final String CAT_PAIR_NEED_TWO_KEY = "rule.catPair.needTwo";
+    private static final String CAT_TRIPLE_NEED_THREE_KEY = "rule.catTriple.needThree";
     private static final String NOTHING_TO_NOPE_KEY = "rule.nope.nothingToCancel";
 
     public void requirePlayable(CardType type) {
@@ -35,6 +37,12 @@ public final class RuleManager {
             }
         }
         return count;
+    }
+
+    public void requireCatTriple(Player actor, CardType selectedCard) {
+        if (countOfType(actor, selectedCard) < CAT_TRIPLE_SIZE) {
+            throw new IllegalStateException(CAT_TRIPLE_NEED_THREE_KEY);
+        }
     }
 
     public void requireSomethingToNope(CardType lastPlayedCard) {
