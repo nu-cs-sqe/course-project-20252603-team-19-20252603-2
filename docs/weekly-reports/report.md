@@ -41,6 +41,15 @@
 3. [in progress] Allan: started TurnTracker class
 4. [done] Kevin: Refactored `Player` to match the design-doc API (`int playerId`, `List<Card>` hand, `getCardAt`/`getHand`/`getIndexOfCard`/`markDead`, all error strings i18n-keyed) and built the `GameEngine` setup phase (validate 2–5 players, deal 5-card hands, rig the deck with Exploding Kittens/Defuses). Per-method Red→Green TDD with BVA (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/43)
 
+# Week 8 (05/18/2026-05/24/2026)
+**Planning and Progress Tracking**:
+1. [done] Team: Read the Week-7 instructor code-review feedback and merged the feedback PR to close the loop (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/44)
+
+# Week 9 (05/25/2026-05/31/2026)
+**Planning and Progress Tracking**:
+1. [done] Vincent: Refactored `Deck.peekTop` to extract the three input-validation checks into a private helper, addressing the instructor's Week-6 "each function does one thing" feedback (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/46)
+2. [done] Kevin: Reviewed and merged Vincent's `peekTop` refactor PR (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/46)
+
 # Week 10 (06/01/2026-06/07/2026)
 **Planning and Progress Tracking**:
 1. [done] Kevin: Added UI-facing `GameEngine` methods for the UI developer — `isDeckEmpty`, `getPlayerHand` (defensive copy via new `Player.getHand`), `drawCardForCurrentPlayer`, `advanceToNextPlayer`; TDD + design-doc + BVA (https://github.com/nu-cs-sqe/course-project-20252603-team-19-20252603-2/pull/48)
