@@ -605,6 +605,70 @@ class GameEngineTest {
     }
 
     @Test
+    void playNope_onSkip_returnsTurnToThePlayerWhoPlayedIt() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SKIP);
+        engine.playSkip();
+        engine.getPlayer(1).addCardToHand(new Card(CardType.NOPE));
+
+        engine.playNope(1);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(1, engine.getForcedTurns());
+    }
+
+    @Test
+    void playNope_onReverse_returnsTurnToThePlayerWhoPlayedIt() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.REVERSE);
+        engine.playReverse();
+        engine.getPlayer(1).addCardToHand(new Card(CardType.NOPE));
+
+        engine.playNope(1);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void playNope_onAttack_reducesForcedTurnsAndReturnsToAttacker() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.ATTACK);
+        engine.playAttack();
+        engine.getPlayer(1).addCardToHand(new Card(CardType.NOPE));
+
+        engine.playNope(1);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(1, engine.getForcedTurns());
+    }
+
+    @Test
+    void playNope_onTargetedAttack_returnsToAttacker() {
+        GameEngine engine = new GameEngine(THREE_PLAYERS);
+        giveToCurrent(engine, CardType.TARGETED_ATTACK);
+        engine.playTargetedAttack(2);
+        engine.getPlayer(2).addCardToHand(new Card(CardType.NOPE));
+
+        engine.playNope(2);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(1, engine.getForcedTurns());
+    }
+
+    @Test
+    void playNope_onSeeTheFuture_keepsTurnAndClearsLastPlayed() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SEE_THE_FUTURE);
+        engine.playSeeTheFuture();
+        engine.getPlayer(1).addCardToHand(new Card(CardType.NOPE));
+
+        engine.playNope(1);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertNull(engine.getLastPlayedCard());
+    }
+
+    @Test
     void endTurnByDrawing_normalTurn_advancesToNextPlayer() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         engine.endTurnByDrawing();
