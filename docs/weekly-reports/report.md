@@ -53,3 +53,5 @@
 9. [done] Vincent: Added the CSS files, card images, and a random selector method
 10. [done] Vincent: Updated the i18n file to contain the test needed for the screens/view created and updated the design doc.
 11. [done] Vincent: Connected the methods that Kevin implemented in GameEngine to have a semi functioning game
+12. [done] Kevin: Closed the `TurnTracker` cyclomatic-coverage gap flagged in the Week-10 instructor review — added tests for the throw branches in `setNumTotalPlayers` (players < 2) and `setCurrentDirection` (direction not ±1), restored the missing `@Test` on `changeCurrentDirection_4TotalPlayers...`, and added BVA Methods 5–6 in `docs/bva/bva-TurnTracker.md` (branch `fix/turntracker-coverage`)
+13. [done] Kevin: Project-board management cleanup for the Week-10 instructor feedback — rewrote all existing board issues with detailed Owner/Goal/Scope/PR-link descriptions and added board entries for the previously-untracked work (TurnTracker, GameEngine setup, UI-facing methods, full game loop, PIT setup), each assigned to its contributor by commit history
