@@ -333,23 +333,24 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 ---
 
-## Method 17: ```public void playCatPair(int targetId)```
+## Method 17: ```public void playCatPair(int targetId, CardType cardType)```
 
 ### Step 1-3 Results
 
 | Step | Input | Output |
 |------|-------|--------|
-| Step 1 | current holds 2 CAT_CARDS; a target | one random card moves from target to current; same player continues |
-| Step 2 | `int` target id | void / exception for bad target or too few cats |
-| Step 3 | 2 cats + valid target, fewer than 2 cats | steal happens / `rule.catPair.needTwo` |
+| Step 1 | current holds 2 of `cardType`; a target | one random card moves from target to current; `lastPlayedCard` = `cardType`; same player continues |
+| Step 2 | `int` target id + `CardType` | void / exception for bad target or too few of the type |
+| Step 3 | 2 cats + valid target, 2 of a non-cat type, fewer than 2 of the type | steal happens / steal happens / `rule.catPair.needTwo` |
 
 ### Step 4:
 ##### All-combination or each-choice: each-choice
 
 | Test Case # | System under test | Expected output | Implemented? |
 |-------------|------------------|-----------------|--------------|
-| TC1 | 2 players, current 0 given 2 CAT_CARDS, `playCatPair(1)` | target hand shrinks by 1, current keeps the turn | yes |
-| TC2 | current holds no extra cats, `playCatPair(1)` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | yes |
+| TC1 | 2 players, current 0 given 2 CAT_CARDS, `playCatPair(1, CAT_CARDS)` | target hand shrinks by 1, current keeps the turn, `getLastPlayedCard()==CAT_CARDS` | yes |
+| TC2 | current 0 given 2 ATTACK, `playCatPair(1, ATTACK)` | target hand shrinks by 1, `getLastPlayedCard()==ATTACK` | yes |
+| TC3 | current holds fewer than 2 of the type, `playCatPair(1, CAT_CARDS)` | throws `IllegalStateException` with message `"rule.catPair.needTwo"` | yes |
 
 ---
 
@@ -444,9 +445,9 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Step | Input | Output |
 |------|-------|--------|
-| Step 1 | a played card to cancel; the noper who holds a NOPE | NOPE discarded; `lastPlayedCard` cleared |
+| Step 1 | a played card to cancel; the noper who holds a NOPE | NOPE discarded; the last action is undone based on its card type; `lastPlayedCard` cleared |
 | Step 2 | `int` noper id | void / `IllegalStateException` |
-| Step 3 | something to nope + noper holds NOPE, nothing played yet, noper holds no NOPE | cancels / `rule.nope.nothingToCancel` / `gameEngine.play.notInHand` |
+| Step 3 | last card = SKIP / REVERSE / ATTACK / TARGETED_ATTACK / SEE_THE_FUTURE; nothing played yet; noper holds no NOPE | undo per card / `rule.nope.nothingToCancel` / `gameEngine.play.notInHand` |
 
 ### Step 4:
 ##### All-combination or each-choice: each-choice
@@ -456,6 +457,11 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | TC1 | a card was just played, noper holds a NOPE, `playNope(noperId)` | `getLastPlayedCard()` becomes `null` | yes |
 | TC2 | nothing played yet, `playNope(0)` | throws `IllegalStateException` with message `"rule.nope.nothingToCancel"` | yes |
 | TC3 | a card was just played, noper holds no NOPE | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | yes |
+| TC4 | SKIP was played (turn passed), then noped | turn returns to the player who played SKIP; `getForcedTurns()==1` | yes |
+| TC5 | REVERSE was played, then noped | direction restored; turn returns to the player who played REVERSE | yes |
+| TC6 | ATTACK was played (next owes 2), then noped | `getForcedTurns()` reduced (2→1); turn returns to the attacker | yes |
+| TC7 | TARGETED_ATTACK was played, then noped | turn returns to the attacker; `getForcedTurns()` reduced | yes |
+| TC8 | SEE_THE_FUTURE was played, then noped | draw pile is shuffled (peek invalidated); same player keeps the turn | yes |
 
 ---
 
@@ -498,6 +504,27 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | TC1 | `getDiscardPile()` at game start | empty list | yes |
 | TC2 | after `playSkip()`, `getDiscardPile()` | list of size 1 containing the SKIP | yes |
 | TC3 | mutate the returned list, then `getDiscardPile()` again | discard pile unchanged (defensive copy) | yes |
+
+---
+
+## Method 25: ```public void playCatTriple(int targetId, CardType selectedCard, CardType desiredCard)```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | current holds 3 of `selectedCard`; a target; a `desiredCard` to demand | the desired card moves from target to current if the target has it (else nothing); `lastPlayedCard` = `selectedCard`; same player continues |
+| Step 2 | `int` target id + two `CardType` | void / exception for bad target or fewer than three of `selectedCard` |
+| Step 3 | 3 selected + target has desired, 3 selected + target lacks desired, fewer than 3 selected | steal happens / no steal / `rule.catTriple.needThree` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | current given 3 ATTACK, `playCatTriple(1, ATTACK, DEFUSE)` (target has a Defuse) | target loses the Defuse, current gains it, current keeps the turn, `getLastPlayedCard()==ATTACK` | yes |
+| TC2 | current given 3 ATTACK, `playCatTriple(1, ATTACK, EXPLODING_KITTEN)` (target lacks it) | no card stolen; `getLastPlayedCard()==ATTACK` | yes |
+| TC3 | current holds fewer than 3 ATTACK, `playCatTriple(1, ATTACK, DEFUSE)` | throws `IllegalStateException` with message `"rule.catTriple.needThree"` | yes |
 
 ---
 

@@ -29,6 +29,7 @@ public final class GameEngine {
 
     private int forcedTurns = NORMAL_FORCED_TURNS;
     private CardType lastPlayedCard;
+    private int lastPlayerId;
 
     public GameEngine(int numPlayers) {
         if (numPlayers < MIN_PLAYERS || numPlayers > MAX_PLAYERS) {
@@ -148,15 +149,27 @@ public final class GameEngine {
         actionController.giveCard(target, current, cardIndex);
     }
 
-    public void playCatPair(int targetId) {
+    public void playCatPair(int targetId, CardType cardType) {
         Player current = getPlayer(getCurrentPlayerId());
         Player target = getPlayer(targetId);
         ruleManager.requireValidTarget(current, target);
-        ruleManager.requireCatPair(current);
-        discardOneFromCurrent(CardType.CAT_CARDS);
-        discardOneFromCurrent(CardType.CAT_CARDS);
-        lastPlayedCard = CardType.CAT_CARDS;
+        ruleManager.requireCatPair(current, cardType);
+        discardOneFromCurrent(cardType);
+        discardOneFromCurrent(cardType);
+        recordPlay(cardType);
         actionController.stealRandomCard(target, current);
+    }
+
+    public void playCatTriple(int targetId, CardType selectedCard, CardType desiredCard) {
+        Player current = getPlayer(getCurrentPlayerId());
+        Player target = getPlayer(targetId);
+        ruleManager.requireValidTarget(current, target);
+        ruleManager.requireCatTriple(current, selectedCard);
+        discardOneFromCurrent(selectedCard);
+        discardOneFromCurrent(selectedCard);
+        discardOneFromCurrent(selectedCard);
+        recordPlay(selectedCard);
+        actionController.stealDesiredCard(target, current, desiredCard);
     }
 
     public void defuseDrawnKitten(int reinsertIndex) {
@@ -197,7 +210,40 @@ public final class GameEngine {
             throw new IllegalStateException(NOT_IN_HAND_KEY);
         }
         deck.discard(noper.removeCardFromHand(index));
+        undoLastAction();
         lastPlayedCard = null;
+    }
+
+    private void undoLastAction() {
+        switch (lastPlayedCard) {
+            case SKIP:
+                returnTurnToLastPlayer();
+                break;
+            case REVERSE:
+                actionController.reverseDirection(turnTracker);
+                returnTurnToLastPlayer();
+                break;
+            case ATTACK:
+            case TARGETED_ATTACK:
+                forcedTurns = forcedTurnsAfterUndoingAttack();
+                turnTracker.setCurrentPlayer(lastPlayerId);
+                break;
+            case SEE_THE_FUTURE:
+                actionController.shuffleDeck(deck);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void returnTurnToLastPlayer() {
+        turnTracker.setCurrentPlayer(lastPlayerId);
+        forcedTurns = NORMAL_FORCED_TURNS;
+    }
+
+    private int forcedTurnsAfterUndoingAttack() {
+        int reduced = forcedTurns - TURNS_ADDED_BY_ATTACK;
+        return reduced < NORMAL_FORCED_TURNS ? NORMAL_FORCED_TURNS : reduced;
     }
 
     public boolean isGameOver() {
@@ -242,7 +288,12 @@ public final class GameEngine {
             throw new IllegalStateException(NOT_IN_HAND_KEY);
         }
         deck.discard(current.removeCardFromHand(index));
+        recordPlay(type);
+    }
+
+    private void recordPlay(CardType type) {
         lastPlayedCard = type;
+        lastPlayerId = getCurrentPlayerId();
     }
 
     private void consumeOneForcedTurn() {

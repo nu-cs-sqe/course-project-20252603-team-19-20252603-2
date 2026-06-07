@@ -124,6 +124,32 @@ class ActionControllerTest {
         assertEquals(0, to.getHandSize());
     }
 
+    @Test
+    void stealDesiredCard_targetHasIt_movesThatCard() {
+        Player from = new Player(0);
+        from.addCardToHand(new Card(CardType.SKIP));
+        Card desired = new Card(CardType.DEFUSE);
+        from.addCardToHand(desired);
+        Player to = new Player(1);
+
+        actionController.stealDesiredCard(from, to, CardType.DEFUSE);
+
+        assertSame(desired, to.getCardAt(0));
+        assertEquals(1, from.getHandSize());
+    }
+
+    @Test
+    void stealDesiredCard_targetLacksIt_isNoOp() {
+        Player from = new Player(0);
+        from.addCardToHand(new Card(CardType.SKIP));
+        Player to = new Player(1);
+
+        actionController.stealDesiredCard(from, to, CardType.DEFUSE);
+
+        assertEquals(0, to.getHandSize());
+        assertEquals(1, from.getHandSize());
+    }
+
     private Deck makeDeck(CardType... types) {
         List<Card> cards = new ArrayList<>();
         for (CardType type : types) {

@@ -105,6 +105,26 @@ This file holds the BVA analysis for every public method of the `ActionControlle
 
 ---
 
+## Method 6: ```public void stealDesiredCard(Player from, Player to, CardType desiredCard)```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | Victim, thief, and the specific card type wanted | the named card moves from victim to thief if present; otherwise nothing |
+| Step 2 | two `Player` + `CardType` | void (hands mutated or unchanged) |
+| Step 3 | victim holds the desired type, victim lacks it | that card moves / no-op |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | victim holds a DEFUSE, `stealDesiredCard(from, to, DEFUSE)` | the DEFUSE moves to the thief; victim hand shrinks by 1 | yes |
+| TC2 | victim lacks the desired type | no-op; both hands unchanged | yes |
+
+---
+
 ## Recall the 4 steps of BVA
 ### Step 1: Describe the input and output in terms of the domain.
 ### Step 2: Choose the data type for the input and the output from the BVA Catalog.
