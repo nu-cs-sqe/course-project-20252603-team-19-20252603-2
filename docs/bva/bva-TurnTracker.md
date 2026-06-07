@@ -69,7 +69,39 @@ This file holds the BVA analysis for every public method of the `TurnTracker` cl
   - State of the system: numTotalPlayers is 3, currentPlayer is 0, currentDirection is -1
     - Expected output: currentPlayer is 0; currentDirection is 1
   - Implemented: yes
-  
+
+---
+
+## 5. Method under test setNumTotalPlayers(int)
+- input: number of players (boundary around the minimum of 2)
+- output: none (state mutation) or IllegalArgumentException
+- TC 5.1: setNumTotalPlayers_belowMinimum_throwsIllegalArgumentException
+  - State of the system: numTotalPlayers set to 1 (just below the minimum)
+    - Expected output: throws IllegalArgumentException with message "turnTracker.numPlayers.tooSmall"
+  - Implemented: yes
+- TC 5.2: setNumTotalPlayers_minimum_setsValue
+  - State of the system: numTotalPlayers set to 2 (the minimum)
+    - Expected output: getNumTotalPlayers() returns 2
+  - Implemented: yes
+
+---
+
+## 6. Method under test setCurrentDirection(int)
+- input: playing direction (valid edges 1 and -1; invalid otherwise)
+- output: none (state mutation) or IllegalArgumentException
+- TC 6.1: setCurrentDirection_invalid_throwsIllegalArgumentException
+  - State of the system: currentDirection set to 0 (neither 1 nor -1)
+    - Expected output: throws IllegalArgumentException with message "turnTracker.currentDirection.invalid"
+  - Implemented: yes
+- TC 6.2: setCurrentDirection_forward_setsValue
+  - State of the system: currentDirection set to 1
+    - Expected output: getCurrentDirection() returns 1
+  - Implemented: yes
+- TC 6.3: setCurrentDirection_backward_setsValue
+  - State of the system: currentDirection set to -1
+    - Expected output: getCurrentDirection() returns -1
+  - Implemented: yes
+
 ---
 
 ## Recall the 4 steps of BVA

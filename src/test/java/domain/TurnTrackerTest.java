@@ -1,6 +1,7 @@
 package domain;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -231,6 +232,7 @@ public class TurnTrackerTest {
     }
 
 
+    @Test
     public void changeCurrentDirection_4TotalPlayers_shouldChangeDirection() {
         TurnTracker turnTracker = new TurnTracker();
         final int numTotalPlayers = 4;
@@ -252,6 +254,48 @@ public class TurnTrackerTest {
     }
 
 
+    @Test
+    public void setNumTotalPlayers_belowMinimum_throwsIllegalArgumentException() {
+        TurnTracker turnTracker = new TurnTracker();
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> turnTracker.setNumTotalPlayers(1));
+        assertEquals("turnTracker.numPlayers.tooSmall", exception.getMessage());
+    }
+
+
+    @Test
+    public void setNumTotalPlayers_minimum_setsValue() {
+        TurnTracker turnTracker = new TurnTracker();
+        turnTracker.setNumTotalPlayers(2);
+        assertEquals(2, turnTracker.getNumTotalPlayers());
+    }
+
+
+    @Test
+    public void setCurrentDirection_invalid_throwsIllegalArgumentException() {
+        TurnTracker turnTracker = new TurnTracker();
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> turnTracker.setCurrentDirection(0));
+        assertEquals("turnTracker.currentDirection.invalid", exception.getMessage());
+    }
+
+
+    @Test
+    public void setCurrentDirection_forward_setsValue() {
+        TurnTracker turnTracker = new TurnTracker();
+        turnTracker.setCurrentDirection(1);
+        assertEquals(1, turnTracker.getCurrentDirection());
+    }
+
+
+    @Test
+    public void setCurrentDirection_backward_setsValue() {
+        TurnTracker turnTracker = new TurnTracker();
+        turnTracker.setCurrentDirection(-1);
+        assertEquals(-1, turnTracker.getCurrentDirection());
+    }
 
 
 }

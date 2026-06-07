@@ -63,7 +63,7 @@ class RuleManagerTest {
         Player actor = new Player(0);
         actor.addCardToHand(new Card(CardType.CAT_CARDS));
         actor.addCardToHand(new Card(CardType.CAT_CARDS));
-        assertDoesNotThrow(() -> ruleManager.requireCatPair(actor));
+        assertDoesNotThrow(() -> ruleManager.requireCatPair(actor, CardType.CAT_CARDS));
     }
 
     @Test
@@ -71,7 +71,7 @@ class RuleManagerTest {
         Player actor = new Player(0);
         IllegalStateException ex = assertThrows(
                 IllegalStateException.class,
-                () -> ruleManager.requireCatPair(actor));
+                () -> ruleManager.requireCatPair(actor, CardType.CAT_CARDS));
         assertEquals("rule.catPair.needTwo", ex.getMessage());
     }
 
@@ -81,7 +81,7 @@ class RuleManagerTest {
         actor.addCardToHand(new Card(CardType.CAT_CARDS));
         IllegalStateException ex = assertThrows(
                 IllegalStateException.class,
-                () -> ruleManager.requireCatPair(actor));
+                () -> ruleManager.requireCatPair(actor, CardType.CAT_CARDS));
         assertEquals("rule.catPair.needTwo", ex.getMessage());
     }
 
@@ -91,7 +91,46 @@ class RuleManagerTest {
         actor.addCardToHand(new Card(CardType.CAT_CARDS));
         actor.addCardToHand(new Card(CardType.CAT_CARDS));
         actor.addCardToHand(new Card(CardType.CAT_CARDS));
-        assertDoesNotThrow(() -> ruleManager.requireCatPair(actor));
+        assertDoesNotThrow(() -> ruleManager.requireCatPair(actor, CardType.CAT_CARDS));
+    }
+
+    @Test
+    void requireCatPair_twoOfNonCatType_returnsNormally() {
+        Player actor = new Player(0);
+        actor.addCardToHand(new Card(CardType.ATTACK));
+        actor.addCardToHand(new Card(CardType.ATTACK));
+        assertDoesNotThrow(() -> ruleManager.requireCatPair(actor, CardType.ATTACK));
+    }
+
+    @Test
+    void requireCatPair_onlyOneOfSelectedType_throwsIllegalStateException() {
+        Player actor = new Player(0);
+        actor.addCardToHand(new Card(CardType.ATTACK));
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> ruleManager.requireCatPair(actor, CardType.ATTACK));
+        assertEquals("rule.catPair.needTwo", ex.getMessage());
+    }
+
+    @Test
+    void requireCatTriple_threeOfType_returnsNormally() {
+        Player actor = new Player(0);
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        assertDoesNotThrow(() -> ruleManager.requireCatTriple(actor, CardType.CAT_CARDS));
+    }
+
+    @Test
+    void requireCatTriple_twoOfType_throwsIllegalStateException() {
+        Player actor = new Player(0);
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> ruleManager.requireCatTriple(actor, CardType.CAT_CARDS));
+        assertEquals("rule.catTriple.needThree", ex.getMessage());
     }
 
     @Test
