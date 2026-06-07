@@ -401,25 +401,25 @@ Postconditions:
 
 ---
 
-## Use Case 14: Play a Pair of Cat Cards
+## Use Case 14: Play a Matching Pair
 
 Actor: Current Player
 
 Preconditions:
 
 - It is the current player's turn.
-- The player's hand contains at least two matching Cat cards.
+- The player's hand contains at least two cards of the same type (any type — Cat cards or any other matching pair).
 
 Main Flow:
 
-1. Player selects a matching pair of Cat cards and chooses a living opponent.
-2. System places both Cat cards on the discard pile.
+1. Player selects two cards of the same type and chooses a living opponent.
+2. System places both cards on the discard pile.
 3. System takes one card chosen at random from the target's hand and gives it to the current player.
 4. System returns to the play-or-pass prompt for the same player.
 
 Alternate Flows:
 
-1.a The player does not hold two matching Cat cards.
+1.a The player does not hold two cards of the chosen type.
   1.a.1 System rejects the play (`rule.catPair.needTwo`) and resumes at the play-or-pass prompt.
 
 1.b The chosen target is the player themselves or is already eliminated.
@@ -430,7 +430,7 @@ Alternate Flows:
 
 Postconditions:
 
-- Both Cat cards are in the discard pile.
+- Both played cards are in the discard pile.
 - At most one random card has moved from the target to the current player.
 - It is still the same player's turn.
 
@@ -449,7 +449,11 @@ Main Flow:
 
 1. Player chooses to play a Nope in response to the last played card.
 2. System places the Nope on the discard pile.
-3. System cancels the last played card so it can no longer be noped again.
+3. System undoes the last played card's effect according to its type:
+   - Skip / Reverse — the turn returns to the player who played it (Reverse also restores the playing direction).
+   - Attack / Targeted Attack — the forced-turn count is reduced by the amount the attack added and the turn returns to the attacker.
+   - See the Future — the draw pile is shuffled so the peeked cards no longer apply.
+   - Other cards — no automatic revert (see README design choices).
 
 Alternate Flows:
 
@@ -462,7 +466,7 @@ Alternate Flows:
 Postconditions:
 
 - The Nope card is in the discard pile.
-- There is no longer a pending played card to nope.
+- The last action has been undone where the card type supports it, and there is no longer a pending played card to nope.
 
 ---
 
@@ -491,3 +495,39 @@ Postconditions:
 
 - The game is no longer accepting turn actions.
 - The winner (most cards, lowest id on a tie) is displayed.
+
+---
+
+## Use Case 17: Play Three of a Kind
+
+Actor: Current Player
+
+Preconditions:
+
+- It is the current player's turn.
+- The player's hand contains at least three cards of the same type.
+
+Main Flow:
+
+1. Player selects three cards of the same type, chooses a living opponent, and names a specific card type they want.
+2. System places all three cards on the discard pile.
+3. System checks whether the target holds the named card.
+4. The target has the named card — system takes it from the target and gives it to the current player.
+5. System returns to the play-or-pass prompt for the same player.
+
+Alternate Flows:
+
+1.a The player does not hold three cards of the chosen type.
+  1.a.1 System rejects the play (`rule.catTriple.needThree`) and resumes at the play-or-pass prompt.
+
+1.b The chosen target is the player themselves or is already eliminated.
+  1.b.1 System rejects the choice (`rule.target.invalid`) and resumes at step 1.
+
+4.a The target does not have the named card.
+  4.a.1 System takes nothing; the play still consumed the three cards.
+
+Postconditions:
+
+- All three played cards are in the discard pile.
+- The named card has moved from the target to the current player if the target had it; otherwise no card moved.
+- It is still the same player's turn.
