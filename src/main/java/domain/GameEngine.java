@@ -29,6 +29,7 @@ public final class GameEngine {
 
     private int forcedTurns = NORMAL_FORCED_TURNS;
     private CardType lastPlayedCard;
+    private int lastPlayerId;
 
     public GameEngine(int numPlayers) {
         if (numPlayers < MIN_PLAYERS || numPlayers > MAX_PLAYERS) {
@@ -155,7 +156,7 @@ public final class GameEngine {
         ruleManager.requireCatPair(current, cardType);
         discardOneFromCurrent(cardType);
         discardOneFromCurrent(cardType);
-        lastPlayedCard = cardType;
+        recordPlay(cardType);
         actionController.stealRandomCard(target, current);
     }
 
@@ -167,7 +168,7 @@ public final class GameEngine {
         discardOneFromCurrent(selectedCard);
         discardOneFromCurrent(selectedCard);
         discardOneFromCurrent(selectedCard);
-        lastPlayedCard = selectedCard;
+        recordPlay(selectedCard);
         actionController.stealDesiredCard(target, current, desiredCard);
     }
 
@@ -209,7 +210,40 @@ public final class GameEngine {
             throw new IllegalStateException(NOT_IN_HAND_KEY);
         }
         deck.discard(noper.removeCardFromHand(index));
+        undoLastAction();
         lastPlayedCard = null;
+    }
+
+    private void undoLastAction() {
+        switch (lastPlayedCard) {
+            case SKIP:
+                returnTurnToLastPlayer();
+                break;
+            case REVERSE:
+                actionController.reverseDirection(turnTracker);
+                returnTurnToLastPlayer();
+                break;
+            case ATTACK:
+            case TARGETED_ATTACK:
+                forcedTurns = forcedTurnsAfterUndoingAttack();
+                turnTracker.setCurrentPlayer(lastPlayerId);
+                break;
+            case SEE_THE_FUTURE:
+                actionController.shuffleDeck(deck);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void returnTurnToLastPlayer() {
+        turnTracker.setCurrentPlayer(lastPlayerId);
+        forcedTurns = NORMAL_FORCED_TURNS;
+    }
+
+    private int forcedTurnsAfterUndoingAttack() {
+        int reduced = forcedTurns - TURNS_ADDED_BY_ATTACK;
+        return reduced < NORMAL_FORCED_TURNS ? NORMAL_FORCED_TURNS : reduced;
     }
 
     public boolean isGameOver() {
@@ -254,7 +288,12 @@ public final class GameEngine {
             throw new IllegalStateException(NOT_IN_HAND_KEY);
         }
         deck.discard(current.removeCardFromHand(index));
+        recordPlay(type);
+    }
+
+    private void recordPlay(CardType type) {
         lastPlayedCard = type;
+        lastPlayerId = getCurrentPlayerId();
     }
 
     private void consumeOneForcedTurn() {

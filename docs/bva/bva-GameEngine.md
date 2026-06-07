@@ -457,11 +457,11 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | TC1 | a card was just played, noper holds a NOPE, `playNope(noperId)` | `getLastPlayedCard()` becomes `null` | yes |
 | TC2 | nothing played yet, `playNope(0)` | throws `IllegalStateException` with message `"rule.nope.nothingToCancel"` | yes |
 | TC3 | a card was just played, noper holds no NOPE | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | yes |
-| TC4 | SKIP was played (turn passed), then noped | turn returns to the player who played SKIP; `getForcedTurns()==1` | no |
-| TC5 | REVERSE was played, then noped | direction restored; turn returns to the player who played REVERSE | no |
-| TC6 | ATTACK was played (next owes 2), then noped | `getForcedTurns()` reduced (2→1); turn returns to the attacker | no |
-| TC7 | TARGETED_ATTACK was played, then noped | turn returns to the attacker; `getForcedTurns()` reduced | no |
-| TC8 | SEE_THE_FUTURE was played, then noped | draw pile is shuffled (peek invalidated); same player keeps the turn | no |
+| TC4 | SKIP was played (turn passed), then noped | turn returns to the player who played SKIP; `getForcedTurns()==1` | yes |
+| TC5 | REVERSE was played, then noped | direction restored; turn returns to the player who played REVERSE | yes |
+| TC6 | ATTACK was played (next owes 2), then noped | `getForcedTurns()` reduced (2→1); turn returns to the attacker | yes |
+| TC7 | TARGETED_ATTACK was played, then noped | turn returns to the attacker; `getForcedTurns()` reduced | yes |
+| TC8 | SEE_THE_FUTURE was played, then noped | draw pile is shuffled (peek invalidated); same player keeps the turn | yes |
 
 ---
 
