@@ -417,6 +417,47 @@ class GameEngineTest {
     }
 
     @Test
+    void playCatTriple_targetHasDesiredCard_stealsItAndKeepsTurn() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.ATTACK);
+        giveToCurrent(engine, CardType.ATTACK);
+        giveToCurrent(engine, CardType.ATTACK);
+
+        engine.playCatTriple(1, CardType.ATTACK, CardType.DEFUSE);
+
+        assertFalse(engine.getPlayer(1).hasCard(CardType.DEFUSE));
+        assertTrue(engine.getPlayer(0).hasCard(CardType.DEFUSE));
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(CardType.ATTACK, engine.getLastPlayedCard());
+    }
+
+    @Test
+    void playCatTriple_targetLacksDesiredCard_stealsNothing() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.ATTACK);
+        giveToCurrent(engine, CardType.ATTACK);
+        giveToCurrent(engine, CardType.ATTACK);
+        int targetHandBefore = engine.getPlayerHand(1).size();
+
+        engine.playCatTriple(1, CardType.ATTACK, CardType.EXPLODING_KITTEN);
+
+        assertEquals(targetHandBefore, engine.getPlayerHand(1).size());
+        assertEquals(CardType.ATTACK, engine.getLastPlayedCard());
+    }
+
+    @Test
+    void playCatTriple_withoutThreeOfType_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.ATTACK);
+        giveToCurrent(engine, CardType.ATTACK);
+        giveToCurrent(engine, CardType.ATTACK);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playCatTriple(1, CardType.ATTACK, CardType.DEFUSE));
+        assertEquals("rule.catTriple.needThree", ex.getMessage());
+    }
+
+    @Test
     void defuseDrawnKitten_survivesAndReinsertsKitten() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.EXPLODING_KITTEN);

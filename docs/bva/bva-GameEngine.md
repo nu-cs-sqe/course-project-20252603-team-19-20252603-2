@@ -502,6 +502,27 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 ---
 
+## Method 25: ```public void playCatTriple(int targetId, CardType selectedCard, CardType desiredCard)```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | current holds 3 of `selectedCard`; a target; a `desiredCard` to demand | the desired card moves from target to current if the target has it (else nothing); `lastPlayedCard` = `selectedCard`; same player continues |
+| Step 2 | `int` target id + two `CardType` | void / exception for bad target or fewer than three of `selectedCard` |
+| Step 3 | 3 selected + target has desired, 3 selected + target lacks desired, fewer than 3 selected | steal happens / no steal / `rule.catTriple.needThree` |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | current given 3 ATTACK, `playCatTriple(1, ATTACK, DEFUSE)` (target has a Defuse) | target loses the Defuse, current gains it, current keeps the turn, `getLastPlayedCard()==ATTACK` | no |
+| TC2 | current given 3 ATTACK, `playCatTriple(1, ATTACK, EXPLODING_KITTEN)` (target lacks it) | no card stolen; `getLastPlayedCard()==ATTACK` | no |
+| TC3 | current holds fewer than 3 ATTACK, `playCatTriple(1, ATTACK, DEFUSE)` | throws `IllegalStateException` with message `"rule.catTriple.needThree"` | no |
+
+---
+
 ## Recall the 4 steps of BVA
 ### Step 1: Describe the input and output in terms of the domain.
 ### Step 2: Choose the data type for the input and the output from the BVA Catalog.

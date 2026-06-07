@@ -90,6 +90,26 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 
 ---
 
+## Method 5: ```public void requireCatTriple(Player actor, CardType selectedCard)```
+
+### Step 1-3 Results
+
+| Step | Input | Output |
+|------|-------|--------|
+| Step 1 | The acting player's hand and the chosen `selectedCard` to play three of | nothing (legal) or exception (illegal) |
+| Step 2 | `Player` reference + `CardType` | void / `IllegalStateException` |
+| Step 3 | 3 of the type (legal); 2 of the type (illegal) | returns normally / exception |
+
+### Step 4:
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test | Expected output | Implemented? |
+|-------------|------------------|-----------------|--------------|
+| TC1 | actor holds 3 `CAT_CARDS`, `requireCatTriple(actor, CAT_CARDS)` | returns normally | no |
+| TC2 | actor holds 2 `CAT_CARDS`, `requireCatTriple(actor, CAT_CARDS)` | throws `IllegalStateException` with message `"rule.catTriple.needThree"` | no |
+
+---
+
 ## Recall the 4 steps of BVA
 ### Step 1: Describe the input and output in terms of the domain.
 ### Step 2: Choose the data type for the input and the output from the BVA Catalog.

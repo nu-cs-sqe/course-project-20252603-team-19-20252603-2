@@ -114,6 +114,26 @@ class RuleManagerTest {
     }
 
     @Test
+    void requireCatTriple_threeOfType_returnsNormally() {
+        Player actor = new Player(0);
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        assertDoesNotThrow(() -> ruleManager.requireCatTriple(actor, CardType.CAT_CARDS));
+    }
+
+    @Test
+    void requireCatTriple_twoOfType_throwsIllegalStateException() {
+        Player actor = new Player(0);
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> ruleManager.requireCatTriple(actor, CardType.CAT_CARDS));
+        assertEquals("rule.catTriple.needThree", ex.getMessage());
+    }
+
+    @Test
     void requireSomethingToNope_nonNullLastCard_returnsNormally() {
         assertDoesNotThrow(() -> ruleManager.requireSomethingToNope(CardType.ATTACK));
     }
