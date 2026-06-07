@@ -129,10 +129,18 @@
   but the chosen living opponent (not the neighbour) owes the turns.
 - `playFavor(int targetId, int cardIndex)` — discards a FAVOR; the target gives
   the card at `cardIndex` to the current player; same player continues.
-- `playCatPair(int targetId)` — discards two CAT_CARDS and steals one random
-  card from the target; same player continues.
-- `playNope(int noperId)` — the noper discards a NOPE to cancel the last played
-  card (simplified, no reaction window); clears `lastPlayedCard`.
+- `playCatPair(int targetId, CardType cardType)` — discards two cards of
+  `cardType` (any matching pair, not only cats) and steals one random card from
+  the target; records `cardType` as the last played card; same player continues.
+- `playCatTriple(int targetId, CardType selectedCard, CardType desiredCard)` —
+  discards three of `selectedCard` and takes the `desiredCard` from the target if
+  the target has it (otherwise steals nothing); same player continues.
+- `playNope(int noperId)` — the noper discards a NOPE to undo the last played
+  card based on its type: SKIP/REVERSE return the turn to the player who played
+  it (REVERSE also restores direction); ATTACK/TARGETED_ATTACK reduce the forced
+  turns and return the turn to the attacker; SEE_THE_FUTURE shuffles the draw
+  pile so the peek no longer applies. Other cards are a documented no-op (see
+  README design choices). Clears `lastPlayedCard`.
 - `defuseDrawnKitten(int reinsertIndex)` — after drawing an Exploding Kitten,
   discards a DEFUSE, reinserts the kitten at `reinsertIndex`, and ends the turn.
 - `explodeCurrentPlayer()` — after drawing an Exploding Kitten with no Defuse,
@@ -196,6 +204,9 @@ turn-state; `ActionController` only touches the deck and players' hands.
   `cardIndex` from `from`'s hand and adds it to `to`'s hand.
 - `stealRandomCard(Player from, Player to)` — Cat pair: moves one randomly
   chosen card from `from`'s hand to `to`'s hand; no-op if `from` has no cards.
+- `stealDesiredCard(Player from, Player to, CardType desiredCard)` — Cat triple:
+  moves the named `desiredCard` from `from` to `to` if `from` has it; otherwise
+  a no-op.
 
 ---
 
@@ -236,8 +247,12 @@ trivially unit-testable.
 - `requireValidTarget(Player actor, Player target)` — throws
   `IllegalArgumentException` (`rule.target.invalid`) if `target` is the actor
   themselves or is not alive.
-- `requireCatPair(Player actor)` — throws `IllegalStateException`
-  (`rule.catPair.needTwo`) if the actor holds fewer than two `CAT_CARDS`.
+- `requireCatPair(Player actor, CardType cardType)` — throws
+  `IllegalStateException` (`rule.catPair.needTwo`) if the actor holds fewer than
+  two cards of `cardType` (works for any matching pair, not only cats).
+- `requireCatTriple(Player actor, CardType selectedCard)` — throws
+  `IllegalStateException` (`rule.catTriple.needThree`) if the actor holds fewer
+  than three of `selectedCard`.
 - `requireSomethingToNope(CardType lastPlayedCard)` — throws
   `IllegalStateException` (`rule.nope.nothingToCancel`) if `lastPlayedCard` is
   `null`.
