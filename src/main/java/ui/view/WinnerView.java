@@ -75,13 +75,13 @@ public class WinnerView extends StackPane {
 	}
 
 	private Text createWinnerText() {
-		winnerText = new Text("BOB IS THE SOLE SURVIVOR!");
+		winnerText = new Text();
 		winnerText.getStyleClass().add("win-status");
 		return winnerText;
 	}
 
 	private Text createWinnerDescription() {
-		winnerDescription = new Text("ALL OTHER PLAYERS HAVE EXPLODED INTO KITTY DUST.");
+		winnerDescription = new Text();
 		winnerDescription.getStyleClass().add("win-sub-details");
 		winnerDescription.setWrappingWidth(winnerDescriptionWrapping);
 		return winnerDescription;
@@ -91,8 +91,8 @@ public class WinnerView extends StackPane {
 		VBox winnerButtonBox = new VBox();
 		winnerButtonBox.getStyleClass().add("win-button-box");
 
-		playAgainButton = new Button("PLAY AGAIN");
-		mainMenuButton = new Button("MAIN MENU");
+		playAgainButton = new Button();
+		mainMenuButton = new Button();
 
 		playAgainButton.getStyleClass().add("btn-play-again");
 		mainMenuButton.getStyleClass().add("btn-menu");

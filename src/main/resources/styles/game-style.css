@@ -407,10 +407,19 @@
 /* Column 2 Layout (Cards list viewport, generous vertical padding headroom) */
 .hand-cards-col-2 {
     -fx-alignment: center;
-    -fx-padding: 20px 0 0 0;
+    -fx-padding: 0;
     -fx-max-width: 570px;
     -fx-min-width: 570px;
-    -fx-translate-y: -5px;
+    -fx-pref-height: 200px;
+    -fx-min-height: 200px;
+    -fx-max-height: 200px;
+    -fx-vbar-policy: never;
+    -fx-hbar-policy: never;
+}
+
+.hand-scroll-content {
+    -fx-alignment: center;
+    -fx-padding: 18px 0 10px 0;
 }
 
 /* Column 3 Layout */
@@ -475,8 +484,7 @@
     -fx-background: transparent;
     -fx-spacing: -36px;
     -fx-alignment: center;
-    -fx-padding: 20px 0 0 0;
-    -fx-translate-y: -5px;
+    -fx-padding: 0;
 }
 
 .hand-card {
@@ -599,7 +607,7 @@
 .future-title-text {
     -fx-fill: #000000; /* Vibrant Future Purple */
     -fx-text-fill: #000000;
-    -fx-font-family: Arial Black;
+    -fx-font-family: Impact;
     -fx-font-size: 28px;
     -fx-font-weight: bold;
 }
@@ -923,7 +931,6 @@
 
 .favor-select-card {
     -fx-cursor: hand;
-    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.2), 0, 1.0, 4, 4);
 }
 
 .favor-select-card:hover {
@@ -1152,4 +1159,161 @@
 .btn-explode:pressed {
     -fx-background-color: #a8a29e;
     -fx-effect: none;
+}
+
+/* Full-screen dark overlay */
+.combo-three-overlay {
+    -fx-background-color: rgba(0, 0, 0, 0.5);
+    -fx-alignment: center;
+}
+
+/* Main modal container card */
+.combo-three-card {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #000000;
+    -fx-border-width: 4px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 24px;
+    -fx-padding: 24px;
+    -fx-spacing: 16px;
+    -fx-alignment: center;
+    -fx-max-width: 450px;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 10, 10);
+}
+
+/* "✨ SPECIAL COMBO" Header */
+.combo-three-header {
+    -fx-fill: #eab308;
+    -fx-font-family: Impact;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+}
+
+/* Instructional layout text */
+.combo-three-instruction {
+    -fx-fill: #57534e;
+    -fx-font-family: Arial Black;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
+}
+
+/* --- THE GUESS BOX CONTAINER (VBox) --- */
+.guess-box-container {
+    -fx-background-color: #f5f5f4;
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px;
+    -fx-spacing: 6px;
+    -fx-alignment: center-left;
+    -fx-max-width: infinity;
+}
+
+/* Drop-down prompt label */
+.guess-box-label {
+    -fx-text-fill: #44403c;
+    -fx-font-family: Arial Black;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.combo-box-guess {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #000000;
+    -fx-border-width: 3px;          /* Thicker border to match comic aesthetic */
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-font-family: "Arial Black";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;           /* Chunky bold text */
+    -fx-text-fill: #000000;
+    -fx-padding: 6px 12px;
+    -fx-cursor: hand;
+}
+
+.combo-box-guess:hover {
+    -fx-background-color: #fcfbf7;
+    -fx-border-color: #ea580c;      /* Highlights orange on hover */
+}
+
+.combo-box-guess:showing {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #eab308;      /* Highlights gold when dropdown is open */
+}
+
+/* --- THE ARROW BUTTON (Right Side) --- */
+.combo-box-guess .arrow-button {
+    -fx-background-color: transparent; /* Remove default grey background */
+    -fx-padding: 0 4px 0 8px;
+}
+
+/* Customize the literal arrow triangle */
+.combo-box-guess .arrow {
+    -fx-background-color: #000000;    /* Solid black arrow */
+    -fx-shape: "M 0 0 L 4 4 L 8 0 Z"; /* Clean vector triangle shape */
+}
+
+.combo-box-guess:hover .arrow {
+    -fx-background-color: #ea580c;    /* Arrow turns orange on hover */
+}
+
+
+/* --- THE POPUP DROPDOWN LISTVIEW --- */
+.combo-box-guess .list-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #000000;
+    -fx-border-width: 3px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 12px;
+    -fx-padding: 4px;
+    /* Puts a crisp shadow behind the floating popup menu */
+    -fx-effect: dropshadow(one-pass-box, rgba(0,0,0,0.3), 8, 0.0, 0, 4);
+}
+
+/* Individual cell items inside the dropdown */
+.combo-box-guess .list-cell {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #000000;
+    -fx-padding: 6px 10px;
+    -fx-background-radius: 4px;
+}
+
+/* Hovering over an item in the list */
+.combo-box-guess .list-cell:hover {
+    -fx-background-color: #f5f5f4;  /* Light stone grey background */
+    -fx-text-fill: #ea580c;          /* Pop orange text on hover */
+}
+
+/* The currently selected item inside the open list */
+.combo-box-guess .list-cell:selected {
+    -fx-text-fill: #000000;
+    -fx-font-weight: bold;
+}
+
+/* --- TARGET BUTTONS --- */
+.btn-three-target {
+    -fx-background-color: #eab308;
+    -fx-text-fill: #000000;
+    -fx-font-family: Arial Black;
+    -fx-font-weight: bold;
+    -fx-font-size: 18px;
+    -fx-border-color: #000000;
+    -fx-border-width: 3px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 10px;
+    -fx-padding: 8px 16px;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 5, 5);
+    -fx-cursor: hand;
+    -fx-background-insets: 2px;
+}
+
+.btn-three-target:hover {
+    -fx-background-color: #facc15;
+}
+
+.btn-three-target:pressed {
+    -fx-translate-y: 2px;
+    -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 1, 1);
 }

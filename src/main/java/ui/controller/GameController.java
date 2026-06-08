@@ -2,8 +2,8 @@ package ui.controller;
 
 import domain.Card;
 import domain.CardType;
+import java.text.MessageFormat;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import ui.model.AppModel;
@@ -19,6 +19,7 @@ public class GameController {
 	private final Runnable startGameAction;
 
 	private static final int CAT_PAIR_SIZE = 2;
+	private static final int CAT_TRIPLE_SIZE = 3;
 
 	public GameController(GameView view, AppModel appModel, ScreenRouter router) {
 		this.model = new GameModel();
@@ -85,6 +86,7 @@ public class GameController {
 					appModel.getResourceBundle(),
 					model.getLocalPlayerName()
 			);
+			handleGameOver(appModel, router);
 		});
 		view.setOnPlayButtonAction((handCards) -> {
 			if (!model.isGameStarted()) {
@@ -128,17 +130,11 @@ public class GameController {
 
 	private String computeLog(List<CardView> handCards, AppModel appModel) {
 		String playerName = model.getLocalPlayerName();
-		String action = appModel.getResourceBundle().getString(
+		String cardName = handCards.get(0).getCardName(appModel.getResourceBundle());
+		String actionTemplate = appModel.getResourceBundle().getString(
 				"gameView.playAction"
 		);
-		String cardName = handCards.get(0).getCardName(
-				appModel.getResourceBundle()
-		);
-		String log = playerName + action + cardName;
-		if (appModel.getSelectedLocale() == Locale.ENGLISH) {
-			log = playerName + " " + action + " " + cardName;
-		}
-		return log;
+		return MessageFormat.format(actionTemplate, playerName, cardName);
 	}
 
 	private void discardCard(CardView card, GameView view) {
@@ -197,98 +193,161 @@ public class GameController {
 				&& player.isAlive();
 	}
 
-	private void playCard(List<CardView> cards, GameView view, AppModel appModel) {
+	private void playCatPair(List<CardView> cards, GameView view, AppModel appModel) {
 		CardView card = cards.get(0);
+		view.showDoubleSpecialComboScreen();
+		view.updateCatCardsPlayer(
+				livingOpponents(),
+				(targetId) -> {
+					discardCard(cards, view);
+					view.hideCatCardScreen();
+					model.playCatPair(
+							targetId,
+							card.getCardType()
+					);
+					refreshAfterPlay(view, appModel);
+				}
+		);
+	}
 
+	private void playCatTriple(List<CardView> cards, GameView view, AppModel appModel) {
+		CardType selectedType = cards.get(0).getCardType();
+		view.showTripleSpecialComboScreen();
+		view.updateTripleComboScreen(
+				appModel.getResourceBundle(),
+				livingOpponents(),
+				(targetId, desiredCard) -> {
+					discardCard(cards, view);
+					view.hideTripleSpecialComboScreen();
+					model.playCatTriple(targetId, selectedType, desiredCard);
+					refreshAfterPlay(view, appModel);
+				}
+		);
+	}
+
+	private void playSkip(List<CardView> cards, GameView view) {
+		discardCard(cards, view);
+		model.playSkip();
+	}
+
+	private void playReverse(List<CardView> cards, GameView view) {
+		discardCard(cards, view);
+		model.playReverse();
+	}
+
+	private void playAttack(List<CardView> cards, GameView view) {
+		discardCard(cards, view);
+		model.playAttack();
+	}
+
+	private void playShuffle(List<CardView> cards, GameView view) {
+		discardCard(cards, view);
+		model.playShuffle();
+	}
+
+	private void playSeeTheFuture(List<CardView> cards, GameView view, AppModel appModel) {
+		discardCard(cards, view);
+		List<Card> topThreeCards = model.playSeeTheFuture();
+		view.showSeeTheFutureScreen();
+		view.updateSeeTheFutureCards(
+				appModel.getResourceBundle(),
+				topThreeCards
+		);
+	}
+
+	private void playTargetedAttack(List<CardView> cards, GameView view, AppModel appModel) {
+		view.showTargetedAttackScreen();
+		view.updateTargetedAttackPlayers(
+				livingOpponents(),
+				(targetId) -> {
+					discardCard(cards, view);
+					view.hideTargetedAttackScreen();
+					model.playTargetedAttack(targetId);
+					refreshAfterPlay(view, appModel);
+				}
+		);
+	}
+
+	private void playFavor(List<CardView> cards, GameView view, AppModel appModel) {
+		ResourceBundle bundle = appModel.getResourceBundle();
+		view.showDemandFavorScreen();
+		view.updateDemandFavorPlayers(
+				livingOpponents(),
+				(targetId) -> {
+					view.hideDemandFavorScreen();
+					view.showGrantFavorScreen();
+					view.updateGrantFavorSubTitle(
+							bundle,
+							model.getPlayerName(targetId),
+							model.getLocalPlayerName()
+					);
+					view.updateFavorCards(
+							model.getSelectedHand(targetId),
+							(cardIndex) -> {
+								discardCard(
+										cards,
+										view
+								);
+								view.hideGrantFavorScreen();
+								model.playFavor(
+										targetId,
+										cardIndex
+								);
+								refreshAfterPlay(
+										view,
+										appModel
+								);
+							}
+					);
+				}
+		);
+	}
+
+	private void playNope(List<CardView> cards, GameView view) {
+		model.playNope();
+		discardCard(cards, view);
+	}
+
+	private void playCard(List<CardView> cards, GameView view, AppModel appModel) {
 		if (cards.size() == CAT_PAIR_SIZE) {
-			view.showCatCardScreen();
-			view.updateCatCardsPlayer(
-					livingOpponents(),
-					(targetId) -> {
-						discardCard(cards, view);
-						view.hideCatCardScreen();
-						model.playCatPair(targetId);
-						refreshAfterPlay(view, appModel);
-					}
-			);
+			playCatPair(cards, view, appModel);
+			return;
 		}
 
-		if (card.getCardType() == CardType.SKIP) {
-			discardCard(cards, view);
-			model.playSkip();
+		if (cards.size() == CAT_TRIPLE_SIZE) {
+			playCatTriple(cards, view, appModel);
+			return;
 		}
 
-		if (card.getCardType() == CardType.REVERSE) {
-			discardCard(cards, view);
-			model.playReverse();
-		}
+		CardType card = cards.get(0).getCardType();
 
-		if (card.getCardType() == CardType.ATTACK) {
-			discardCard(cards, view);
-			model.playAttack();
-		}
-
-		if (card.getCardType() == CardType.SHUFFLE) {
-			discardCard(cards, view);
-			model.playShuffle();
-		}
-
-		if (card.getCardType() == CardType.SEE_THE_FUTURE) {
-			discardCard(cards, view);
-			List<Card> topThreeCards = model.playSeeTheFuture();
-			view.showSeeTheFutureScreen();
-			view.updateSeeTheFutureCards(
-					appModel.getResourceBundle(),
-					topThreeCards
-			);
-		}
-
-		if (card.getCardType() == CardType.TARGETED_ATTACK) {
-			view.showTargetedAttackScreen();
-			view.updateTargetedAttackPlayers(
-					livingOpponents(),
-					(targetId) -> {
-						discardCard(cards, view);
-						view.hideTargetedAttackScreen();
-						model.playTargetedAttack(targetId);
-						refreshAfterPlay(view, appModel);
-					}
-			);
-		}
-
-		if (card.getCardType() == CardType.FAVOR) {
-			ResourceBundle bundle = appModel.getResourceBundle();
-			view.showDemandFavorScreen();
-			view.updateDemandFavorPlayers(
-					livingOpponents(),
-					(targetId) -> {
-						view.hideDemandFavorScreen();
-						view.showGrantFavorScreen();
-						view.updateGrantFavorSubTitle(
-								bundle,
-								model.getPlayerName(targetId),
-								model.getLocalPlayerName()
-						);
-						view.updateFavorCards(
-								model.getSelectedHand(targetId),
-								(cardIndex) -> {
-									discardCard(
-											cards,
-											view
-									);
-									view.hideGrantFavorScreen();
-									model.playFavor(
-											targetId,
-											cardIndex
-									);
-									refreshAfterPlay(
-											view,
-											appModel
-									);
-								}
-						);
-					}
-			);
+		switch (card) {
+			case SKIP:
+				playSkip(cards, view);
+				break;
+			case REVERSE:
+				playReverse(cards, view);
+				break;
+			case ATTACK:
+				playAttack(cards, view);
+				break;
+			case SHUFFLE:
+				playShuffle(cards, view);
+				break;
+			case SEE_THE_FUTURE:
+				playSeeTheFuture(cards, view, appModel);
+				break;
+			case TARGETED_ATTACK:
+				playTargetedAttack(cards, view, appModel);
+				break;
+			case FAVOR:
+				playFavor(cards, view, appModel);
+				break;
+			case NOPE:
+				playNope(cards, view);
+				break;
+			default:
+				break;
 		}
 
 		refreshAfterPlay(view, appModel);

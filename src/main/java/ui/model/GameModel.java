@@ -72,8 +72,19 @@ public class GameModel {
 		engine.playFavor(targetId, cardIndex);
 	}
 
-	public void playCatPair(int targetId) {
-		engine.playCatPair(targetId);
+	public void playNope() {
+		engine.playNope(engine.getCurrentPlayerId());
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
+	public void playCatPair(int targetId, CardType cardType) {
+		engine.playCatPair(targetId, cardType);
+	}
+
+	public void playCatTriple(
+			int targetId, CardType selectedCard, CardType desiredCard
+	) {
+		engine.playCatTriple(targetId, selectedCard, desiredCard);
 	}
 
 	public void defuseExplodingKitten(int reinsertIndex) {

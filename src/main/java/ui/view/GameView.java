@@ -8,14 +8,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -44,6 +49,8 @@ public class GameView extends StackPane {
 	private HBox gamePlaySection;
 	private HBox cardSection;
 	private HBox playerHandSection;
+	private HBox handScrollContent;
+	private ScrollPane handScrollPane;
 	private HBox modalCardRow;
 	private HBox defuseSliderInfo;
 	private VBox feedContainer;
@@ -54,6 +61,9 @@ public class GameView extends StackPane {
 	private VBox modalBody;
 	private VBox modalPlayerButtons;
 	private VBox defuseOverlayScreen;
+	private VBox tripleComboOverlayScreen;
+	private VBox tripleComboCard;
+	private VBox tripleTargetButtons;
 	private VBox defuseSection;
 	private VBox defuseSliderBody;
 	private ScrollPane scrollPane;
@@ -70,6 +80,9 @@ public class GameView extends StackPane {
 	private Text discardPileFooterText;
 	private Text modalTitle;
 	private Text modalSubTitle;
+	private Text tripleComboHeader;
+	private Text tripleComboInstruction;
+	private Text guessBoxLabel;
 	private Text defuseTitle;
 	private Text defuseSliderTitle;
 	private Text defuseSliderLow;
@@ -101,6 +114,8 @@ public class GameView extends StackPane {
 	private Button modalDismissButton;
 	private Button defuseButton;
 	private Button explodeButton;
+
+	private ComboBox<CardType> cardGuessComboBox;
 
 	private List<CardView> selectedHandCards;
 
@@ -140,6 +155,9 @@ public class GameView extends StackPane {
 	private static final int grantFavorTitleWrap = 400;
 	private static final int catCardTitleWrap = 400;
 	private static final int defuseContentWidth = 300;
+	private static final double handScrollPaneInitialValue = 0.5;
+	private static final int tripleComboInstructionWordWrap = 320;
+	private static final int tripleTargetButtonsSpacing = 8;
 
 	public GameView() {
 		this.getStyleClass().add("game-root");
@@ -181,10 +199,15 @@ public class GameView extends StackPane {
 		defuseOverlayScreen.setVisible(false);
 		defuseOverlayScreen.setManaged(false);
 
+		tripleComboOverlayScreen = createTripleComboOverlay();
+		tripleComboOverlayScreen.setVisible(false);
+		tripleComboOverlayScreen.setManaged(false);
+
 		this.getChildren().addAll(
 				gameContainer,
 				modalOverlayScreen,
-				defuseOverlayScreen
+				defuseOverlayScreen,
+				tripleComboOverlayScreen
 		);
 
 		String stylePath = "/styles/game-style.css";
@@ -539,16 +562,52 @@ public class GameView extends StackPane {
 		this.playerHandSection = new HBox();
 		this.playerHandSection.getStyleClass().add("hand-cards-container");
 
-		ScrollPane scrollWrapper = new ScrollPane(playerHandSection);
-		scrollWrapper.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		scrollWrapper.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		scrollWrapper.setFitToHeight(true);
-		scrollWrapper.setFitToWidth(true);
-		scrollWrapper.setPannable(true);
+		this.handScrollContent = new HBox(playerHandSection);
+		this.handScrollContent.setAlignment(Pos.CENTER);
+		this.handScrollContent.getStyleClass().add("hand-scroll-content");
 
-		scrollWrapper.getStyleClass().add("hand-cards-col-2");
+		this.handScrollPane = new ScrollPane(handScrollContent);
+		handScrollContent.minWidthProperty().bind(
+				Bindings.max(
+						handScrollPane.widthProperty(),
+						playerHandSection.widthProperty()
+				)
+		);
+		handScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		handScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		handScrollPane.setFitToHeight(false);
+		handScrollPane.setFitToWidth(false);
+		handScrollPane.setPannable(true);
+		handScrollPane.vvalueProperty().addListener((
+				obs,
+				oldVal,
+				newVal
+		) -> {
+			if (newVal.doubleValue() != 0.0) {
+				handScrollPane.setVvalue(0.0);
+			}
+		});
+		handScrollPane.addEventFilter(ScrollEvent.SCROLL, event -> {
+			if (event.getDeltaY() != 0) {
+				event.consume();
+			}
+		});
 
-		return scrollWrapper;
+		handScrollPane.getStyleClass().add("hand-cards-col-2");
+
+		return handScrollPane;
+	}
+
+	private void centerHandScrollInitially() {
+		Platform.runLater(() -> {
+			double viewportWidth = handScrollPane.getViewportBounds().getWidth();
+			double contentWidth = handScrollContent.getBoundsInLocal().getWidth();
+			if (viewportWidth <= 0 || contentWidth <= viewportWidth) {
+				handScrollPane.setHvalue(0);
+				return;
+			}
+			handScrollPane.setHvalue(handScrollPaneInitialValue);
+		});
 	}
 
 	private void createPlayCardButton() {
@@ -780,7 +839,7 @@ public class GameView extends StackPane {
 		modalBody.getChildren().add(modalCardScroll);
 	}
 
-	private void prepareCatCardModal() {
+	private void prepareDoubleSpecialComboScreen() {
 		modalTextBox.setSpacing(catCardTextBoxSpacing);
 		applyModalDialogStyle(
 				"catcard-dialog-box",
@@ -800,6 +859,53 @@ public class GameView extends StackPane {
 		modalPlayerButtons.getChildren().clear();
 		setModalPlayerButtonStyle("opponent-list");
 		modalBody.getChildren().add(modalPlayerButtons);
+	}
+
+	private VBox createTripleComboOverlay() {
+		VBox overlay = new VBox();
+		overlay.getStyleClass().add("combo-three-overlay");
+		overlay.setAlignment(Pos.CENTER);
+		overlay.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+		tripleComboCard = new VBox();
+		tripleComboCard.getStyleClass().add("combo-three-card");
+		tripleComboCard.setAlignment(Pos.CENTER);
+
+		tripleComboHeader = new Text();
+		tripleComboHeader.getStyleClass().add("combo-three-header");
+		tripleComboHeader.setTextAlignment(TextAlignment.CENTER);
+
+		tripleComboInstruction = new Text();
+		tripleComboInstruction.getStyleClass().add("combo-three-instruction");
+		tripleComboInstruction.setTextAlignment(TextAlignment.CENTER);
+		tripleComboInstruction.setWrappingWidth(tripleComboInstructionWordWrap);
+
+		VBox guessBox = new VBox();
+		guessBox.getStyleClass().add("guess-box-container");
+
+		guessBoxLabel = new Text();
+		guessBoxLabel.getStyleClass().add("guess-box-label");
+
+		cardGuessComboBox = new ComboBox<>();
+		cardGuessComboBox.getStyleClass().add("combo-box-guess");
+		cardGuessComboBox.setMaxWidth(Double.MAX_VALUE);
+
+		guessBox.getChildren().addAll(guessBoxLabel, cardGuessComboBox);
+
+		tripleTargetButtons = new VBox();
+		tripleTargetButtons.setSpacing(tripleTargetButtonsSpacing);
+		tripleTargetButtons.setAlignment(Pos.CENTER);
+		tripleTargetButtons.setMaxWidth(Double.MAX_VALUE);
+
+		tripleComboCard.getChildren().addAll(
+				tripleComboHeader,
+				tripleComboInstruction,
+				guessBox,
+				tripleTargetButtons
+		);
+
+		overlay.getChildren().add(tripleComboCard);
+		return overlay;
 	}
 
 	private void showModal() {
@@ -966,8 +1072,8 @@ public class GameView extends StackPane {
 		demandFavorTitleText = bundle.getString("favor.demandTitle");
 		demandFavorSubTitleText = bundle.getString("favor.demandSubTitle");
 		grantFavorTitleText = bundle.getString("favor.grantTitle");
-		catCardTitleText = bundle.getString("catCardPair.title");
-		catCardSubTitleText = bundle.getString("catCardPair.subTitle");
+		catCardTitleText = bundle.getString("catCardSpecialCombo.title");
+		catCardSubTitleText = bundle.getString("catCardSpecialCombo.subTitle");
 		defuseTitle.setText(bundle.getString("defuse.title"));
 		defuseSliderTitle.setText(bundle.getString("defuse.sliderLabel"));
 		defuseButton.setText(bundle.getString("defuse.defuseButton"));
@@ -1023,6 +1129,7 @@ public class GameView extends StackPane {
 		for (Card card : hand) {
 			addPlayerCard(card);
 		}
+		centerHandScrollInitially();
 	}
 
 	public void updateFavorCards(List<Card> hand, IntConsumer handler) {
@@ -1068,13 +1175,59 @@ public class GameView extends StackPane {
 		hideModal();
 	}
 
-	public void showCatCardScreen() {
-		prepareCatCardModal();
+	public void showDoubleSpecialComboScreen() {
+		prepareDoubleSpecialComboScreen();
 		showModal();
 	}
 
 	public void hideCatCardScreen() {
 		hideModal();
+	}
+
+	public void showTripleSpecialComboScreen() {
+		tripleComboOverlayScreen.setVisible(true);
+		tripleComboOverlayScreen.setManaged(true);
+	}
+
+	public void hideTripleSpecialComboScreen() {
+		tripleComboOverlayScreen.setVisible(false);
+		tripleComboOverlayScreen.setManaged(false);
+	}
+
+	public void updateTripleComboScreen(
+			ResourceBundle bundle,
+			List<PlayerDisplayInfo> opponents,
+			BiConsumer<Integer, CardType> onTargetSelected
+	) {
+		tripleComboHeader.setText(catCardTitleText);
+		tripleComboInstruction.setText(catCardSubTitleText);
+		guessBoxLabel.setText(bundle.getString("catCardSpecialCombo.guessLabel"));
+
+		cardGuessComboBox.getItems().clear();
+		for (CardType type : CardType.values()) {
+			if (type != CardType.EXPLODING_KITTEN) {
+				cardGuessComboBox.getItems().add(type);
+			}
+		}
+		cardGuessComboBox.setValue(CardType.DEFUSE);
+
+		tripleTargetButtons.getChildren().clear();
+		for (PlayerDisplayInfo player : opponents) {
+			String playerName = player.getName();
+			int playerId = player.getPlayerId();
+
+			Button playerButton = new Button(
+					playerName
+			);
+			playerButton.getStyleClass().add("btn-three-target");
+			playerButton.setMaxWidth(Double.MAX_VALUE);
+			playerButton.setOnAction(e -> {
+				CardType desiredCard = cardGuessComboBox.getValue();
+				onTargetSelected.accept(playerId, desiredCard);
+			});
+
+			tripleTargetButtons.getChildren().add(playerButton);
+		}
 	}
 
 	public void showDefuseScreen(ResourceBundle bundle, int deckSize) {
