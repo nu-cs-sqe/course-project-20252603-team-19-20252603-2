@@ -5,6 +5,9 @@ import domain.CardType;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 import ui.model.AppModel;
 import ui.model.GameModel;
@@ -270,36 +273,34 @@ public class GameController {
 
 	private void playFavor(List<CardView> cards, GameView view, AppModel appModel) {
 		ResourceBundle bundle = appModel.getResourceBundle();
+
+		BiConsumer<Integer, Integer> onFavorCardSelected = (targetId, cardIndex) -> {
+			discardCard(cards, view);
+			view.hideGrantFavorScreen();
+			model.playFavor(targetId, cardIndex);
+			refreshAfterPlay(view, appModel);
+		};
+
+		IntConsumer onOpponentSelected = (targetId) -> {
+			view.hideDemandFavorScreen();
+			view.showGrantFavorScreen();
+
+			view.updateGrantFavorSubTitle(
+					bundle,
+					model.getPlayerName(targetId),
+					model.getLocalPlayerName()
+			);
+
+			view.updateFavorCards(
+					model.getSelectedHand(targetId),
+					cardIndex -> onFavorCardSelected.accept(targetId, cardIndex)
+			);
+		};
+
 		view.showDemandFavorScreen();
 		view.updateDemandFavorPlayers(
 				livingOpponents(),
-				(targetId) -> {
-					view.hideDemandFavorScreen();
-					view.showGrantFavorScreen();
-					view.updateGrantFavorSubTitle(
-							bundle,
-							model.getPlayerName(targetId),
-							model.getLocalPlayerName()
-					);
-					view.updateFavorCards(
-							model.getSelectedHand(targetId),
-							(cardIndex) -> {
-								discardCard(
-										cards,
-										view
-								);
-								view.hideGrantFavorScreen();
-								model.playFavor(
-										targetId,
-										cardIndex
-								);
-								refreshAfterPlay(
-										view,
-										appModel
-								);
-							}
-					);
-				}
+				onOpponentSelected
 		);
 	}
 

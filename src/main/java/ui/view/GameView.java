@@ -1194,6 +1194,25 @@ public class GameView extends StackPane {
 		tripleComboOverlayScreen.setManaged(false);
 	}
 
+	private Button createTargetPlayerButton(
+			PlayerDisplayInfo player,
+			CardType desiredCard,
+			BiConsumer<Integer, CardType> onTargetSelected
+	) {
+		String playerName = player.getName();
+		int playerId = player.getPlayerId();
+
+		Button playerButton = new Button(
+				playerName
+		);
+		playerButton.getStyleClass().add("btn-three-target");
+		playerButton.setMaxWidth(Double.MAX_VALUE);
+		playerButton.setOnAction(e -> {
+			onTargetSelected.accept(playerId, desiredCard);
+		});
+		return playerButton;
+	}
+
 	public void updateTripleComboScreen(
 			ResourceBundle bundle,
 			List<PlayerDisplayInfo> opponents,
@@ -1213,28 +1232,17 @@ public class GameView extends StackPane {
 
 		tripleTargetButtons.getChildren().clear();
 		for (PlayerDisplayInfo player : opponents) {
-			String playerName = player.getName();
-			int playerId = player.getPlayerId();
-
-			Button playerButton = new Button(
-					playerName
+			CardType desiredCard = cardGuessComboBox.getValue();
+			Button playerButton = createTargetPlayerButton(
+					player,
+					desiredCard,
+					onTargetSelected
 			);
-			playerButton.getStyleClass().add("btn-three-target");
-			playerButton.setMaxWidth(Double.MAX_VALUE);
-			playerButton.setOnAction(e -> {
-				CardType desiredCard = cardGuessComboBox.getValue();
-				onTargetSelected.accept(playerId, desiredCard);
-			});
-
 			tripleTargetButtons.getChildren().add(playerButton);
 		}
 	}
 
-	public void showDefuseScreen(ResourceBundle bundle, int deckSize) {
-		defuseTopLabelText = bundle.getString("defuse.topLabel");
-		defuseCurrentLabelText = bundle.getString("defuse.currentLabel");
-		defuseBottomLabelText = bundle.getString("defuse.bottomLabel");
-
+	private void updateDefuseSlider(int deckSize) {
 		int maxIndex = Math.max(deckSize, 0);
 		defuseSliderMaxIndex = maxIndex;
 		defuseSlider.setMin(0);
@@ -1245,6 +1253,15 @@ public class GameView extends StackPane {
 		defuseSlider.setMinorTickCount(0);
 		defuseSlider.setSnapToTicks(true);
 		defuseSlider.setDisable(false);
+		updateDefuseSliderLabels();
+	}
+
+	public void showDefuseScreen(ResourceBundle bundle, int deckSize) {
+		defuseTopLabelText = bundle.getString("defuse.topLabel");
+		defuseCurrentLabelText = bundle.getString("defuse.currentLabel");
+		defuseBottomLabelText = bundle.getString("defuse.bottomLabel");
+
+		updateDefuseSlider(deckSize);
 		updateDefuseSliderLabels();
 
 		defuseOverlayScreen.setVisible(true);
