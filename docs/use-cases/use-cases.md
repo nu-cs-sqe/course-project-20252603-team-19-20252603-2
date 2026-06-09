@@ -19,7 +19,7 @@ Main Flow:
 3. Player enters the number of players (2–5).
 4. System creates one player seat per requested player, numbered 0..N-1.
 5. System sets aside all 4 Exploding Kittens and all 6 Defuses from the full deck.
-6. System shuffles the remaining 53 non-Exploding-Kitten, non-Defuse cards.
+6. System shuffles the remaining 64 non-Exploding-Kitten, non-Defuse cards.
 7. System deals each player 4 cards from that shuffled pool plus 1 Defuse, for a starting hand of 5 cards.
 8. System returns the unused (6 − N) Defuses and (N − 1) Exploding Kittens to the draw pile.
 9. System shuffles the draw pile.
@@ -34,7 +34,7 @@ Alternate Flows:
 Postconditions:
 
 - Each of the N players has exactly 5 cards in hand, including a Defuse and no Exploding Kitten.
-- The draw pile holds (53 − 4·N) random cards + (6 − N) Defuses + (N − 1) Exploding Kittens, shuffled — 50 cards for 2 players, 38 cards for 5 players.
+- The draw pile holds (64 − 4·N) random cards + (6 − N) Defuses + (N − 1) Exploding Kittens, shuffled — 61 cards for 2 players, 49 cards for 5 players.
 - The game is ready for the first turn, starting with player 0.
 
 ---

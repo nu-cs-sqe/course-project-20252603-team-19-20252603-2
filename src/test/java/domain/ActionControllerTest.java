@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 class ActionControllerTest {
 
-    private static final int FULL_DECK_SIZE = 63;
+    private static final int FULL_DECK_SIZE = 74;
     private static final int SEE_THE_FUTURE_COUNT = 3;
     private final ActionController actionController = new ActionController();
 

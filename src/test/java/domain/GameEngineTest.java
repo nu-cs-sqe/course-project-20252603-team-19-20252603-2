@@ -19,8 +19,8 @@ class GameEngineTest {
     private static final int STARTING_HAND_SIZE = 5;
     private static final int SEE_THE_FUTURE_COUNT = 3;
     private static final int STACKED_ATTACK_FORCED_TURNS = 4;
-    private static final int DRAW_PILE_SIZE_MIN_PLAYERS = 50;
-    private static final int DRAW_PILE_SIZE_MAX_PLAYERS = 38;
+    private static final int DRAW_PILE_SIZE_MIN_PLAYERS = 61;
+    private static final int DRAW_PILE_SIZE_MAX_PLAYERS = 49;
 
     @Test
     void constructor_minPlayers_succeeds() {
@@ -153,13 +153,13 @@ class GameEngineTest {
     }
 
     @Test
-    void getDrawPileSize_minPlayers_returns50() {
+    void getDrawPileSize_minPlayers_returns61() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         assertEquals(DRAW_PILE_SIZE_MIN_PLAYERS, engine.getDrawPileSize());
     }
 
     @Test
-    void getDrawPileSize_maxPlayers_returns38() {
+    void getDrawPileSize_maxPlayers_returns49() {
         GameEngine engine = new GameEngine(MAX_PLAYERS);
         assertEquals(DRAW_PILE_SIZE_MAX_PLAYERS, engine.getDrawPileSize());
     }
