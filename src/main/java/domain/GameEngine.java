@@ -237,6 +237,7 @@ public final class GameEngine {
     }
 
     public void playClone() {
+        ruleManager.requireSomethingToClone(lastPlayedCard);
         lastPlayedCard = null;
     }
 
