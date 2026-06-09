@@ -12,6 +12,8 @@ public final class RuleManager {
     private static final String CAT_PAIR_NEED_TWO_KEY = "rule.catPair.needTwo";
     private static final String CAT_PAIR_FERAL_CANNOT_BE_BASE_KEY =
             "rule.catPair.feralCannotBeBaseType";
+    private static final String CAT_PAIR_CLONE_CANNOT_BE_BASE_KEY =
+            "rule.catPair.cloneCannotBeBaseType";
     private static final String CAT_TRIPLE_NEED_THREE_KEY = "rule.catTriple.needThree";
     private static final String NOTHING_TO_NOPE_KEY = "rule.nope.nothingToCancel";
     private static final String NOTHING_TO_CLONE_KEY = "rule.clone.nothingToClone";
@@ -32,6 +34,9 @@ public final class RuleManager {
     public void requireCatPair(Player actor, CardType cardType) {
         if (cardType == CardType.FERAL_CAT) {
             throw new IllegalStateException(CAT_PAIR_FERAL_CANNOT_BE_BASE_KEY);
+        }
+        if (cardType == CardType.CLONE) {
+            throw new IllegalStateException(CAT_PAIR_CLONE_CANNOT_BE_BASE_KEY);
         }
         if (countOfType(actor, cardType) < CAT_PAIR_SIZE) {
             throw new IllegalStateException(CAT_PAIR_NEED_TWO_KEY);

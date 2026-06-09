@@ -76,7 +76,7 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 | TC9         | actor holds 1 `FERAL CAT` + 1 `FERAL CAT`, `requireCatPair(actor, FERAL_CAT)` | throws `IllegalStateException` with message `"rule.catPair.feralCannotBeBaseType"`  | yes          | 
 | TC10        | actor holds 1 `CAT_CARDS` + 1 `CLONE`, `requireCatPair(actor, CAT_CARDS)`     | returns normally                                                                    | yes          |
 | TC11        | actor holds 1 `ATTACK` + 1 `CLONE`, `requireCatPair(actor, ATTACK)`           | throws `IllegalStateException` with message `"rule.catPair.needTwo"`                | yes          |
-| TC12        | actor holds 2 `CLONE`, `requireCatPair(actor, CLONE)`                         | throws `IllegalStateException` with message `"rule.catPair.cloneCannoteBeBaseType"` | no           |
+| TC12        | actor holds 2 `CLONE`, `requireCatPair(actor, CLONE)`                         | throws `IllegalStateException` with message `"rule.catPair.cloneCannoteBeBaseType"` | yes          |
 
 ---
 
