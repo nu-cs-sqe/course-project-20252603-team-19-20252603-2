@@ -291,7 +291,8 @@ public final class GameEngine {
 
     public void playSuperSkip() {
         playFromHand(CardType.SUPER_SKIP);
-        consumeOneForcedTurn();
+        advanceToNextPlayer();
+        forcedTurns = 1;
     }
 
     private void returnTurnToLastPlayer() {
