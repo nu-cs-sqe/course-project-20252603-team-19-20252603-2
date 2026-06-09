@@ -47,14 +47,25 @@ public final class RuleManager {
 
     private static int countOfType(Player actor, CardType cardType) {
         int count = 0;
+        int cloneCount = 0;
+
         for (Card card : actor.getHand()) {
             CardType currentType = card.getCardType();
-            if (currentType == cardType
-                    || (currentType == CardType.FERAL_CAT && cardType == CardType.CAT_CARDS)
-                    || (currentType == CardType.CLONE && cardType == CardType.CAT_CARDS)) {
+            if (currentType == cardType ||
+                    (currentType == CardType.FERAL_CAT && cardType == CardType.CAT_CARDS)) {
                 count++;
             }
+            else if (currentType == CardType.CLONE) {
+                cloneCount++;
+            }
         }
+
+        int effectiveClones = Math.min(cloneCount, 1);
+
+        if (cardType == CardType.CAT_CARDS) {
+            return count + effectiveClones;
+        }
+
         return count;
     }
 
