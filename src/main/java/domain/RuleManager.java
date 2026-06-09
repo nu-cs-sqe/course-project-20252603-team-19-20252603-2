@@ -56,4 +56,8 @@ public final class RuleManager {
             throw new IllegalStateException(NOTHING_TO_NOPE_KEY);
         }
     }
+
+    public void requireSomethingToClone(CardType lastPlayedCard) {
+
+    }
 }
