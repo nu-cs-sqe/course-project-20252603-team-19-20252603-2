@@ -163,6 +163,17 @@ class RuleManagerTest {
     }
 
     @Test
+    void requireCatPair_twoCloneCard_throwsIllegalStateException() {
+        Player actor = new Player(0);
+        actor.addCardToHand(new Card(CardType.CLONE));
+        actor.addCardToHand(new Card(CardType.CLONE));
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> ruleManager.requireCatPair(actor, CardType.CLONE));
+        assertEquals("rule.catPair.cloneCannotBeBaseType", ex.getMessage());
+    }
+
+    @Test
     void requireCatTriple_threeOfType_returnsNormally() {
         Player actor = new Player(0);
         actor.addCardToHand(new Card(CardType.CAT_CARDS));
