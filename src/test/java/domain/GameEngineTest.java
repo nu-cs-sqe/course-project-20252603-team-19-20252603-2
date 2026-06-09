@@ -811,6 +811,19 @@ class GameEngineTest {
         assertEquals(4, engine.getForcedTurns());
     }
 
+    @Test
+    void playClone_onTargetedAttack_targetedPlayerDrawsFourTimes() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.TARGETED_ATTACK);
+        engine.playTargetedAttack(1);
+        engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
+
+        engine.playClone(0);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(4, engine.getForcedTurns());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
