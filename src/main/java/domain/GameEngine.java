@@ -103,6 +103,10 @@ public final class GameEngine {
         return lastPlayedCard;
     }
 
+    public int getCurrentDirection() {
+        return turnTracker.getCurrentDirection();
+    }
+
     public void playSkip() {
         playFromHand(CardType.SKIP);
         consumeOneForcedTurn();
@@ -254,6 +258,9 @@ public final class GameEngine {
         switch (lastPlayedCard) {
             case SKIP:
                 playSkip();
+                break;
+            case REVERSE:
+                playReverse();
                 break;
             default:
                 break;
