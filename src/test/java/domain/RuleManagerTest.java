@@ -133,6 +133,17 @@ class RuleManagerTest {
     }
 
     @Test
+    void requireCatPair_twoFeralCatCard_throwsIllegalStateException() {
+        Player actor = new Player(0);
+        actor.addCardToHand(new Card(CardType.FERAL_CAT));
+        actor.addCardToHand(new Card(CardType.FERAL_CAT));
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> ruleManager.requireCatPair(actor, CardType.FERAL_CAT));
+        assertEquals("rule.catPair.feralCannotBeBaseType", ex.getMessage());
+    }
+
+    @Test
     void requireCatTriple_threeOfType_returnsNormally() {
         Player actor = new Player(0);
         actor.addCardToHand(new Card(CardType.CAT_CARDS));
