@@ -105,24 +105,26 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 
 ### Step 1-3 Results
 
-| Step   | Input                                                                                                                                                                                        | Output                                 |
-|--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------|
-| Step 1 | The acting player's hand and the chosen `selectedCard` to play three of                                                                                                                      | nothing (legal) or exception (illegal) |
-| Step 2 | `Player` reference + `CardType`                                                                                                                                                              | void / `IllegalStateException`         |
-| Step 3 | 3 of the type (legal); 2 of the type + 1 feral cat (legal); 1 of the type + 2 feral cat (legal); 2 of the type + 1 clone (legal); 1 of the type + 2 clone (illegal); 2 of the type (illegal) | returns normally / exception           |
+| Step   | Input                                                                                                                                                                                                                                   | Output                                 |
+|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------|
+| Step 1 | The acting player's hand and the chosen `selectedCard` to play three of                                                                                                                                                                 | nothing (legal) or exception (illegal) |
+| Step 2 | `Player` reference + `CardType`                                                                                                                                                                                                         | void / `IllegalStateException`         |
+| Step 3 | 3 of the type (legal); 2 of the type + 1 feral cat (legal); 1 of the type + 2 feral cat (legal); 2 of the type + 1 clone (legal); 1 of the type + 2 clone (illegal); 3 feral cats (illegal); 3 clone (illegal); 2 of the type (illegal) | returns normally / exception           |
 
 ### Step 4:
 
 ##### All-combination or each-choice: each-choice
 
-| Test Case # | System under test                                                               | Expected output                                                          | Implemented? |
-|-------------|---------------------------------------------------------------------------------|--------------------------------------------------------------------------|--------------|
-| TC1         | actor holds 3 `CAT_CARDS`, `requireCatTriple(actor, CAT_CARDS)`                 | returns normally                                                         | yes          |
-| TC2         | actor holds 2 `CAT_CARDS`, `requireCatTriple(actor, CAT_CARDS)`                 | throws `IllegalStateException` with message `"rule.catTriple.needThree"` | yes          |
-| TC3         | actor holds 2 `CAT_CARDS` + 1 `FERAL CAT`, `requireCatTriple(actor, CAT_CARDS)` | returns normally                                                         | yes          |    
-| TC4         | actor holds 1 `CAT_CARDS` + 2 `FERAL CAT`, `requireCatTriple(actor, CAT_CARDS)` | returns normally                                                         | no           |    
-| TC5         | actor holds 2 `CAT_CARDS` + 1 `CLONE`, `requireCatTriple(actor, CAT_CARDS)`     | returns normally                                                         | no           |
-| TC6         | actor holds 1 `CAT_CARDS` + 2 `CLONE`, `requireCatTriple(actor, CAT_CARDS)`     | throws `IllegalStateException` with message `"rule.catTriple.needThree"` | no           |
+| Test Case # | System under test                                                               | Expected output                                                                     | Implemented? |
+|-------------|---------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|--------------|
+| TC1         | actor holds 3 `CAT_CARDS`, `requireCatTriple(actor, CAT_CARDS)`                 | returns normally                                                                    | yes          |
+| TC2         | actor holds 2 `CAT_CARDS`, `requireCatTriple(actor, CAT_CARDS)`                 | throws `IllegalStateException` with message `"rule.catTriple.needThree"`            | yes          |
+| TC3         | actor holds 2 `CAT_CARDS` + 1 `FERAL CAT`, `requireCatTriple(actor, CAT_CARDS)` | returns normally                                                                    | yes          |    
+| TC4         | actor holds 1 `CAT_CARDS` + 2 `FERAL CAT`, `requireCatTriple(actor, CAT_CARDS)` | returns normally                                                                    | yes          |
+| TC5         | actor holds 3 `FERAL_CAT`, `requireCatTriple(actor, FERAL_CAT)`                 | throw `IllegalStateException` with message `"rule.catTriple.feralCannotBeBaseType"` | no           |
+| TC6         | actor holds 2 `CAT_CARDS` + 1 `CLONE`, `requireCatTriple(actor, CAT_CARDS)`     | returns normally                                                                    | no           |
+| TC7         | actor holds 1 `CAT_CARDS` + 2 `CLONE`, `requireCatTriple(actor, CAT_CARDS)`     | throws `IllegalStateException` with message `"rule.catTriple.needThree"`            | no           |
+| TC8         | actor holds 3 `CLONE`, `requireCatTriple(actor, CLONE)`                         | throw `IllegalStateException` with message `"rule.catTriple.cloneCannotBeBaseType"` | no           |
 
 ---
 
