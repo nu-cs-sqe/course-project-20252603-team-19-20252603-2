@@ -33,7 +33,8 @@ public final class RuleManager {
         int count = 0;
         for (Card card : actor.getHand()) {
             CardType currentType = card.getCardType();
-            if (currentType == cardType || currentType == CardType.FERAL_CAT) {
+            if (currentType == cardType || (currentType == CardType.FERAL_CAT
+                    && cardType == CardType.CAT_CARDS)) {
                 count++;
             }
         }
