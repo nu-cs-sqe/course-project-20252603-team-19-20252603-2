@@ -584,6 +584,26 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 ---
 
+## Method 16: ```public void playSuperSkip()```
+
+### Step 1-3 Results
+
+| Step   | Input                                                                                     | Output                                                    |
+|--------|-------------------------------------------------------------------------------------------|-----------------------------------------------------------|
+| Step 1 | current player holds a SUPER SKIP                                                         | SUPER SKIP discarded; one owed turn ended without drawing |
+| Step 2 | game state                                                                                | void / `IllegalStateException` if no SUPER SKIP held      |
+| Step 3 | holds SUPER SKIP (normal turn), holds no SUPER SKIP, holds SUPER SKIP and forced turn > 1 | turn passes to next / `gameEngine.play.notInHand`         |
+
+### Step 4:
+
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test                                                                  | Expected output                                                           | Implemented? |
+|-------------|------------------------------------------------------------------------------------|---------------------------------------------------------------------------|--------------|
+| TC1         | current player given a SUPER SKIP, `playSuperSkip()` (2 players)                   | turn passes to player 1; draw pile unchanged                              | no           |
+| TC2         | current player has no SUPER SKIP, `playSuperSkip()` (2 players)                    | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | no           |
+| TC3         | current player given a SUPER SKIP, forced turns = 4, `playSuperSkip()` (2 players) | forced turns reset to 1; turn passes to player 1; draw pile unchanged     | no           |                             
+
 ## Recall the 4 steps of BVA
 
 ### Step 1: Describe the input and output in terms of the domain.
