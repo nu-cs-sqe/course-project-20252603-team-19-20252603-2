@@ -211,6 +211,17 @@ class RuleManagerTest {
         assertDoesNotThrow(() -> ruleManager.requireCatTriple(actor, CardType.CAT_CARDS));
     }
 
+    @Test
+    void requireCatTriple_threeFeralCat_throwsIllegalStateException() {
+        Player actor = new Player(0);
+        actor.addCardToHand(new Card(CardType.FERAL_CAT));
+        actor.addCardToHand(new Card(CardType.FERAL_CAT));
+        actor.addCardToHand(new Card(CardType.FERAL_CAT));
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> ruleManager.requireCatTriple(actor, CardType.FERAL_CAT));
+        assertEquals("rule.catTriple.feralCannotBeBaseType", ex.getMessage());
+    }
 
     @Test
     void requireSomethingToNope_nonNullLastCard_returnsNormally() {
