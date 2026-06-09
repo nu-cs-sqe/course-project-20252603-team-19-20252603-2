@@ -744,7 +744,7 @@ class GameEngineTest {
         engine.playSkip();
         engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
 
-        engine.playClone();
+        engine.playClone(0, 0);
 
         assertNull(engine.getLastPlayedCard());
     }
@@ -754,7 +754,7 @@ class GameEngineTest {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         IllegalStateException ex = assertThrows(
                 IllegalStateException.class,
-                () -> engine.playClone());
+                () -> engine.playClone(0, 0));
         assertEquals("rule.clone.nothingToClone", ex.getMessage());
     }
 
@@ -766,7 +766,7 @@ class GameEngineTest {
         clearCardType(engine.getPlayer(1), CardType.CLONE);
         IllegalStateException ex = assertThrows(
                 IllegalStateException.class,
-                () -> engine.playClone());
+                () -> engine.playClone(0, 0));
         assertEquals("gameEngine.play.notInHand", ex.getMessage());
     }
 
@@ -777,7 +777,7 @@ class GameEngineTest {
         engine.playSkip();
         engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
 
-        engine.playClone();
+        engine.playClone(0, 0);
 
         assertEquals(0, engine.getCurrentPlayerId());
         assertEquals(1, engine.getForcedTurns());
@@ -792,7 +792,7 @@ class GameEngineTest {
 
         assertEquals(-1, engine.getCurrentDirection());
 
-        engine.playClone();
+        engine.playClone(0, 0);
 
         assertEquals(0, engine.getCurrentPlayerId());
         assertEquals(1, engine.getCurrentDirection());
@@ -805,10 +805,12 @@ class GameEngineTest {
         engine.playAttack();
         engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
 
-        engine.playClone();
+        final int expectedForcedTurns = 4;
+
+        engine.playClone(0, 0);
 
         assertEquals(0, engine.getCurrentPlayerId());
-        assertEquals(4, engine.getForcedTurns());
+        assertEquals(expectedForcedTurns, engine.getForcedTurns());
     }
 
     @Test
@@ -818,10 +820,12 @@ class GameEngineTest {
         engine.playTargetedAttack(1);
         engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
 
-        engine.playClone(0);
+        final int expectedForcedTurns = 4;
+
+        engine.playClone(0, 0);
 
         assertEquals(0, engine.getCurrentPlayerId());
-        assertEquals(4, engine.getForcedTurns());
+        assertEquals(expectedForcedTurns, engine.getForcedTurns());
     }
 
     @Test
@@ -831,7 +835,7 @@ class GameEngineTest {
         engine.playSeeTheFuture();
         engine.getPlayer(0).addCardToHand(new Card(CardType.CLONE));
 
-        assertEquals(SEE_THE_FUTURE_COUNT, engine.playClone().size());
+        assertEquals(SEE_THE_FUTURE_COUNT, engine.playClone(0, 0).size());
         assertEquals(0, engine.getCurrentPlayerId());
     }
 
@@ -846,10 +850,10 @@ class GameEngineTest {
         assertEquals(pileSize, engine.getDrawPileSize());
 
         engine.getPlayer(0).addCardToHand(new Card(CardType.CLONE));
-        engine.playClone();
+        engine.playClone(0, 0);
 
-        assertEquals(pileSize,engine.getDrawPileSize());
-        assertEquals(0,engine.getCurrentPlayerId());
+        assertEquals(pileSize, engine.getDrawPileSize());
+        assertEquals(0, engine.getCurrentPlayerId());
     }
 
     @Test
@@ -858,20 +862,27 @@ class GameEngineTest {
         giveToCurrent(engine, CardType.FAVOR);
         engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
 
-        assertEquals(6, engine.getPlayerHand(0).size());
-        assertEquals(6, engine.getPlayerHand(1).size());
+        final int expectedHandSize = 6;
 
-        engine.playFavor(1,0);
+        assertEquals(expectedHandSize, engine.getPlayerHand(0).size());
+        assertEquals(expectedHandSize, engine.getPlayerHand(1).size());
+
+        engine.playFavor(1, 0);
         engine.advanceToNextPlayer();
 
-        assertEquals(6, engine.getPlayerHand(0).size());
-        assertEquals(5, engine.getPlayerHand(1).size());
+        final int player0HandSize = 6;
+        final int player1HandSize = 5;
+
+        assertEquals(player0HandSize, engine.getPlayerHand(0).size());
+        assertEquals(player1HandSize, engine.getPlayerHand(1).size());
         assertEquals(1, engine.getCurrentPlayerId());
 
-        engine.playClone(0,0);
+        engine.playClone(0, 0);
 
-        assertEquals(5, engine.getPlayerHand(0).size());
-        assertEquals(5, engine.getPlayerHand(1).size());
+        final int finalPlayerHandSize = 5;
+
+        assertEquals(finalPlayerHandSize, engine.getPlayerHand(0).size());
+        assertEquals(finalPlayerHandSize, engine.getPlayerHand(1).size());
         assertEquals(1, engine.getCurrentPlayerId());
     }
 
@@ -882,7 +893,7 @@ class GameEngineTest {
         engine.getPlayer(0).addCardToHand(new Card(CardType.CLONE));
 
         IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
-            engine.playClone();
+            engine.playClone(0, 0);
         });
 
         assertEquals("rule.clone.cannotCloneClone", ex.getMessage());

@@ -246,7 +246,7 @@ public final class GameEngine {
         }
     }
 
-    public List<Card> playClone() {
+    public List<Card> playClone(int targetId, int cardIndex) {
         ruleManager.requireSomethingToClone(lastPlayedCard);
         Player cloner = getPlayer(getCurrentPlayerId());
         int index = cloner.getIndexOfCard(CardType.CLONE);
@@ -254,12 +254,12 @@ public final class GameEngine {
             throw new IllegalStateException(NOT_IN_HAND_KEY);
         }
         deck.discard(cloner.removeCardFromHand(index));
-        List<Card> viewedCards = cloneLastAction();
+        List<Card> viewedCards = cloneLastAction(targetId, cardIndex);
         lastPlayedCard = null;
         return viewedCards;
     }
 
-    private List<Card> cloneLastAction() {
+    private List<Card> cloneLastAction(int targetId, int cardIndex) {
         Player cloner = getPlayer(getCurrentPlayerId());
         cloner.addCardToHand(new Card(lastPlayedCard));
         switch (lastPlayedCard) {
@@ -276,58 +276,17 @@ public final class GameEngine {
                 return playSeeTheFuture();
             case SHUFFLE:
                 playShuffle();
-            default:
                 break;
-        }
-        return new ArrayList<>();
-    }
-
-    public void playClone(int targetId) {
-        ruleManager.requireSomethingToClone(lastPlayedCard);
-        Player cloner = getPlayer(getCurrentPlayerId());
-        int index = cloner.getIndexOfCard(CardType.CLONE);
-        if (index < 0) {
-            throw new IllegalStateException(NOT_IN_HAND_KEY);
-        }
-        deck.discard(cloner.removeCardFromHand(index));
-        cloneLastAction(targetId);
-        lastPlayedCard = null;
-    }
-
-    private void cloneLastAction(int targetId) {
-        Player cloner = getPlayer(getCurrentPlayerId());
-        cloner.addCardToHand(new Card(lastPlayedCard));
-        switch (lastPlayedCard) {
             case TARGETED_ATTACK:
                 playTargetedAttack(targetId);
                 break;
-            default:
-                break;
-        }
-    }
-
-    public void playClone(int targetId, int cardIndex) {
-        ruleManager.requireSomethingToClone(lastPlayedCard);
-        Player cloner = getPlayer(getCurrentPlayerId());
-        int index = cloner.getIndexOfCard(CardType.CLONE);
-        if (index < 0) {
-            throw new IllegalStateException(NOT_IN_HAND_KEY);
-        }
-        deck.discard(cloner.removeCardFromHand(index));
-        cloneLastAction(targetId, cardIndex);
-        lastPlayedCard = null;
-    }
-
-    private void cloneLastAction(int targetId, int cardIndex) {
-        Player cloner = getPlayer(getCurrentPlayerId());
-        cloner.addCardToHand(new Card(lastPlayedCard));
-        switch (lastPlayedCard) {
             case FAVOR:
                 playFavor(targetId, cardIndex);
                 break;
             default:
                 break;
         }
+        return new ArrayList<>();
     }
 
     private void returnTurnToLastPlayer() {
