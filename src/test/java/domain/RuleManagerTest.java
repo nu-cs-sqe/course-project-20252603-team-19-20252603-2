@@ -180,4 +180,12 @@ class RuleManagerTest {
     void requireSomethingToClone_nonNullLastCard_returnsNormally() {
         assertDoesNotThrow(() -> ruleManager.requireSomethingToClone(CardType.ATTACK));
     }
+
+    @Test
+    void requireSomethingToClone_null_throwsIllegalStateException() {
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> ruleManager.requireSomethingToClone(null));
+        assertEquals("rule.clone.nothingToClone", ex.getMessage());
+    }
 }
