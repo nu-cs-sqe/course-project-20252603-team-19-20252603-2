@@ -233,6 +233,18 @@ class RuleManagerTest {
     }
 
     @Test
+    void requireCatTriple_oneCatCardAndTwoClone_throwsIllegalStateException() {
+        Player actor = new Player(0);
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        actor.addCardToHand(new Card(CardType.CLONE));
+        actor.addCardToHand(new Card(CardType.CLONE));
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> ruleManager.requireCatTriple(actor, CardType.CAT_CARDS));
+        assertEquals("rule.catTriple.needThree", ex.getMessage());
+    }
+
+    @Test
     void requireSomethingToNope_nonNullLastCard_returnsNormally() {
         assertDoesNotThrow(() -> ruleManager.requireSomethingToNope(CardType.ATTACK));
     }
