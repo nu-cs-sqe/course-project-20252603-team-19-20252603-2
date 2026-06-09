@@ -302,6 +302,30 @@ public final class GameEngine {
         }
     }
 
+    public void playClone(int targetId, int cardIndex) {
+        ruleManager.requireSomethingToClone(lastPlayedCard);
+        Player cloner = getPlayer(getCurrentPlayerId());
+        int index = cloner.getIndexOfCard(CardType.CLONE);
+        if (index < 0) {
+            throw new IllegalStateException(NOT_IN_HAND_KEY);
+        }
+        deck.discard(cloner.removeCardFromHand(index));
+        cloneLastAction(targetId, cardIndex);
+        lastPlayedCard = null;
+    }
+
+    private void cloneLastAction(int targetId, int cardIndex) {
+        Player cloner = getPlayer(getCurrentPlayerId());
+        cloner.addCardToHand(new Card(lastPlayedCard));
+        switch (lastPlayedCard) {
+            case FAVOR:
+                playFavor(targetId, cardIndex);
+                break;
+            default:
+                break;
+        }
+    }
+
     private void returnTurnToLastPlayer() {
         turnTracker.setCurrentPlayer(lastPlayerId);
         forcedTurns = NORMAL_FORCED_TURNS;
