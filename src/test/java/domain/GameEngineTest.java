@@ -771,7 +771,7 @@ class GameEngineTest {
     }
 
     @Test
-    void playClone_onSkip_TurnGoesToTheNextLivingPlayer() {
+    void playClone_onSkip_turnGoesToTheNextLivingPlayer() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.SKIP);
         engine.playSkip();
@@ -781,6 +781,21 @@ class GameEngineTest {
 
         assertEquals(0, engine.getCurrentPlayerId());
         assertEquals(1, engine.getForcedTurns());
+    }
+
+    @Test
+    void playClone_onReverse_directionRestored() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.REVERSE);
+        engine.playReverse();
+        engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
+
+        assertEquals(-1, engine.getCurrentDirection());
+
+        engine.playClone();
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(1, engine.getCurrentDirection());
     }
 
     private void giveToCurrent(GameEngine engine, CardType type) {
