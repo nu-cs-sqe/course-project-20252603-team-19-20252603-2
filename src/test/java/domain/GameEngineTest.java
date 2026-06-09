@@ -749,6 +749,15 @@ class GameEngineTest {
         assertNull(engine.getLastPlayedCard());
     }
 
+    @Test
+    void playClone_nothingToClone_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playClone());
+        assertEquals("rule.clone.nothingToClone", ex.getMessage());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
