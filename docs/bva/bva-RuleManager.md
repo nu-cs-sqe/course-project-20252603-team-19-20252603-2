@@ -119,7 +119,7 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 |-------------|---------------------------------------------------------------------------------|--------------------------------------------------------------------------|--------------|
 | TC1         | actor holds 3 `CAT_CARDS`, `requireCatTriple(actor, CAT_CARDS)`                 | returns normally                                                         | yes          |
 | TC2         | actor holds 2 `CAT_CARDS`, `requireCatTriple(actor, CAT_CARDS)`                 | throws `IllegalStateException` with message `"rule.catTriple.needThree"` | yes          |
-| TC3         | actor holds 2 `CAT_CARDS` + 1 `FERAL CAT`, `requireCatTriple(actor, CAT_CARDS)` | returns normally                                                         | no           |    
+| TC3         | actor holds 2 `CAT_CARDS` + 1 `FERAL CAT`, `requireCatTriple(actor, CAT_CARDS)` | returns normally                                                         | yes          |    
 | TC4         | actor holds 1 `CAT_CARDS` + 2 `FERAL CAT`, `requireCatTriple(actor, CAT_CARDS)` | returns normally                                                         | no           |    
 | TC5         | actor holds 2 `CAT_CARDS` + 1 `CLONE`, `requireCatTriple(actor, CAT_CARDS)`     | returns normally                                                         | no           |
 | TC6         | actor holds 1 `CAT_CARDS` + 2 `CLONE`, `requireCatTriple(actor, CAT_CARDS)`     | throws `IllegalStateException` with message `"rule.catTriple.needThree"` | no           |
