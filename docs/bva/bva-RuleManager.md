@@ -138,7 +138,7 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 | Test Case # | System under test                 | Expected output                                                           | Implemented? |
 |-------------|-----------------------------------|---------------------------------------------------------------------------|--------------|
 | TC1         | `requireSomethingToClone(ATTACK)` | returns normally                                                          | yes          |
-| TC2         | `requireSomethingToClone(null)`   | throws `IllegalStateException` with message `"rule.clone.nothingToClone"` | no           |
+| TC2         | `requireSomethingToClone(null)`   | throws `IllegalStateException` with message `"rule.clone.nothingToClone"` | yes          |
 
 ---
 
