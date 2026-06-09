@@ -236,6 +236,10 @@ public final class GameEngine {
         }
     }
 
+    public void playClone() {
+        lastPlayedCard = null;
+    }
+
     private void returnTurnToLastPlayer() {
         turnTracker.setCurrentPlayer(lastPlayerId);
         forcedTurns = NORMAL_FORCED_TURNS;

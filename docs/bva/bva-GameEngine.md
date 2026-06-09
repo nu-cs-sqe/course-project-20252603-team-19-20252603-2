@@ -570,7 +570,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test                                                            | Expected output                                                                      | Implemented? |
 |-------------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|--------------|
-| TC1         | a card was just played, cloner holds a clone, `playClone()`                  | `getLastPlayedCard()` becomes `null`                                                 | no           |
+| TC1         | a card was just played, cloner holds a clone, `playClone()`                  | `getLastPlayedCard()` becomes `null`                                                 | yes          |
 | TC2         | nothing played yet, `playClone()`                                            | throws `IllegalStateException` with message `"rule.clone.nothingToClone"`            | no           |
 | TC3         | a card was just played, cloner holds no CLONE                                | throws `IllegalStateException` with message `"gameEngine.play.notInHand"`            | no           |
 | TC4         | SKIP was played (turn passed), then cloned                                   | turn goes to the next living player                                                  | no           |
