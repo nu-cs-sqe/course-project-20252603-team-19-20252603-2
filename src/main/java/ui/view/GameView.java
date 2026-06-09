@@ -8,12 +8,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
+import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -42,23 +49,73 @@ public class GameView extends StackPane {
 	private HBox gamePlaySection;
 	private HBox cardSection;
 	private HBox playerHandSection;
+	private HBox handScrollContent;
+	private ScrollPane handScrollPane;
+	private HBox modalCardRow;
+	private HBox defuseSliderInfo;
 	private VBox feedContainer;
 	private VBox discardPile;
+	private VBox modalOverlayScreen;
+	private VBox modalSection;
+	private VBox modalTextBox;
+	private VBox modalBody;
+	private VBox modalPlayerButtons;
+	private VBox defuseOverlayScreen;
+	private VBox tripleComboOverlayScreen;
+	private VBox tripleComboCard;
+	private VBox tripleTargetButtons;
+	private VBox defuseSection;
+	private VBox defuseSliderBody;
 	private ScrollPane scrollPane;
+	private ScrollPane modalCardScroll;
 	private StackPane discardPileSection;
+	private StackPane modalDialogScreen;
+	private StackPane defuseDialogScreen;
+	private Slider defuseSlider;
 
 	private Text logoText;
 	private Text deckTitleText;
 	private Text turnIndicatorText;
 	private Text tableChatterTitle;
 	private Text discardPileFooterText;
+	private Text modalTitle;
+	private Text modalSubTitle;
+	private Text tripleComboHeader;
+	private Text tripleComboInstruction;
+	private Text guessBoxLabel;
+	private Text defuseTitle;
+	private Text defuseSliderTitle;
+	private Text defuseSliderLow;
+	private Text defuseSliderCurrent;
+	private Text defuseSliderHigh;
+	private Text playerAvatarLabel;
+	private String seeTheFutureTitleText;
+	private String seeTheFutureSubTitleText;
+	private String seeTheFutureDismissText;
+	private String targetedAttackTitleText;
+	private String targetedAttackSubTitleText;
+	private String demandFavorTitleText;
+	private String demandFavorSubTitleText;
+	private String grantFavorTitleText;
+	private String catCardTitleText;
+	private String catCardSubTitleText;
+	private String defuseTopLabelText;
+	private String defuseCurrentLabelText;
+	private String defuseBottomLabelText;
+	private int defuseSliderMaxIndex;
 	private Label deckCountLabel;
 	private Label localHandLabel;
+	private Label playerAvatarCardCount;
 
 	private Button quitButton;
 	private Button deck;
 	private Button drawCard;
 	private Button playCardButton;
+	private Button modalDismissButton;
+	private Button defuseButton;
+	private Button explodeButton;
+
+	private ComboBox<CardType> cardGuessComboBox;
 
 	private List<CardView> selectedHandCards;
 
@@ -72,8 +129,35 @@ public class GameView extends StackPane {
 	private static final int feedContainerSpacing = 5;
 	private static final int tableChatterSectionSpacing = 10;
 	private static final int playerEventLogSpacing = 8;
+	private static final int seeTheFutureTextBoxSpacing = 10;
+	private static final int seeTheFutureSectionSpacing = 20;
+	private static final int targetedAttackTextBoxSpacing = 10;
+	private static final int targetedAttackSectionSpacing = 10;
+	private static final int demandFavorTextBoxSpacing = 10;
+	private static final int demandFavorSectionSpacing = 10;
+	private static final int grantFavorTextBoxSpacing = 10;
+	private static final int catCardTextBoxSpacing = 10;
+	private static final int catCardSectionSpacing = 10;
 	private static final int discardCardWidth = 175;
 	private static final int discardCardHeight = 260;
+	private static final int peekCardWidth = 140;
+	private static final int peekCardHeight = 200;
+	private static final int targetedAttackDialogWindowHeight = 145;
+	private static final int targetedAttackButtonHeight = 60;
+	private static final int demandFavorDialogWindowHeight = 145;
+	private static final int demandFavorButtonHeight = 60;
+	private static final int catCardDialogWindowHeight = 145;
+	private static final int catCardButtonHeight = 60;
+	private static final int defuseSliderHeight = 24;
+	private static final int maxNumberOfCardSelected = 3;
+	private static final int targetedAttackTitleWrap = 400;
+	private static final int demandFavorTitleWrap = 400;
+	private static final int grantFavorTitleWrap = 400;
+	private static final int catCardTitleWrap = 400;
+	private static final int defuseContentWidth = 300;
+	private static final double handScrollPaneInitialValue = 0.5;
+	private static final int tripleComboInstructionWordWrap = 320;
+	private static final int tripleTargetButtonsSpacing = 8;
 
 	public GameView() {
 		this.getStyleClass().add("game-root");
@@ -107,7 +191,24 @@ public class GameView extends StackPane {
 		gamePlaySection.getStyleClass().add("table-felt");
 		cardSection.getStyleClass().add("player-hand-bar");
 
-		this.getChildren().addAll(gameContainer);
+		modalOverlayScreen = createModalOverlay();
+		modalOverlayScreen.setVisible(false);
+		modalOverlayScreen.setManaged(false);
+
+		defuseOverlayScreen = createDefuseOverlay();
+		defuseOverlayScreen.setVisible(false);
+		defuseOverlayScreen.setManaged(false);
+
+		tripleComboOverlayScreen = createTripleComboOverlay();
+		tripleComboOverlayScreen.setVisible(false);
+		tripleComboOverlayScreen.setManaged(false);
+
+		this.getChildren().addAll(
+				gameContainer,
+				modalOverlayScreen,
+				defuseOverlayScreen,
+				tripleComboOverlayScreen
+		);
 
 		String stylePath = "/styles/game-style.css";
 		this.getStylesheets().add(
@@ -203,20 +304,40 @@ public class GameView extends StackPane {
 		return playerAvatarCardCount;
 	}
 
-	private VBox createPlayer(PlayerDisplayInfo opponent) {
-		VBox player = new VBox(playerSpacing);
-
-		if (opponent.isCurrentTurn()) {
+	private void checkCurrentTurn(PlayerDisplayInfo opponent, VBox player) {
+		if (opponent.isCurrentTurn() && opponent.isAlive()) {
 			player.getStyleClass().add("opponent-avatar-active");
 			player.getStyleClass().add("opponent-active-highlight");
 		} else {
 			player.getStyleClass().remove("opponent-avatar-active");
 			player.getStyleClass().remove("opponent-active-highlight");
 		}
+	}
+
+	private void checkPlayerAlive(PlayerDisplayInfo opponent, VBox player, VBox playerAvatar) {
+		if (opponent.isAlive()) {
+			player.getStyleClass().remove("exploded-player-container");
+			playerAvatar.getStyleClass().remove("exploded-avatar-circle");
+			playerAvatarLabel.getStyleClass().remove("exploded-player-name");
+			playerAvatarCardCount.getStyleClass().remove("exploded-status-badge");
+		} else {
+			player.getStyleClass().add("exploded-player-container");
+			playerAvatar.getStyleClass().add("exploded-avatar-circle");
+			playerAvatarLabel.getStyleClass().add("exploded-player-name");
+			playerAvatarCardCount.getStyleClass().add("exploded-status-badge");
+		}
+	}
+
+	private VBox createPlayer(PlayerDisplayInfo opponent) {
+		VBox player = new VBox(playerSpacing);
+
+		checkCurrentTurn(opponent, player);
 
 		VBox playerAvatar = createPlayerAvatar(opponent.getName());
-		Text playerAvatarLabel = createPlayerAvatarLabel(opponent.getName());
-		Label playerAvatarCardCount = createPlayerAvatarCardCount(opponent.getHandSize());
+		playerAvatarLabel = createPlayerAvatarLabel(opponent.getName());
+		playerAvatarCardCount = createPlayerAvatarCardCount(opponent.getHandSize());
+
+		checkPlayerAlive(opponent, player, playerAvatar);
 
 		player.getChildren().addAll(
 				playerAvatar,
@@ -441,16 +562,52 @@ public class GameView extends StackPane {
 		this.playerHandSection = new HBox();
 		this.playerHandSection.getStyleClass().add("hand-cards-container");
 
-		ScrollPane scrollWrapper = new ScrollPane(playerHandSection);
-		scrollWrapper.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		scrollWrapper.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		scrollWrapper.setFitToHeight(true);
-		scrollWrapper.setFitToWidth(true);
-		scrollWrapper.setPannable(true);
+		this.handScrollContent = new HBox(playerHandSection);
+		this.handScrollContent.setAlignment(Pos.CENTER);
+		this.handScrollContent.getStyleClass().add("hand-scroll-content");
 
-		scrollWrapper.getStyleClass().add("hand-cards-col-2");
+		this.handScrollPane = new ScrollPane(handScrollContent);
+		handScrollContent.minWidthProperty().bind(
+				Bindings.max(
+						handScrollPane.widthProperty(),
+						playerHandSection.widthProperty()
+				)
+		);
+		handScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		handScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		handScrollPane.setFitToHeight(false);
+		handScrollPane.setFitToWidth(false);
+		handScrollPane.setPannable(true);
+		handScrollPane.vvalueProperty().addListener((
+				obs,
+				oldVal,
+				newVal
+		) -> {
+			if (newVal.doubleValue() != 0.0) {
+				handScrollPane.setVvalue(0.0);
+			}
+		});
+		handScrollPane.addEventFilter(ScrollEvent.SCROLL, event -> {
+			if (event.getDeltaY() != 0) {
+				event.consume();
+			}
+		});
 
-		return scrollWrapper;
+		handScrollPane.getStyleClass().add("hand-cards-col-2");
+
+		return handScrollPane;
+	}
+
+	private void centerHandScrollInitially() {
+		Platform.runLater(() -> {
+			double viewportWidth = handScrollPane.getViewportBounds().getWidth();
+			double contentWidth = handScrollContent.getBoundsInLocal().getWidth();
+			if (viewportWidth <= 0 || contentWidth <= viewportWidth) {
+				handScrollPane.setHvalue(0);
+				return;
+			}
+			handScrollPane.setHvalue(handScrollPaneInitialValue);
+		});
 	}
 
 	private void createPlayCardButton() {
@@ -488,6 +645,415 @@ public class GameView extends StackPane {
 		return cardSection;
 	}
 
+	private void createModalText() {
+		modalTitle = new Text();
+		modalSubTitle = new Text();
+		modalTitle.setTextAlignment(TextAlignment.CENTER);
+		modalSubTitle.setTextAlignment(TextAlignment.CENTER);
+	}
+
+	private void createModalTextBox() {
+		modalTextBox = new VBox(seeTheFutureTextBoxSpacing);
+		modalTextBox.getStyleClass().add("modal-header-box");
+		modalTextBox.setAlignment(Pos.CENTER);
+		modalTextBox.getChildren().addAll(modalTitle, modalSubTitle);
+	}
+
+	private void createModalBody() {
+		modalBody = new VBox();
+		modalBody.getStyleClass().add("modal-body");
+		modalBody.setAlignment(Pos.CENTER);
+	}
+
+	private void createModalDismissButton() {
+		modalDismissButton = new Button();
+		modalDismissButton.getStyleClass().add("future-dismiss-button");
+		modalDismissButton.setAlignment(Pos.CENTER);
+		modalDismissButton.setMaxWidth(Double.MAX_VALUE);
+	}
+
+	private void createModalCardRow() {
+		modalCardRow = new HBox();
+		modalCardRow.getStyleClass().add("future-cards-hbox");
+		modalCardRow.setMaxWidth(Double.MAX_VALUE);
+	}
+
+	private void createModalCardScroll() {
+		modalCardScroll = new ScrollPane(modalCardRow);
+		modalCardScroll.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		modalCardScroll.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		modalCardScroll.setFitToHeight(true);
+		modalCardScroll.setFitToWidth(true);
+		modalCardScroll.setPannable(true);
+		modalCardScroll.getStyleClass().add("favor-card-scroll");
+	}
+
+	private VBox createModalOverlay() {
+		VBox overlay = new VBox();
+		overlay.getStyleClass().add("card-overlay-backdrop");
+		overlay.setAlignment(Pos.CENTER);
+		overlay.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+		modalDialogScreen = new StackPane();
+
+		createModalText();
+		createModalTextBox();
+		createModalBody();
+		createModalDismissButton();
+		createModalCardRow();
+		createModalCardScroll();
+
+		modalPlayerButtons = new VBox();
+
+		modalSection = new VBox(modalTextBox, modalBody, modalDismissButton);
+		modalSection.getStyleClass().add("modal-content-section");
+		modalDialogScreen.getChildren().add(modalSection);
+		overlay.getChildren().add(modalDialogScreen);
+
+		return overlay;
+	}
+
+	private void applyModalDialogStyle(
+			String dialogStyle, Integer minHeight, Integer maxHeight
+	) {
+		modalDialogScreen.getStyleClass().clear();
+		modalDialogScreen.getStyleClass().add(dialogStyle);
+		if (minHeight != null) {
+			modalDialogScreen.setMinHeight(minHeight);
+			modalDialogScreen.setMaxHeight(maxHeight);
+		} else {
+			modalDialogScreen.setMinHeight(Region.USE_COMPUTED_SIZE);
+			modalDialogScreen.setMaxHeight(Region.USE_COMPUTED_SIZE);
+		}
+	}
+
+	private void applyModalTextStyle(
+			String titleStyle, String subtitleStyle, int subtitleWrap
+	) {
+		modalTitle.getStyleClass().clear();
+		modalTitle.getStyleClass().add(titleStyle);
+		modalSubTitle.getStyleClass().clear();
+		modalSubTitle.getStyleClass().add(subtitleStyle);
+		modalSubTitle.setWrappingWidth(subtitleWrap);
+	}
+
+	private void hideModalDismissButton() {
+		modalDismissButton.setVisible(false);
+		modalDismissButton.setManaged(false);
+	}
+
+	private void showModalDismissButton() {
+		modalDismissButton.setVisible(true);
+		modalDismissButton.setManaged(true);
+	}
+
+	private void setModalCardRowStyle(String styleClass) {
+		modalCardRow.getStyleClass().clear();
+		modalCardRow.getStyleClass().add(styleClass);
+	}
+
+	private void setModalPlayerButtonStyle(String styleClass) {
+		modalPlayerButtons.getStyleClass().clear();
+		modalPlayerButtons.getStyleClass().add(styleClass);
+	}
+
+	private void prepareSeeTheFutureModal() {
+		modalTextBox.setSpacing(seeTheFutureTextBoxSpacing);
+		applyModalDialogStyle("future-dialog-box", null, null);
+		applyModalTextStyle(
+				"future-title-text", "future-subtitle-text", 0
+		);
+		modalTitle.setText(seeTheFutureTitleText);
+		modalSubTitle.setText(seeTheFutureSubTitleText);
+		modalDismissButton.setText(seeTheFutureDismissText);
+		modalSection.setSpacing(seeTheFutureSectionSpacing);
+		showModalDismissButton();
+		modalBody.getChildren().clear();
+		modalCardRow.getChildren().clear();
+		setModalCardRowStyle("future-cards-hbox");
+		modalBody.getChildren().add(modalCardRow);
+	}
+
+	private void prepareTargetedAttackModal() {
+		modalTextBox.setSpacing(targetedAttackTextBoxSpacing);
+		applyModalDialogStyle(
+				"targeted-dialog-box",
+				targetedAttackDialogWindowHeight,
+				targetedAttackDialogWindowHeight
+		);
+		applyModalTextStyle(
+				"targeted-title-text",
+				"targeted-subtitle-text",
+				targetedAttackTitleWrap
+		);
+		modalTitle.setText(targetedAttackTitleText);
+		modalSubTitle.setText(targetedAttackSubTitleText);
+		modalSection.setSpacing(targetedAttackSectionSpacing);
+		hideModalDismissButton();
+		modalBody.getChildren().clear();
+		modalPlayerButtons.getChildren().clear();
+		setModalPlayerButtonStyle("targeted-button-vbox");
+		modalBody.getChildren().add(modalPlayerButtons);
+	}
+
+	private void prepareDemandFavorModal() {
+		modalTextBox.setSpacing(demandFavorTextBoxSpacing);
+		applyModalDialogStyle(
+				"favor-request-box",
+				demandFavorDialogWindowHeight,
+				demandFavorDialogWindowHeight
+		);
+		applyModalTextStyle(
+				"favor-title-text",
+				"favor-subtitle-text",
+				demandFavorTitleWrap
+		);
+		modalTitle.setText(demandFavorTitleText);
+		modalSubTitle.setText(demandFavorSubTitleText);
+		modalSection.setSpacing(demandFavorSectionSpacing);
+		hideModalDismissButton();
+		modalBody.getChildren().clear();
+		modalPlayerButtons.getChildren().clear();
+		setModalPlayerButtonStyle("favor-button-vbox");
+		modalBody.getChildren().add(modalPlayerButtons);
+	}
+
+	private void prepareGrantFavorModal() {
+		modalTextBox.setSpacing(grantFavorTextBoxSpacing);
+		applyModalDialogStyle(
+				"favor-grant-box",
+				demandFavorDialogWindowHeight,
+				demandFavorDialogWindowHeight
+		);
+		applyModalTextStyle(
+				"favor-title-text",
+				"favor-subtitle-text",
+				grantFavorTitleWrap
+		);
+		modalTitle.setText(grantFavorTitleText);
+		modalSection.setSpacing(grantFavorTextBoxSpacing);
+		hideModalDismissButton();
+		modalBody.getChildren().clear();
+		modalCardRow.getChildren().clear();
+		setModalCardRowStyle("favor-card-hbox");
+		modalBody.getChildren().add(modalCardScroll);
+	}
+
+	private void prepareDoubleSpecialComboScreen() {
+		modalTextBox.setSpacing(catCardTextBoxSpacing);
+		applyModalDialogStyle(
+				"catcard-dialog-box",
+				catCardDialogWindowHeight,
+				catCardDialogWindowHeight
+		);
+		applyModalTextStyle(
+				"catcard-title-text",
+				"catcard-subtitle-text",
+				catCardTitleWrap
+		);
+		modalTitle.setText(catCardTitleText);
+		modalSubTitle.setText(catCardSubTitleText);
+		modalSection.setSpacing(catCardSectionSpacing);
+		hideModalDismissButton();
+		modalBody.getChildren().clear();
+		modalPlayerButtons.getChildren().clear();
+		setModalPlayerButtonStyle("opponent-list");
+		modalBody.getChildren().add(modalPlayerButtons);
+	}
+
+	private VBox createTripleComboOverlay() {
+		VBox overlay = new VBox();
+		overlay.getStyleClass().add("combo-three-overlay");
+		overlay.setAlignment(Pos.CENTER);
+		overlay.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+		tripleComboCard = new VBox();
+		tripleComboCard.getStyleClass().add("combo-three-card");
+		tripleComboCard.setAlignment(Pos.CENTER);
+
+		tripleComboHeader = new Text();
+		tripleComboHeader.getStyleClass().add("combo-three-header");
+		tripleComboHeader.setTextAlignment(TextAlignment.CENTER);
+
+		tripleComboInstruction = new Text();
+		tripleComboInstruction.getStyleClass().add("combo-three-instruction");
+		tripleComboInstruction.setTextAlignment(TextAlignment.CENTER);
+		tripleComboInstruction.setWrappingWidth(tripleComboInstructionWordWrap);
+
+		VBox guessBox = new VBox();
+		guessBox.getStyleClass().add("guess-box-container");
+
+		guessBoxLabel = new Text();
+		guessBoxLabel.getStyleClass().add("guess-box-label");
+
+		cardGuessComboBox = new ComboBox<>();
+		cardGuessComboBox.getStyleClass().add("combo-box-guess");
+		cardGuessComboBox.setMaxWidth(Double.MAX_VALUE);
+
+		guessBox.getChildren().addAll(guessBoxLabel, cardGuessComboBox);
+
+		tripleTargetButtons = new VBox();
+		tripleTargetButtons.setSpacing(tripleTargetButtonsSpacing);
+		tripleTargetButtons.setAlignment(Pos.CENTER);
+		tripleTargetButtons.setMaxWidth(Double.MAX_VALUE);
+
+		tripleComboCard.getChildren().addAll(
+				tripleComboHeader,
+				tripleComboInstruction,
+				guessBox,
+				tripleTargetButtons
+		);
+
+		overlay.getChildren().add(tripleComboCard);
+		return overlay;
+	}
+
+	private void showModal() {
+		modalOverlayScreen.setVisible(true);
+		modalOverlayScreen.setManaged(true);
+	}
+
+	private void hideModal() {
+		modalOverlayScreen.setVisible(false);
+		modalOverlayScreen.setManaged(false);
+		modalBody.getChildren().clear();
+	}
+
+	private void createDefuseText() {
+		defuseTitle = new Text();
+		defuseTitle.setTextAlignment(TextAlignment.CENTER);
+		defuseTitle.setWrappingWidth(defuseContentWidth);
+		defuseTitle.getStyleClass().add("defuse-header");
+	}
+
+	private void createDefuseSliderTitle() {
+		defuseSliderTitle = new Text();
+		defuseSliderTitle.setTextAlignment(TextAlignment.CENTER);
+		defuseSliderTitle.setWrappingWidth(defuseContentWidth);
+		defuseSliderTitle.getStyleClass().add("slider-label");
+	}
+
+	private void createDefuseSlider() {
+		defuseSlider = new Slider();
+		defuseSlider.getStyleClass().add("depth-slider");
+		defuseSlider.setPrefWidth(defuseContentWidth);
+		defuseSlider.setMinWidth(defuseContentWidth);
+		defuseSlider.setMaxWidth(defuseContentWidth);
+		defuseSlider.setMinHeight(defuseSliderHeight);
+		defuseSlider.setPrefHeight(defuseSliderHeight);
+		defuseSlider.valueProperty().addListener(
+				(observable, oldValue, newValue) ->
+						updateDefuseSliderLabels()
+		);
+	}
+
+	private void updateDefuseSliderLabels() {
+		int position = (int) defuseSlider.getValue();
+		defuseSliderLow.setText(defuseTopLabelText + " (0)");
+		defuseSliderCurrent.setText(defuseCurrentLabelText + ": " + position);
+		defuseSliderHigh.setText(
+				defuseBottomLabelText + " (" + defuseSliderMaxIndex + ")"
+		);
+	}
+
+	private void createDefuseSliderInfo() {
+		defuseSliderInfo = new HBox();
+		defuseSliderInfo.setAlignment(Pos.CENTER);
+		defuseSliderInfo.setMaxWidth(defuseContentWidth);
+		defuseSliderInfo.setPrefWidth(defuseContentWidth);
+
+		defuseSliderLow = new Text();
+		defuseSliderCurrent = new Text();
+		defuseSliderHigh = new Text();
+
+		defuseSliderLow.getStyleClass().add("stat-text");
+		defuseSliderCurrent.getStyleClass().add("stat-text-chosen");
+		defuseSliderHigh.getStyleClass().add("stat-text");
+
+		HBox leftColumn = new HBox(defuseSliderLow);
+		leftColumn.setAlignment(Pos.CENTER_LEFT);
+		HBox.setHgrow(leftColumn, Priority.ALWAYS);
+
+		HBox centerColumn = new HBox(defuseSliderCurrent);
+		centerColumn.setAlignment(Pos.CENTER);
+		HBox.setHgrow(centerColumn, Priority.ALWAYS);
+
+		HBox rightColumn = new HBox(defuseSliderHigh);
+		rightColumn.setAlignment(Pos.CENTER_RIGHT);
+		HBox.setHgrow(rightColumn, Priority.ALWAYS);
+
+		defuseSliderInfo.getChildren().addAll(
+				leftColumn,
+				centerColumn,
+				rightColumn
+		);
+	}
+
+	private void createDefuseSliderBody() {
+		defuseSliderBody = new VBox();
+		defuseSliderBody.getStyleClass().add("slider-container");
+		defuseSliderBody.setAlignment(Pos.CENTER);
+		defuseSliderBody.setFillWidth(true);
+		defuseSliderBody.setMaxWidth(defuseContentWidth);
+		defuseSliderBody.setPrefWidth(defuseContentWidth);
+
+		createDefuseSliderTitle();
+		createDefuseSlider();
+		createDefuseSliderInfo();
+
+		defuseSliderBody.getChildren().addAll(
+				defuseSliderTitle,
+				defuseSlider,
+				defuseSliderInfo
+		);
+	}
+
+	private void createDefuseButton() {
+		defuseButton = new Button();
+		defuseButton.getStyleClass().add("btn-defuse");
+		defuseButton.setMaxWidth(defuseContentWidth);
+		defuseButton.setPrefWidth(defuseContentWidth);
+	}
+
+	private void createExplodeButton() {
+		explodeButton = new Button();
+		explodeButton.getStyleClass().add("btn-explode");
+		explodeButton.setMaxWidth(defuseContentWidth);
+		explodeButton.setPrefWidth(defuseContentWidth);
+	}
+
+	private VBox createDefuseOverlay() {
+		VBox overlay = new VBox();
+		overlay.getStyleClass().add("defuse-overlay");
+		overlay.setAlignment(Pos.CENTER);
+		overlay.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+		createDefuseText();
+		createDefuseSliderBody();
+		createDefuseButton();
+		createExplodeButton();
+
+		defuseDialogScreen = new StackPane();
+		defuseDialogScreen.setAlignment(Pos.CENTER);
+		defuseDialogScreen.getStyleClass().add("defuse-modal-card");
+
+		defuseSection = new VBox();
+		defuseSection.getStyleClass().add("defuse-section");
+		defuseSection.setAlignment(Pos.CENTER);
+		defuseSection.setFillWidth(false);
+		defuseSection.getChildren().addAll(
+				defuseTitle,
+				defuseSliderBody,
+				defuseButton,
+				explodeButton
+		);
+
+		defuseDialogScreen.getChildren().add(defuseSection);
+		overlay.getChildren().add(defuseDialogScreen);
+
+		return overlay;
+	}
+
 	public void updateDisplay(ResourceBundle bundle) {
 		logoText.setText(bundle.getString("gameView.logo"));
 		quitButton.setText(bundle.getString("gameView.quit"));
@@ -498,6 +1064,23 @@ public class GameView extends StackPane {
 		playCardButton.setText(bundle.getString("gameView.playCard"));
 		cardCountText = bundle.getString("gameView.cardCount");
 		cardsText = bundle.getString("gameView.cards");
+		seeTheFutureTitleText = bundle.getString("seeTheFuture.title");
+		seeTheFutureSubTitleText = bundle.getString("seeTheFuture.subTitle");
+		seeTheFutureDismissText = bundle.getString("seeTheFuture.dismissButton");
+		targetedAttackTitleText = bundle.getString("targetedAttack.title");
+		targetedAttackSubTitleText = bundle.getString("targetedAttack.subTitle");
+		demandFavorTitleText = bundle.getString("favor.demandTitle");
+		demandFavorSubTitleText = bundle.getString("favor.demandSubTitle");
+		grantFavorTitleText = bundle.getString("favor.grantTitle");
+		catCardTitleText = bundle.getString("catCardSpecialCombo.title");
+		catCardSubTitleText = bundle.getString("catCardSpecialCombo.subTitle");
+		defuseTitle.setText(bundle.getString("defuse.title"));
+		defuseSliderTitle.setText(bundle.getString("defuse.sliderLabel"));
+		defuseButton.setText(bundle.getString("defuse.defuseButton"));
+		explodeButton.setText(bundle.getString("defuse.explodeButton"));
+		defuseTopLabelText = bundle.getString("defuse.topLabel");
+		defuseCurrentLabelText = bundle.getString("defuse.currentLabel");
+		defuseBottomLabelText = bundle.getString("defuse.bottomLabel");
 	}
 
 	public void showOpponents(List<PlayerDisplayInfo> opponents) {
@@ -516,6 +1099,11 @@ public class GameView extends StackPane {
 		updateDeckCount(cardCount);
 	}
 
+	public void updateDrawCount(ResourceBundle bundle, int drawCount) {
+		String draws = bundle.getString("gameView.drawCard") + " X" + drawCount;
+		drawCard.setText(draws);
+	}
+
 	public void updatePlayerTurn(ResourceBundle bundle, String player) {
 		String turn = player + " " + bundle.getString("gameView.turn");
 		turnIndicatorText.setText(turn);
@@ -527,10 +1115,258 @@ public class GameView extends StackPane {
 		localHandLabel.setText(handText);
 	}
 
+	public void updateGrantFavorSubTitle(
+			ResourceBundle bundle, String fromPlayer, String toPlayer
+	) {
+		String subTitle = fromPlayer + " "
+				+ bundle.getString("favor.grantSubTitle") + " "
+				+ toPlayer;
+		modalSubTitle.setText(subTitle);
+	}
+
 	public void updatePlayerCards(List<Card> hand) {
 		this.playerHandSection.getChildren().clear();
 		for (Card card : hand) {
 			addPlayerCard(card);
+		}
+		centerHandScrollInitially();
+	}
+
+	public void updateFavorCards(List<Card> hand, IntConsumer handler) {
+		this.modalCardRow.getChildren().clear();
+		for (int idx = 0; idx < hand.size(); idx++) {
+			addFavorCard(hand.get(idx), handler, idx);
+		}
+	}
+
+	public void showSeeTheFutureScreen() {
+		prepareSeeTheFutureModal();
+		showModal();
+	}
+
+	public void hideSeeTheFutureScreen() {
+		hideModal();
+	}
+
+	public void showTargetedAttackScreen() {
+		prepareTargetedAttackModal();
+		showModal();
+	}
+
+	public void hideTargetedAttackScreen() {
+		hideModal();
+	}
+
+	public void showDemandFavorScreen() {
+		prepareDemandFavorModal();
+		showModal();
+	}
+
+	public void hideDemandFavorScreen() {
+		hideModal();
+	}
+
+	public void showGrantFavorScreen() {
+		prepareGrantFavorModal();
+		showModal();
+	}
+
+	public void hideGrantFavorScreen() {
+		hideModal();
+	}
+
+	public void showDoubleSpecialComboScreen() {
+		prepareDoubleSpecialComboScreen();
+		showModal();
+	}
+
+	public void hideCatCardScreen() {
+		hideModal();
+	}
+
+	public void showTripleSpecialComboScreen() {
+		tripleComboOverlayScreen.setVisible(true);
+		tripleComboOverlayScreen.setManaged(true);
+	}
+
+	public void hideTripleSpecialComboScreen() {
+		tripleComboOverlayScreen.setVisible(false);
+		tripleComboOverlayScreen.setManaged(false);
+	}
+
+	private Button createTargetPlayerButton(
+			PlayerDisplayInfo player,
+			CardType desiredCard,
+			BiConsumer<Integer, CardType> onTargetSelected
+	) {
+		String playerName = player.getName();
+		int playerId = player.getPlayerId();
+
+		Button playerButton = new Button(
+				playerName
+		);
+		playerButton.getStyleClass().add("btn-three-target");
+		playerButton.setMaxWidth(Double.MAX_VALUE);
+		playerButton.setOnAction(e -> {
+			onTargetSelected.accept(playerId, desiredCard);
+		});
+		return playerButton;
+	}
+
+	public void updateTripleComboScreen(
+			ResourceBundle bundle,
+			List<PlayerDisplayInfo> opponents,
+			BiConsumer<Integer, CardType> onTargetSelected
+	) {
+		tripleComboHeader.setText(catCardTitleText);
+		tripleComboInstruction.setText(catCardSubTitleText);
+		guessBoxLabel.setText(bundle.getString("catCardSpecialCombo.guessLabel"));
+
+		cardGuessComboBox.getItems().clear();
+		for (CardType type : CardType.values()) {
+			if (type != CardType.EXPLODING_KITTEN) {
+				cardGuessComboBox.getItems().add(type);
+			}
+		}
+		cardGuessComboBox.setValue(CardType.DEFUSE);
+
+		tripleTargetButtons.getChildren().clear();
+		for (PlayerDisplayInfo player : opponents) {
+			CardType desiredCard = cardGuessComboBox.getValue();
+			Button playerButton = createTargetPlayerButton(
+					player,
+					desiredCard,
+					onTargetSelected
+			);
+			tripleTargetButtons.getChildren().add(playerButton);
+		}
+	}
+
+	private void updateDefuseSlider(int deckSize) {
+		int maxIndex = Math.max(deckSize, 0);
+		defuseSliderMaxIndex = maxIndex;
+		defuseSlider.setMin(0);
+		defuseSlider.setMax(maxIndex);
+		defuseSlider.setValue(0);
+		defuseSlider.setBlockIncrement(1);
+		defuseSlider.setMajorTickUnit(1);
+		defuseSlider.setMinorTickCount(0);
+		defuseSlider.setSnapToTicks(true);
+		defuseSlider.setDisable(false);
+		updateDefuseSliderLabels();
+	}
+
+	public void showDefuseScreen(ResourceBundle bundle, int deckSize) {
+		defuseTopLabelText = bundle.getString("defuse.topLabel");
+		defuseCurrentLabelText = bundle.getString("defuse.currentLabel");
+		defuseBottomLabelText = bundle.getString("defuse.bottomLabel");
+
+		updateDefuseSlider(deckSize);
+		updateDefuseSliderLabels();
+
+		defuseOverlayScreen.setVisible(true);
+		defuseOverlayScreen.setManaged(true);
+	}
+
+	public void hideDefuseScreen() {
+		defuseOverlayScreen.setVisible(false);
+		defuseOverlayScreen.setManaged(false);
+	}
+
+	public void updateSeeTheFutureCards(ResourceBundle bundle, List<Card> cards) {
+		modalCardRow.getChildren().clear();
+		for (Card card : cards) {
+			String cardName = cardCollection.get(card.getCardType());
+			CardView peekCard = new CardView(cardName);
+			peekCard.getStyleClass().remove("hand-card");
+			peekCard.getStyleClass().add(
+					"future-peeked-card"
+			);
+
+			preprocessCard(peekCard, peekCardWidth, peekCardHeight);
+
+			modalCardRow.getChildren().add(peekCard);
+		}
+	}
+
+	public void updateTargetedAttackPlayers(
+			List<PlayerDisplayInfo> players, IntConsumer handler
+	) {
+		int newHeight = players.size()
+				* targetedAttackButtonHeight
+				+ targetedAttackDialogWindowHeight;
+		modalDialogScreen.setMinHeight(newHeight);
+		modalDialogScreen.setMaxHeight(newHeight);
+
+		modalPlayerButtons.getChildren().clear();
+		for (PlayerDisplayInfo player : players) {
+			String playerName = player.getName();
+			int playerId = player.getPlayerId();
+
+			Button playerButton = new Button(playerName);
+			playerButton.getStyleClass().add("targeted-action-button");
+			playerButton.setOnAction(e -> handler.accept(playerId));
+
+			modalPlayerButtons.getChildren().add(
+					playerButton
+			);
+		}
+	}
+
+	public void updateDemandFavorPlayers(
+			List<PlayerDisplayInfo> players, IntConsumer handler
+	) {
+		int newHeight = players.size()
+				* demandFavorButtonHeight
+				+ demandFavorDialogWindowHeight;
+		modalDialogScreen.setMinHeight(newHeight);
+		modalDialogScreen.setMaxHeight(newHeight);
+
+		modalPlayerButtons.getChildren().clear();
+		for (PlayerDisplayInfo player : players) {
+			String playerName = player.getName();
+			int playerId = player.getPlayerId();
+
+			Button playerButton = new Button(playerName);
+			playerButton.getStyleClass().add("favor-target-button");
+			playerButton.setOnAction(e -> handler.accept(playerId));
+
+			modalPlayerButtons.getChildren().add(
+					playerButton
+			);
+		}
+	}
+
+	public void updateCatCardsPlayer(
+			List<PlayerDisplayInfo> players, IntConsumer handler
+	) {
+		int newHeight = players.size()
+				* catCardButtonHeight
+				+ catCardDialogWindowHeight;
+		modalDialogScreen.setMinHeight(newHeight);
+		modalDialogScreen.setMaxHeight(newHeight);
+
+		modalPlayerButtons.getChildren().clear();
+		for (PlayerDisplayInfo player : players) {
+			String playerName = player.getName();
+			int playerId = player.getPlayerId();
+
+			Button playerButton = new Button(playerName);
+			playerButton.getStyleClass().add("catCard-target-button");
+			playerButton.setOnAction(e -> handler.accept(playerId));
+
+			modalPlayerButtons.getChildren().add(
+					playerButton
+			);
+		}
+	}
+
+	private void handleExtraCard() {
+		if (this.selectedHandCards.size() > maxNumberOfCardSelected) {
+			CardView card = this.selectedHandCards.get(0);
+			card.getStyleClass().remove("hand-card-selected");
+			card.getStyleClass().add("hand-card");
+			this.selectedHandCards.remove(0);
 		}
 	}
 
@@ -539,6 +1375,7 @@ public class GameView extends StackPane {
 		card.getStyleClass().add("hand-card-selected");
 		this.selectedHandCards.add(card);
 		this.playCardButton.setDisable(false);
+		handleExtraCard();
 	}
 
 	private void deselectCard(CardView card) {
@@ -582,6 +1419,15 @@ public class GameView extends StackPane {
 		this.playerHandSection.getChildren().add(playerCard);
 	}
 
+	private void addFavorCard(Card card, IntConsumer handler, int index) {
+		String assetFolder = cardCollection.get(card.getCardType());
+		CardView favorCard = new CardView(assetFolder);
+		favorCard.getStyleClass().remove("hand-card");
+		favorCard.getStyleClass().add("favor-select-card");
+		favorCard.setOnMouseClicked(e -> handler.accept(index));
+		this.modalCardRow.getChildren().add(favorCard);
+	}
+
 	public void clearLog() {
 		this.scrollPane.setVvalue(0.0);
 		this.feedContainer.getChildren().clear();
@@ -609,18 +1455,7 @@ public class GameView extends StackPane {
 	}
 
 	public void addCardToDiscardPile(CardView card) {
-		card.setMaxSize(discardCardWidth, discardCardHeight);
-		card.setMinSize(discardCardWidth, discardCardHeight);
-		card.setPrefSize(discardCardWidth, discardCardHeight);
-
-		ImageView imageView = (ImageView) card.getChildren().get(0);
-		imageView.setFitWidth(discardCardWidth);
-		imageView.setFitHeight(discardCardHeight);
-		imageView.setPreserveRatio(false);
-
-		Rectangle clip = (Rectangle) imageView.getClip();
-		clip.setWidth(discardCardWidth);
-		clip.setHeight(discardCardHeight);
+		preprocessCard(card, discardCardWidth, discardCardHeight);
 
 		this.discardPileSection.getChildren().add(
 				card
@@ -637,6 +1472,23 @@ public class GameView extends StackPane {
 		this.playCardButton.setDisable(true);
 	}
 
+	private void preprocessCard(CardView card, int width, int height) {
+		card.setMaxSize(width, height);
+		card.setMinSize(width, height);
+		card.setPrefSize(width, height);
+
+		ImageView imageView = (ImageView) card.getChildren().get(0);
+		imageView.setFitWidth(width);
+		imageView.setFitHeight(height);
+		imageView.setPreserveRatio(false);
+
+		Rectangle clip = (Rectangle) imageView.getClip();
+		clip.setWidth(width);
+		clip.setHeight(height);
+
+		imageView.setClip(clip);
+	}
+
 	public void setOnDrawAction(Runnable handler) {
 		this.deck.setOnAction(e -> handler.run());
 		this.drawCard.setOnAction(e -> handler.run());
@@ -646,5 +1498,21 @@ public class GameView extends StackPane {
 		this.playCardButton.setOnAction(e -> {
 			handler.accept(new ArrayList<>(this.selectedHandCards));
 		});
+	}
+
+	public void setOnSeeTheFutureDismissButton(Runnable handler) {
+		this.modalDismissButton.setOnAction(e -> {
+			handler.run();
+		});
+	}
+
+	public void setOnDefuseButton(IntConsumer handler) {
+		defuseButton.setOnAction(event -> handler.accept(
+				(int) defuseSlider.getValue()
+		));
+	}
+
+	public void setOnExplodeButton(Runnable handler) {
+		explodeButton.setOnAction(event -> handler.run());
 	}
 }

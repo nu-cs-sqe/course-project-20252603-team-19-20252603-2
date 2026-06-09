@@ -171,8 +171,9 @@ For each turn the UI drives the engine as follows:
      Both end the turn.
    - Otherwise call `endTurnByDrawing()` to end the turn (honours Attack
      stacking and skips eliminated players).
-5. After any turn-ending action, check `isGameOver()`; if true call
-   `getWinnerId()` and show the End screen.
+5. After any turn-ending action, check `isGameOver()`; if true resolve
+   `getWinnerId()` → `AppModel.setWinnerPlayerName()` and navigate to `WinnerView`
+   via `ScreenRouter.showWinner()`.
 6. Otherwise repeat from step 1 for the new `getCurrentPlayerId()`.
 
 A Nope may be played by any other player via `playNope(noperId)` immediately
@@ -279,10 +280,11 @@ the root JavaFX Stage.
 
 - `start(Stage primaryStage)` — Overridden JavaFX application lifecycle method. 
 Configures the centralized `AppModel` and `JavaFxScreenRouter`, instantiates all 
-screen views (`StartView`, `InstructionView`, `GameSetupView`, `GameView`), wires 
-`StartController`, `InstructionController`, `GameSetupController`, and `GameController`, 
-registers anonymous `ScreenRouter` logic to mutate the `Scene` root during navigation, 
-and brings the primary application window into view.
+screen views (`StartView`, `InstructionView`, `GameSetupView`, `GameView`, `WinnerView`), wires 
+`StartController`, `InstructionController`, `GameSetupController`, `GameController`, and 
+`WinnerController`, registers anonymous `ScreenRouter` logic to mutate the `Scene` root during 
+navigation (including `showWinner()`), initializes the `Scene` on `StartView`, and brings the 
+primary application window into view.
 - `main(String[] args)` — Traditional static entry point; delegates execution straight
 to the native JavaFX framework's `launch()` sequence.
 
@@ -445,6 +447,13 @@ restricted to homogeneous card types to support matching pair/triplet combo mech
 - `gamePlaySection`: `HBox` — main central board layout framing the deck, chatter, and discard pile.
 - `cardSection`: `HBox` — bottom dock formatting hand metrics, card tracks, and buttons.
 - `playerHandSection`: `HBox` — dynamic row rendering the active cards held in the local player's hand.
+- `handScrollContent`: `HBox` — centering wrapper around `playerHandSection`; `minWidth` binds to `max(viewport, hand width)` so few cards center in the bar.
+- `handScrollPane`: `ScrollPane` — horizontal-only hand viewport (`.hand-cards-col-2`); pannable left/right, vertical scroll blocked, `vvalue` pinned to `0`.
+- `modalOverlayScreen`: `VBox` — shared backdrop for See the Future, Targeted Attack, Favor, and double special-combo modals.
+- `tripleComboOverlayScreen`: `VBox` — dedicated backdrop for the three-of-a-kind special combo (`.combo-three-overlay`).
+- `defuseOverlayScreen`: `VBox` — dedicated backdrop for Exploding Kitten defuse resolution.
+- `modalDialogScreen`, `modalCardRow`, `modalCardScroll`, `modalPlayerButtons` — reusable modal chrome for card/target selection flows.
+- `tripleComboCard`, `cardGuessComboBox`, `tripleTargetButtons` — triple-combo UI (title, `ComboBox<CardType>` guess, per-opponent target buttons).
 - `feedContainer`: `VBox` — vertical logging module appending incoming event feeds.
 - `discardPile`: `VBox` — container stack managing the visual properties of discarded card layouts.
 - `scrollPane`: `ScrollPane` — container scrolling window wrapping around the live chatter engine.
@@ -506,8 +515,11 @@ restricted to homogeneous card types to support matching pair/triplet combo mech
 - `createGamePlaySection(): HBox` — macro assembler; layouts the board surface, integrating draw piles, 
   feed trackers, and discard piles.
 - `createHandLabelSection(): VBox` — component factory; configures local user hand title tracking rows.
-- `createPlayerHandSection(): ScrollPane` — configuration wrapper; styles horizontal panning sliders over 
-  active inventories.
+- `createPlayerHandSection(): ScrollPane` — builds `handScrollPane` over `handScrollContent` + 
+  `playerHandSection`; horizontal pan only, blocks vertical wheel/drag, recenters on hand refresh.
+- `centerHandScrollInitially()` — after `updatePlayerCards`, sets `hvalue` to `0` when the hand fits 
+  the viewport or `0.5` when it overflows (starts centered on wide hands).
+- `createTripleComboOverlay(): VBox` — constructs the three-of-a-kind modal (`combo-three-card` CSS).
 - `createPlayCardButton()` — element factory; generates main card triggers and forces initial fallback 
   disable constraints.
 - `createPlayCardSection(): VBox` — alignment wrapper; maps out the layout area for execution buttons.
@@ -523,8 +535,34 @@ restricted to homogeneous card types to support matching pair/triplet combo mech
   updating active turn fields.
 - `updateHandCount(int handSize, String playerName)` — string processor; builds and prints local user 
   inventory lengths.
-- `updatePlayerCards(List<Card> hand)` — layout flush loop; resets user hand panels and runs structural
-  loops to map and display cards.
+- `updatePlayerCards(List<Card> hand)` — layout flush loop; resets user hand panels, maps cards, then 
+  calls `centerHandScrollInitially()`.
+- `showDemandFavorScreen()` / `hideDemandFavorScreen()` — shared modal for Favor target pick 
+  (`.favor-request-box`).
+- `showGrantFavorScreen()` / `hideGrantFavorScreen()` — shared modal for granting a card from the 
+  target's hand (`.favor-grant-box` + `modalCardScroll`).
+- `updateDemandFavorPlayers(List<PlayerDisplayInfo>, IntConsumer)` — populates living-opponent target 
+  buttons for demand Favor.
+- `updateGrantFavorSubTitle(ResourceBundle, String fromPlayer, String toPlayer)` — builds grant-step 
+  subtitle text.
+- `updateFavorCards(List<Card>, IntConsumer)` — renders opponent hand cards as clickable 
+  `.favor-select-card` nodes in `modalCardRow`.
+- `showDoubleSpecialComboScreen()` / `hideCatCardScreen()` — two-of-a-kind special combo modal.
+- `showTripleSpecialComboScreen()` / `hideTripleSpecialComboScreen()` — shows/hides dedicated triple 
+  combo overlay.
+- `updateTripleComboScreen(ResourceBundle, List<PlayerDisplayInfo>, BiConsumer<Integer, CardType>)` — 
+  fills triple combo UI: shared `catCardSpecialCombo` title/subtitle, `guessLabel`, `ComboBox` of all 
+  `CardType` except `EXPLODING_KITTEN` (default `DEFUSE`), and gold target buttons per opponent.
+- `showSeeTheFutureScreen()` / `hideSeeTheFutureScreen()` — See the Future peek modal.
+- `updateSeeTheFutureCards(ResourceBundle, List<Card>)` — renders peeked cards in `modalCardRow`.
+- `showTargetedAttackScreen()` / `hideTargetedAttackScreen()` — Targeted Attack victim picker.
+- `updateTargetedAttackPlayers(List<PlayerDisplayInfo>, IntConsumer)` — opponent buttons for 
+  Targeted Attack.
+- `updateCatCardsPlayer(List<PlayerDisplayInfo>, IntConsumer)` — opponent buttons for double 
+  special combo.
+- `showDefuseScreen(ResourceBundle, int deckSize)` / `hideDefuseScreen()` — defuse slider overlay.
+- `setOnSeeTheFutureDismissButton(Runnable)` / `setOnDefuseButton(IntConsumer)` / 
+  `setOnExplodeButton(Runnable)` — modal action hooks.
 - `selectCard(CardView card)` — layout modifier; shifts visual item properties to tracking selections 
   and updates action button disable states.
 - `deselectCard(CardView card)` — layout modifier; resets targeted item style definitions back to 
@@ -648,18 +686,31 @@ pipelines without storing references to mutable view or model instances as field
 ## GameController Class
 
 Represents the controller coordinating the active match between `GameView`, `AppModel`, 
-and an owned `GameModel`. Encapsulates draw, play, turn-advance, and full-board refresh 
-logic while delegating all domain rules to `GameEngine` through the model layer.
+and an owned `GameModel`. Encapsulates draw, play, modal card flows, defuse/explode 
+resolution, game-over navigation, and full-board refresh while delegating domain rules 
+to `GameEngine` through the model layer.
 
 ### Data Members
 - `model`: `GameModel` — per-match UI state facade wrapping `GameEngine` and display names.
-- `refreshAction`: `Runnable` — synchronizes localized chrome, local hand, opponents, deck count, turn banner, and log/discard reset when a game is active.
+- `refreshAction`: `Runnable` — synchronizes localized chrome, local hand, opponents, deck count, turn banner, forced-turn count, and log/discard reset when a game is active.
 - `startGameAction`: `Runnable` — boots the engine from `AppModel.getPlayerNames()` then runs `refreshAction`.
+- `CAT_PAIR_SIZE`: `int` — hand selection count ($2$) that routes to double special combo.
+- `CAT_TRIPLE_SIZE`: `int` — hand selection count ($3$) that routes to triple special combo.
 
 ### Methods
-- `GameController(GameView view, AppModel appModel, ScreenRouter router)` — instantiates `GameModel`, wires quit/draw/play handlers, and defines refresh/start pipelines.
-- `startGame()` — executes `startGameAction`; invoked by navigation when entering the game screen.
-- `refreshView()` — executes `refreshAction`; rebinds the board after locale changes or re-entry.
+- `GameController(GameView view, AppModel appModel, ScreenRouter router)` — instantiates `GameModel`, wires quit/draw/play/defuse/explode/see-the-future-dismiss handlers, and defines refresh/start pipelines.
+- `startGame()` — executes `startGameAction`; invoked by `MainApp` when navigating to the game screen (boots engine and runs `refreshAction`).
+- `handleGameOver(AppModel, ScreenRouter)` — when `model.isGameOver()`, stores winner display name in `AppModel` and calls `router.showWinner()`.
+- `handleExplodingKitten(GameView, AppModel)` — on drawn `EXPLODING_KITTEN`: opens defuse slider when local seat holds Defuse, otherwise calls `model.explodeCurrentPlayer()`.
+- `playCard(List<CardView>, GameView, AppModel)` — dispatches by selection size and `CardType`; early-returns for two- or three-card cat combos before generic single-card switch.
+- `playCatPair` / `playCatTriple` — show double/triple combo modals, discard selected cards on confirm, delegate to `model.playCatPair` / `model.playCatTriple`, then `refreshAfterPlay`.
+- `playFavor` — two-step modal: demand target (`livingOpponents()`), then grant step showing `model.getSelectedHand(targetId)` for card pick.
+- `playTargetedAttack` — victim picker over living opponents; discards and refreshes on confirm.
+- `playSeeTheFuture` — discards card, peeks top three via `model.playSeeTheFuture()`, opens peek modal.
+- `playSkip` / `playReverse` / `playAttack` / `playShuffle` / `playNope` — discard then delegate to matching `GameModel.play*` method.
+- `livingOpponents()` — filters `model.getOpponents()` to seats where `playerId != localPlayerId` and `isAlive`.
+- `refreshAfterPlay(GameView, AppModel)` — syncs hand, deck count, forced turns, turn banner, and opponent row after a play resolves.
+- `discardCard` / `computeLog` — moves played `CardView` nodes to discard pile and formats play log lines.
 
 ---
 
@@ -675,6 +726,7 @@ pre-game player metadata. Shared by every controller that requires i18n or setup
 - `CHINESE`: `Locale` — alternate locale constant (`Locale.SIMPLIFIED_CHINESE`).
 - `selectedLocale`: `Locale` — active user-facing locale; toggled at runtime.
 - `setupModel`: `GameSetupModel` — encapsulated setup-state store for player count and captured names.
+- `winnerPlayerName`: `String` — display name of match winner; set on game over, read by `WinnerController`.
 
 ### Methods
 - `toggleLanguage()` — flips `selectedLocale` between English and Simplified Chinese.
@@ -684,6 +736,7 @@ pre-game player metadata. Shared by every controller that requires i18n or setup
 - `setNumberPlayer(int playerCount)` — delegates to `setupModel.setNumberPlayer(playerCount)`.
 - `getPlayerNames(): List<String>` — delegates to `setupModel.getPlayerNames()` (defensive copy).
 - `capturePlayerNamesFromInputs(List<String> rawInputs, String defaultNamePrefix)` — delegates name normalization and validation to `setupModel`.
+- `setWinnerPlayerName(String)` / `getWinnerPlayerName(): String` — store and retrieve the winner label for the end screen.
 
 ---
 
@@ -729,33 +782,77 @@ turn tracking, and hand queries without embedding JavaFX dependencies.
 - `ableToDrawCard(): boolean` — delegates to `engine.isDeckEmpty()` (inverted guard semantics for UI draw eligibility).
 - `drawCard(): Card` — delegates to `engine.drawCardForCurrentPlayer()`.
 - `getDeckSize(): int` — delegates to `engine.getDrawPileSize()`.
-- `removeCard(CardType cardType)` — locates and removes the first matching card from the local player's hand via the engine.
-- `finishTurn()` — advances the engine turn tracker and syncs `localPlayerId` to `engine.getCurrentPlayerId()`.
+- `endTurnByDrawing()` — delegates to `engine.endTurnByDrawing()` and syncs `localPlayerId`.
+- `playSkip()` / `playReverse()` / `playAttack()` / `playShuffle()` — action delegates; each syncs `localPlayerId` after engine call.
+- `playSeeTheFuture(): List<Card>` — delegates peek to engine.
+- `playTargetedAttack(int targetId)` / `playFavor(int targetId, int cardIndex)` / `playNope()` — targeted and reactive play delegates.
+- `playCatPair(int targetId, CardType)` / `playCatTriple(int targetId, CardType selected, CardType desired)` — special-combo steals.
+- `defuseExplodingKitten(int reinsertIndex)` / `explodeCurrentPlayer()` — Exploding Kitten resolution paths.
+- `isGameOver(): boolean` / `getWinnerId(): int` — end-state queries from engine.
+- `getForcedTurns(): int` — remaining forced draws for the local UI turn banner.
+- `getLocalPlayerId(): int` — current human seat index tracked for modal filtering.
+- `currentPlayerHasDefuse(): boolean` — whether the engine's current player holds Defuse (draw-time check).
+- `getPlayerName(int playerId): String` — resolves a seat's display label.
+- `getSelectedHand(int playerId): List<Card>` — full hand of any seat (Favor grant step).
 - `getLocalHand(): List<Card>` — returns the local player's hand from the engine.
 - `getLocalHandSize(): int` — returns local hand list size.
 - `getLocalPlayerName(): String` — resolves the display name for `localPlayerId`.
 - `resetPlayerId()` — resets `localPlayerId` to $0$ before a full UI refresh.
 - `getOpponents(): List<PlayerDisplayInfo>` — maps every seated player into a display DTO for `GameView.showOpponents`.
-- `toDisplayInfo(int playerId): PlayerDisplayInfo` — private mapper; bundles name, hand size, and current-turn flag.
+- `toDisplayInfo(int playerId): PlayerDisplayInfo` — private mapper; bundles name, hand size, `playerId`, current-turn flag, and alive state.
 
 ---
 
 ## PlayerDisplayInfo Class
 
-Represents an immutable snapshot of opponent (or seat) information required by `GameView` 
-to render avatars, hand-size badges, and active-turn highlights. A pure data transfer 
-object with no behavior beyond accessors.
+Represents a per-seat snapshot for `GameView` opponent rows and modal target pickers. 
+Mutable turn/alive flags; name, hand size, and `playerId` fixed at construction.
 
 ### Data Members
 - `name`: `String` — player display label.
 - `handSize`: `int` — number of cards currently held (face-down count for opponents).
+- `playerId`: `int` — engine seat index; used by `GameController.livingOpponents()` and modal callbacks.
 - `currentTurn`: `boolean` — whether this seat matches `GameEngine.getCurrentPlayerId()`.
+- `alive`: `boolean` — false after the player explodes without Defuse.
 
 ### Methods
-- `PlayerDisplayInfo(String name, int handSize, boolean currentTurn)` — constructs an immutable record.
-- `getName(): String` — returns `name`.
-- `getHandSize(): int` — returns `handSize`.
-- `isCurrentTurn(): boolean` — returns `currentTurn`.
+- `PlayerDisplayInfo(String name, int handSize, int playerId)` — constructs a seat record (turn and alive default to false-turn / alive).
+- `getName(): String` / `getHandSize(): int` / `getPlayerId(): int` — accessors.
+- `isCurrentTurn(): boolean` / `setCurrentTurn(boolean)` — turn highlight state.
+- `isAlive(): boolean` / `setAlive(boolean)` — elimination state for modal filtering.
+
+---
+
+## WinnerView Class
+
+Represents the post-match overlay shown when exactly one player remains. Trophy icon, 
+winner name line, description copy, and Play Again / Main Menu actions. Loads 
+`winner-style.css`.
+
+### Data Members
+- `winnerTitle`, `winnerText`, `winnerDescription`: `Text` — header, dynamic winner line, and body copy.
+- `playAgainButton`, `mainMenuButton`: `Button` — navigation triggers.
+- Trophy layout constants (`trophyImageSize`, clip dimensions, `winnerSectionSpacing`, etc.).
+
+### Methods
+- `WinnerView()` — builds centered `win-overlay` stack with `win-modal-card` dialog.
+- `updateDisplay(ResourceBundle)` — binds `winner.title`, `winner.description`, button labels.
+- `updateWinner(ResourceBundle, String player)` — sets `winnerText` to `{player} {winner.subtitle}`.
+- `setOnPlayAgainAction(Runnable)` / `setOnMainMenuAction(Runnable)` — wire controller navigation.
+
+---
+
+## WinnerController Class
+
+Represents the controller binding `WinnerView` to `AppModel` winner state and 
+`ScreenRouter` post-game navigation.
+
+### Data Members
+- `refreshView`: `Runnable` — reloads bundle strings and winner name from `AppModel`.
+
+### Methods
+- `WinnerController(WinnerView, AppModel, ScreenRouter)` — defines `refreshView`; Play Again → `showGame`, Main Menu → `showStart`.
+- `refreshView()` — runs `refreshView` runnable (invoked when entering winner screen).
 
 ---
 
@@ -769,6 +866,7 @@ from concrete JavaFX `Scene` root mutations implemented in `MainApp`.
 - `showInstructions()` — navigate to the rules screen.
 - `showGameSetup()` — navigate to the pre-game setup screen.
 - `showGame()` — navigate to the active match screen.
+- `showWinner()` — navigate to the post-match winner screen.
 
 ---
 
@@ -787,6 +885,25 @@ logic after all views and controllers are constructed.
 - `showInstructions()` — forwards to `navigation.showInstructions()`.
 - `showGameSetup()` — forwards to `navigation.showGameSetup()`.
 - `showGame()` — forwards to `navigation.showGame()`.
+- `showWinner()` — forwards to `navigation.showWinner()`.
+
+---
+
+## UI Stylesheets (game and winner)
+
+Key `game-style.css` hooks added or relied on by recent UI work:
+
+- `.hand-scroll-content` — top/bottom padding so hand-card hover lift and selection ring are not clipped by the horizontal `ScrollPane`.
+- `.hand-cards-col-2` — fixed hand viewport height ($200$px); horizontal scroll only (enforced in `GameView.createPlayerHandSection`).
+- `.combo-three-overlay`, `.combo-three-card`, `.combo-three-*` — dedicated triple special-combo modal chrome (separate from shared `modalOverlayScreen`).
+- `.favor-request-box` / `.favor-grant-box` — two-step Favor modals on the shared overlay; grant step uses `modalCardScroll` for opponent hand cards.
+
+`winner-style.css` styles `WinnerView` (`win-overlay`, `win-modal-card`, `win-header`, `btn-play-again`, etc.).
+
+### i18n keys (message bundles)
+
+- `catCardSpecialCombo.title`, `.subtitle`, `.guessLabel`, `.targetPrefix` — double/triple combo modals (`message_en.properties`, `message_zh.properties`).
+- `winner.title`, `.subtitle`, `.description`, `.playAgain`, `.mainMenu` — winner screen copy.
 
 ---
 

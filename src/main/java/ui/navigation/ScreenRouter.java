@@ -8,4 +8,6 @@ public interface ScreenRouter {
 	void showGameSetup();
 
 	void showGame();
+
+	void showWinner();
 }

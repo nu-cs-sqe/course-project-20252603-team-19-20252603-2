@@ -3,6 +3,7 @@ package ui.view;
 import domain.CardType;
 import java.util.Map;
 import java.util.Random;
+import java.util.ResourceBundle;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -73,8 +74,8 @@ public class CardView extends StackPane {
 		this.getChildren().add(imageView);
 	}
 
-	public String getCardName() {
-		return cardName;
+	public String getCardName(ResourceBundle bundle) {
+		return bundle.getString("cardView." + cardName);
 	}
 
 	public CardType getCardType() {

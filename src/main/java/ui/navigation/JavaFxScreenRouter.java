@@ -27,4 +27,9 @@ public class JavaFxScreenRouter implements ScreenRouter {
 	public void showGame() {
 		navigation.showGame();
 	}
+
+	@Override
+	public void showWinner() {
+		navigation.showWinner();
+	}
 }

@@ -34,14 +34,83 @@ public class GameModel {
 		return engine.getDrawPileSize();
 	}
 
-	public void removeCard(CardType cardType) {
-		int index = engine.getPlayer(localPlayerId).getIndexOfCard(cardType);
-		engine.getPlayer(localPlayerId).removeCardFromHand(index);
+	public void endTurnByDrawing() {
+		engine.endTurnByDrawing();
+		localPlayerId = engine.getCurrentPlayerId();
 	}
 
-	public void finishTurn() {
-		engine.advanceToNextPlayer();
+	public void playSkip() {
+		engine.playSkip();
 		localPlayerId = engine.getCurrentPlayerId();
+	}
+
+	public void playReverse() {
+		engine.playReverse();
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
+	public void playAttack() {
+		engine.playAttack();
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
+	public void playShuffle() {
+		engine.playShuffle();
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
+	public List<Card> playSeeTheFuture() {
+		return engine.playSeeTheFuture();
+	}
+
+	public void playTargetedAttack(int targetId) {
+		engine.playTargetedAttack(targetId);
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
+	public void playFavor(int targetId, int cardIndex) {
+		engine.playFavor(targetId, cardIndex);
+	}
+
+	public void playNope() {
+		engine.playNope(engine.getCurrentPlayerId());
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
+	public void playCatPair(int targetId, CardType cardType) {
+		engine.playCatPair(targetId, cardType);
+	}
+
+	public void playCatTriple(
+			int targetId, CardType selectedCard, CardType desiredCard
+	) {
+		engine.playCatTriple(targetId, selectedCard, desiredCard);
+	}
+
+	public void defuseExplodingKitten(int reinsertIndex) {
+		engine.defuseDrawnKitten(reinsertIndex);
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
+	public boolean isGameOver() {
+		return engine.isGameOver();
+	}
+
+	public int getWinnerId() {
+		return engine.getWinnerId();
+	}
+
+	public String getPlayerName(int playerId) {
+		return playerNames.get(playerId);
+	}
+
+	public void explodeCurrentPlayer() {
+		engine.explodeCurrentPlayer();
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
+	public int getForcedTurns() {
+		return engine.getForcedTurns();
 	}
 
 	public List<Card> getLocalHand() {
@@ -54,6 +123,19 @@ public class GameModel {
 
 	public String getLocalPlayerName() {
 		return playerNames.get(localPlayerId);
+	}
+
+	public int getLocalPlayerId() {
+		return localPlayerId;
+	}
+
+	public boolean currentPlayerHasDefuse() {
+		return engine.getPlayer(engine.getCurrentPlayerId())
+				.hasCard(CardType.DEFUSE);
+	}
+
+	public List<Card> getSelectedHand(int playerId) {
+		return engine.getPlayerHand(playerId);
 	}
 
 	public void resetPlayerId() {
@@ -70,10 +152,13 @@ public class GameModel {
 
 	private PlayerDisplayInfo toDisplayInfo(int playerId) {
 		Player player = engine.getPlayer(playerId);
-		return new PlayerDisplayInfo(
+		PlayerDisplayInfo playerInfo = new PlayerDisplayInfo(
 				playerNames.get(playerId),
 				player.getHandSize(),
-				engine.getCurrentPlayerId() == playerId
+				playerId
 		);
+		playerInfo.setCurrentTurn(engine.getCurrentPlayerId() == playerId);
+		playerInfo.setAlive(player.isAlive());
+		return playerInfo;
 	}
 }

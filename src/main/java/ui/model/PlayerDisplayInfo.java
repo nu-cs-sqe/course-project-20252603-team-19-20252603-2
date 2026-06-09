@@ -3,12 +3,16 @@ package ui.model;
 public final class PlayerDisplayInfo {
 	private final String name;
 	private final int handSize;
-	private final boolean currentTurn;
+	private final int playerId;
+	private boolean currentTurn;
+	private boolean alive;
 
-	public PlayerDisplayInfo(String name, int handSize, boolean currentTurn) {
+	public PlayerDisplayInfo(String name, int handSize, int playerId) {
 		this.name = name;
 		this.handSize = handSize;
-		this.currentTurn = currentTurn;
+		this.playerId = playerId;
+		this.currentTurn = false;
+		this.alive = true;
 	}
 
 	public String getName() {
@@ -21,5 +25,21 @@ public final class PlayerDisplayInfo {
 
 	public boolean isCurrentTurn() {
 		return currentTurn;
+	}
+
+	public void setCurrentTurn(boolean turn) {
+		this.currentTurn = turn;
+	}
+
+	public int getPlayerId() {
+		return playerId;
+	}
+
+	public boolean isAlive() {
+		return alive;
+	}
+
+	public void setAlive(boolean living) {
+		alive = living;
 	}
 }
