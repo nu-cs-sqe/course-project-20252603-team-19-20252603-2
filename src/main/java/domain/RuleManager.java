@@ -1,5 +1,7 @@
 package domain;
 
+import java.util.Currency;
+
 public final class RuleManager {
 
     private static final int CAT_PAIR_SIZE = 2;
@@ -40,8 +42,9 @@ public final class RuleManager {
         int count = 0;
         for (Card card : actor.getHand()) {
             CardType currentType = card.getCardType();
-            if (currentType == cardType || (currentType == CardType.FERAL_CAT
-                    && cardType == CardType.CAT_CARDS)) {
+            if (currentType == cardType
+                    || (currentType == CardType.FERAL_CAT && cardType == CardType.CAT_CARDS)
+                    || (currentType == CardType.CLONE && cardType == CardType.CAT_CARDS)) {
                 count++;
             }
         }
