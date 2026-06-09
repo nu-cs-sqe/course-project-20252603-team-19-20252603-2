@@ -13,6 +13,7 @@ public final class RuleManager {
     private static final String CAT_TRIPLE_NEED_THREE_KEY = "rule.catTriple.needThree";
     private static final String NOTHING_TO_NOPE_KEY = "rule.nope.nothingToCancel";
     private static final String NOTHING_TO_CLONE_KEY = "rule.clone.nothingToClone";
+    private static final String CANNOT_CLONE_CLONE_CARD_KEY = "rule.clone.cannotCloneClone";
 
     public void requirePlayable(CardType type) {
         if (type == CardType.DEFUSE || type == CardType.EXPLODING_KITTEN) {
@@ -62,6 +63,9 @@ public final class RuleManager {
     public void requireSomethingToClone(CardType lastPlayedCard) {
         if (lastPlayedCard == null) {
             throw new IllegalStateException(NOTHING_TO_CLONE_KEY);
+        }
+        if (lastPlayedCard == CardType.CLONE) {
+            throw new IllegalStateException(CANNOT_CLONE_CLONE_CARD_KEY);
         }
     }
 }

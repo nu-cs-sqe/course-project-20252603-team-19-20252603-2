@@ -136,10 +136,10 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 ##### All-combination or each-choice: each-choice
 
 | Test Case # | System under test                 | Expected output                                                             | Implemented? |
-|-------------|-----------------------------------|-----------------------------------------------------------------------------|--------------|
-| TC1         | `requireSomethingToClone(ATTACK)` | returns normally                                                            | yes          |
-| TC2         | `requireSomethingToClone(null)`   | throws `IllegalStateException` with message `"rule.clone.nothingToClone"`   | yes          |
-| TC3         | `requireSomethingToClone(CLONE)`  | throws `IllegalStateException` with message `"rule.clone.cannotCloneClone"` | no           |
+|-------------|-----------------------------------|-----------------------------------------------------------------------------|-------------|
+| TC1         | `requireSomethingToClone(ATTACK)` | returns normally                                                            | yes         |
+| TC2         | `requireSomethingToClone(null)`   | throws `IllegalStateException` with message `"rule.clone.nothingToClone"`   | yes         |
+| TC3         | `requireSomethingToClone(CLONE)`  | throws `IllegalStateException` with message `"rule.clone.cannotCloneClone"` | yes         |
 
 ---
 
