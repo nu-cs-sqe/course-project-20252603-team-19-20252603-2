@@ -175,4 +175,9 @@ class RuleManagerTest {
                 () -> ruleManager.requireSomethingToNope(null));
         assertEquals("rule.nope.nothingToCancel", ex.getMessage());
     }
+
+    @Test
+    void requireSomethingToClone_nonNullLastCard_returnsNormally() {
+        assertDoesNotThrow(() -> ruleManager.requireSomethingToClone(CardType.ATTACK));
+    }
 }
