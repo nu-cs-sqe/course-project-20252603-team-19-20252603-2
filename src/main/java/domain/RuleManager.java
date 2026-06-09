@@ -17,6 +17,8 @@ public final class RuleManager {
     private static final String CAT_TRIPLE_NEED_THREE_KEY = "rule.catTriple.needThree";
     private static final String CAT_TRIPLE_FERAL_CANNOT_BE_BASE_KEY =
             "rule.catTriple.feralCannotBeBaseType";
+    private static final String CAT_TRIPLE_CLONE_CANNOT_BE_BASE_KEY =
+            "rule.catTriple.cloneCannotBeBaseType";
     private static final String NOTHING_TO_NOPE_KEY = "rule.nope.nothingToCancel";
     private static final String NOTHING_TO_CLONE_KEY = "rule.clone.nothingToClone";
     private static final String CANNOT_CLONE_CLONE_CARD_KEY = "rule.clone.cannotCloneClone";
@@ -72,6 +74,9 @@ public final class RuleManager {
     public void requireCatTriple(Player actor, CardType selectedCard) {
         if (selectedCard == CardType.FERAL_CAT) {
             throw new IllegalStateException(CAT_TRIPLE_FERAL_CANNOT_BE_BASE_KEY);
+        }
+        if (selectedCard == CardType.CLONE) {
+            throw new IllegalStateException(CAT_TRIPLE_CLONE_CANNOT_BE_BASE_KEY);
         }
         if (countOfType(actor, selectedCard) < CAT_TRIPLE_SIZE) {
             throw new IllegalStateException(CAT_TRIPLE_NEED_THREE_KEY);
