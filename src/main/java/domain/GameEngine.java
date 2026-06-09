@@ -243,7 +243,21 @@ public final class GameEngine {
         if (index < 0) {
             throw new IllegalStateException(NOT_IN_HAND_KEY);
         }
+        deck.discard(cloner.removeCardFromHand(index));
+        cloneLastAction();
         lastPlayedCard = null;
+    }
+
+    private void cloneLastAction() {
+        Player cloner = getPlayer(getCurrentPlayerId());
+        cloner.addCardToHand(new Card(lastPlayedCard));
+        switch (lastPlayedCard) {
+            case SKIP:
+                playSkip();
+                break;
+            default:
+                break;
+        }
     }
 
     private void returnTurnToLastPlayer() {
