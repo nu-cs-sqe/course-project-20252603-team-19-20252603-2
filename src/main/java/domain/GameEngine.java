@@ -119,6 +119,7 @@ public final class GameEngine {
 
     public List<Card> playSeeTheFuture() {
         playFromHand(CardType.SEE_THE_FUTURE);
+        lastPlayedCard = CardType.SEE_THE_FUTURE;
         return actionController.peekTopThree(deck);
     }
 
@@ -241,7 +242,7 @@ public final class GameEngine {
         }
     }
 
-    public void playClone() {
+    public List<Card> playClone() {
         ruleManager.requireSomethingToClone(lastPlayedCard);
         Player cloner = getPlayer(getCurrentPlayerId());
         int index = cloner.getIndexOfCard(CardType.CLONE);
@@ -249,11 +250,12 @@ public final class GameEngine {
             throw new IllegalStateException(NOT_IN_HAND_KEY);
         }
         deck.discard(cloner.removeCardFromHand(index));
-        cloneLastAction();
+        List<Card> viewedCards = cloneLastAction();
         lastPlayedCard = null;
+        return viewedCards;
     }
 
-    private void cloneLastAction() {
+    private List<Card> cloneLastAction() {
         Player cloner = getPlayer(getCurrentPlayerId());
         cloner.addCardToHand(new Card(lastPlayedCard));
         switch (lastPlayedCard) {
@@ -266,9 +268,12 @@ public final class GameEngine {
             case ATTACK:
                 playAttack();
                 break;
+            case SEE_THE_FUTURE:
+                return playSeeTheFuture();
             default:
                 break;
         }
+        return new ArrayList<>();
     }
 
     public void playClone(int targetId) {
