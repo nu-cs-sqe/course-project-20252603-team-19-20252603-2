@@ -911,6 +911,16 @@ class GameEngineTest {
         assertEquals(pileBefore, engine.getDrawPileSize());
     }
 
+    @Test
+    void playSuperSkip_withoutSkipInHand_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.SUPER_SKIP);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playSuperSkip());
+        assertEquals("gameEngine.play.notInHand", ex.getMessage());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
