@@ -770,6 +770,19 @@ class GameEngineTest {
         assertEquals("gameEngine.play.notInHand", ex.getMessage());
     }
 
+    @Test
+    void playClone_onSkip_TurnGoesToTheNextLivingPlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SKIP);
+        engine.playSkip();
+        engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
+
+        engine.playClone();
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(1, engine.getForcedTurns());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
