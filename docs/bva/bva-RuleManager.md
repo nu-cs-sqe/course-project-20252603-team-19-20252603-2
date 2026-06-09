@@ -121,6 +121,27 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 
 ---
 
+## Method 6: ```public void requireSomethingToClone(CardType lastPlayedCard)```
+
+### Step 1-3 Results
+
+| Step   | Input                                                 | Output                                 |
+|--------|-------------------------------------------------------|----------------------------------------|
+| Step 1 | The most recently played card type, or `null` if none | nothing (legal) or exception (illegal) |
+| Step 2 | `CardType` or `null`                                  | void / `IllegalStateException`         |
+| Step 3 | non-null last card (legal), `null` (illegal)          | returns normally / exception           |
+
+### Step 4:
+
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test                 | Expected output                                                           | Implemented? |
+|-------------|-----------------------------------|---------------------------------------------------------------------------|--------------|
+| TC1         | `requireSomethingToClone(ATTACK)` | returns normally                                                          | no           |
+| TC2         | `requireSomethingToClone(null)`   | throws `IllegalStateException` with message `"rule.clone.nothingToClone"` | no           |
+
+---
+
 ## Recall the 4 steps of BVA
 
 ### Step 1: Describe the input and output in terms of the domain.
