@@ -125,20 +125,21 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 
 ### Step 1-3 Results
 
-| Step   | Input                                                 | Output                                 |
-|--------|-------------------------------------------------------|----------------------------------------|
-| Step 1 | The most recently played card type, or `null` if none | nothing (legal) or exception (illegal) |
-| Step 2 | `CardType` or `null`                                  | void / `IllegalStateException`         |
-| Step 3 | non-null last card (legal), `null` (illegal)          | returns normally / exception           |
+| Step   | Input                                                    | Output                                 |
+|--------|----------------------------------------------------------|----------------------------------------|
+| Step 1 | The most recently played card type, or `null` if none    | nothing (legal) or exception (illegal) |
+| Step 2 | `CardType` or `null`                                     | void / `IllegalStateException`         |
+| Step 3 | non-null last card (legal), `null` (illegal), clone card | returns normally / exception           |
 
 ### Step 4:
 
 ##### All-combination or each-choice: each-choice
 
-| Test Case # | System under test                 | Expected output                                                           | Implemented? |
-|-------------|-----------------------------------|---------------------------------------------------------------------------|--------------|
-| TC1         | `requireSomethingToClone(ATTACK)` | returns normally                                                          | yes          |
-| TC2         | `requireSomethingToClone(null)`   | throws `IllegalStateException` with message `"rule.clone.nothingToClone"` | yes          |
+| Test Case # | System under test                 | Expected output                                                             | Implemented? |
+|-------------|-----------------------------------|-----------------------------------------------------------------------------|--------------|
+| TC1         | `requireSomethingToClone(ATTACK)` | returns normally                                                            | yes          |
+| TC2         | `requireSomethingToClone(null)`   | throws `IllegalStateException` with message `"rule.clone.nothingToClone"`   | yes          |
+| TC3         | `requireSomethingToClone(CLONE)`  | throws `IllegalStateException` with message `"rule.clone.cannotCloneClone"` | no           |
 
 ---
 
