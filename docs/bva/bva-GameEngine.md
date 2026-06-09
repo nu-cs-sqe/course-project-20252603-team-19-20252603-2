@@ -569,19 +569,19 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 ##### All-combination or each-choice: each-choice
 
 | Test Case # | System under test                                                            | Expected output                                                                      | Implemented? |
-|-------------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|--------------|
-| TC1         | a card was just played, cloner holds a clone, `playClone()`                  | `getLastPlayedCard()` becomes `null`                                                 | yes          |
-| TC2         | nothing played yet, `playClone()`                                            | throws `IllegalStateException` with message `"rule.clone.nothingToClone"`            | yes          |
-| TC3         | a card was just played, cloner holds no CLONE                                | throws `IllegalStateException` with message `"gameEngine.play.notInHand"`            | yes          |
-| TC4         | SKIP was played (turn passed), then cloned                                   | turn goes to the next living player                                                  | yes          |
-| TC5         | REVERSE was played, then cloned                                              | direction restored; turn returns to the player who played REVERSE given 2 players    | yes          |
-| TC6         | ATTACK was played (next owes 2), then cloned                                 | turn goes to the next living player; `getForcedTurns()` increased (2→4);             | no           |
-| TC7         | TARGETED_ATTACK was played, then cloned                                      | turn goes to the targeted player; `getForcedTurns()` reduced (2->4)                  | no           |
-| TC8         | SEE_THE_FUTURE was played, then cloned                                       | player peeks the top 3 cards; same player keeps the turn                             | no           |
-| TC9         | CAT CARD was played, last played player id = current player id, then cloned  | cat pair played; same player keeps the turn                                          | no           |
-| TC10        | CAT CARD was played, last played player id != current player id, then cloned | throws `IllegalStateException` with message `"rule.clone.cannotCloneAnotherCatCard"` | no           |
-| TC11        | SHUFFLE was played, then cloned                                              | shuffles deck; same player keeps the turn                                            | no           |
-| TC12        | FAVOR was played, then cloned                                                | favor card is played; same player keeps the turn                                     | no           |
+|-------------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------|-------------|
+| TC1         | a card was just played, cloner holds a clone, `playClone()`                  | `getLastPlayedCard()` becomes `null`                                                 | yes         |
+| TC2         | nothing played yet, `playClone()`                                            | throws `IllegalStateException` with message `"rule.clone.nothingToClone"`            | yes         |
+| TC3         | a card was just played, cloner holds no CLONE                                | throws `IllegalStateException` with message `"gameEngine.play.notInHand"`            | yes         |
+| TC4         | SKIP was played (turn passed), then cloned                                   | turn goes to the next living player                                                  | yes         |
+| TC5         | REVERSE was played, then cloned                                              | direction restored; turn returns to the player who played REVERSE given 2 players    | yes         |
+| TC6         | ATTACK was played (next owes 2), then cloned                                 | turn goes to the next living player; `getForcedTurns()` increased (2→4);             | yes         |
+| TC7         | TARGETED_ATTACK was played, then cloned                                      | turn goes to the targeted player; `getForcedTurns()` reduced (2->4)                  | no          |
+| TC8         | SEE_THE_FUTURE was played, then cloned                                       | player peeks the top 3 cards; same player keeps the turn                             | no          |
+| TC9         | CAT CARD was played, last played player id = current player id, then cloned  | cat pair played; same player keeps the turn                                          | no          |
+| TC10        | CAT CARD was played, last played player id != current player id, then cloned | throws `IllegalStateException` with message `"rule.clone.cannotCloneAnotherCatCard"` | no          |
+| TC11        | SHUFFLE was played, then cloned                                              | shuffles deck; same player keeps the turn                                            | no          |
+| TC12        | FAVOR was played, then cloned                                                | favor card is played; same player keeps the turn                                     | no          |
 
 ---
 

@@ -262,6 +262,9 @@ public final class GameEngine {
             case REVERSE:
                 playReverse();
                 break;
+            case ATTACK:
+                playAttack();
+                break;
             default:
                 break;
         }
