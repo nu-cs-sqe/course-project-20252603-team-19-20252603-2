@@ -835,6 +835,23 @@ class GameEngineTest {
         assertEquals(0, engine.getCurrentPlayerId());
     }
 
+    @Test
+    void playClone_onShuffle_shufflesDeckAndKeepsSamePlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SHUFFLE);
+
+        int pileSize = engine.getDrawPileSize();
+
+        engine.playShuffle();
+        assertEquals(pileSize, engine.getDrawPileSize());
+
+        engine.getPlayer(0).addCardToHand(new Card(CardType.CLONE));
+        engine.playClone();
+
+        assertEquals(pileSize,engine.getDrawPileSize());
+        assertEquals(0,engine.getCurrentPlayerId());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
