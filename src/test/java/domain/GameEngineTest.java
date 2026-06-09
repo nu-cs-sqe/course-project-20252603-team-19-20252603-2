@@ -737,6 +737,18 @@ class GameEngineTest {
         assertEquals(0, engine.getPlayer(0).getHandSize());
     }
 
+    @Test
+    void playClone_clearsLastPlayedCard() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SKIP);
+        engine.playSkip();
+        engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
+
+        engine.playClone();
+
+        assertNull(engine.getLastPlayedCard());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
