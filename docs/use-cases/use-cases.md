@@ -408,22 +408,28 @@ Actor: Current Player
 Preconditions:
 
 - It is the current player's turn.
-- The player's hand contains at least two cards of the same type (any type — Cat cards or any other matching pair).
+- The player's hand contains at least two cards of the same type (any type — Cat cards or any other matching pair) or using clone and feral cat as substitutions.
 
 Main Flow:
 
-1. Player selects two cards of the same type and chooses a living opponent.
+1. Player selects two cards of the same type (can use 1 clone only as substitution for cat card and any number of feral cats to substitute cat card) and chooses a living opponent.
 2. System places both cards on the discard pile.
 3. System takes one card chosen at random from the target's hand and gives it to the current player.
 4. System returns to the play-or-pass prompt for the same player.
 
 Alternate Flows:
 
-1.a The player does not hold two cards of the chosen type.
+1.a The player does not hold two cards of the chosen type or does not have a valid 2 card combo.
   1.a.1 System rejects the play (`rule.catPair.needTwo`) and resumes at the play-or-pass prompt.
 
-1.b The chosen target is the player themselves or is already eliminated.
-  1.b.1 System rejects the choice (`rule.target.invalid`) and resumes at step 1.
+1.b The player tries to play two feral cats as the two card of the same type
+  1.b.1 System rejects the play (`rule.catPair.feralCannotBeBaseType`) and resumes at the play-or-pass prompt.
+
+1.c The player tries to play two clone cards as the three card of the same type
+  1.c.1 System rejects the play (`rule.catPair.cloneCannotBeBaseType`) and resumes at the play-or-pass prompt.
+
+1.d The chosen target is the player themselves or is already eliminated.
+  1.d.1 System rejects the choice (`rule.target.invalid`) and resumes at step 1.
 
 3.a The target has no cards.
   3.a.1 System steals nothing; the play still consumed the pair.
@@ -505,11 +511,11 @@ Actor: Current Player
 Preconditions:
 
 - It is the current player's turn.
-- The player's hand contains at least three cards of the same type.
+- The player's hand contains at least three cards of the same type or another valid combo using clone or feral cat.
 
 Main Flow:
 
-1. Player selects three cards of the same type, chooses a living opponent, and names a specific card type they want.
+1. Player selects three cards of the same type (excluding clone and feral cat), can use clone as one substitution and feral cat as substitution for cat card, chooses a living opponent, and names a specific card type they want.
 2. System places all three cards on the discard pile.
 3. System checks whether the target holds the named card.
 4. The target has the named card — system takes it from the target and gives it to the current player.
@@ -517,10 +523,16 @@ Main Flow:
 
 Alternate Flows:
 
-1.a The player does not hold three cards of the chosen type.
+1.a The player does not hold three cards of the chosen type or does not have a valid 3 card combo.
   1.a.1 System rejects the play (`rule.catTriple.needThree`) and resumes at the play-or-pass prompt.
 
-1.b The chosen target is the player themselves or is already eliminated.
+1.b The player tries to play three feral cats as the three card of the same type
+  1.b.1 System rejects the play (`rule.catTriple.feralCannotBeBaseType`) and resumes at the play-or-pass prompt.
+
+1.c The player tries to play three clone cards as the three card of the same type
+  1.c.1 System rejects the play (`rule.catTriple.cloneCannotBeBaseType`) and resumes at the play-or-pass prompt.
+
+1.d The chosen target is the player themselves or is already eliminated.
   1.b.1 System rejects the choice (`rule.target.invalid`) and resumes at step 1.
 
 4.a The target does not have the named card.
@@ -531,3 +543,127 @@ Postconditions:
 - All three played cards are in the discard pile.
 - The named card has moved from the target to the current player if the target had it; otherwise no card moved.
 - It is still the same player's turn.
+
+--- 
+
+## Use Case 18: Play Clone
+
+Actor: Current Player
+
+Preconditions:
+
+- It is the current player's turn.
+- The player's hand contains at least one Clone card.
+- The lastPlayedCard cache in the system is not empty and contains a valid, cloneable card identity.
+
+Main Flow:
+
+1.	Player selects the Clone card from their hand (and provides any necessary parameters like a targetId or cardIndex if copying a targeted action).
+2.	System validates that the lastPlayedCard is cloneable.
+3.	System moves the Clone card from the player's hand to the discard pile.
+4.	System temporarily grants the player a copy of the lastPlayedCard to evaluate its identity.
+5.	System routes execution to the corresponding method matching the cloned card type (e.g., playSkip(), playFavor(), etc.) using the passed parameters.
+6.	System resets the lastPlayedCard tracking history cache to null.
+7.	System resumes gameplay based on the cloned card's natural post-resolution turn progression flow.
+
+Alternate Flows:
+
+1.a The user does not actually possess a Clone card in their hand array.
+  1.a.1 System throws an IllegalStateException (gameEngine.play.notInHand) and halts execution.
+
+2.a There is no card history to clone or the last card played was an illegal base type (e.g., another Clone or an opponent's Cat card).
+  2.a.1 System rejects the play execution (rule.clone.cannotCloneClone or rule.clone.cannotCloneAnotherCatCard) and retains the Clone card in the player's hand.
+
+Postconditions:
+
+- The Clone card is placed in the discard pile.
+- The lastPlayedCard cache is set to null to clear history tracking.
+- The dynamic card action has executed successfully, applying its own unique side effects (stealing a card, reversing turns, or peeking at the deck).
+
+--- 
+
+## Use Case 19: Play Super Skip
+
+Actor: Current Player
+
+Preconditions:
+
+- It is the current player's turn.
+- player's hand contains at least one Super Skip card.
+
+Main Flow:
+
+1.	Player selects Super Skip from their hand.
+2.	System places the Super Skip card on the discard pile.
+3.	System updates the lastPlayedCard cache to SUPER_SKIP and tracks the actor's ID.
+4.	System clears all required turns remaining for the current player down to zero, instantly terminating their turn without forcing them to draw.
+5.	System advances control seamlessly to the next sequential living player.
+
+Alternate Flows:
+
+1.a The player does not actually possess a Super Skip card in their hand array.
+  1.a.1 System rejects the choice (gameEngine.play.notInHand) and halts execution.
+
+Postconditions:
+
+- The Super Skip card is in the discard pile.
+- The current player's turn penalty counter is reset to zero.
+- Control has advanced to the next living player in the turn rotation.
+
+---
+
+## Use Case 20: Play Bury
+
+Actor: Current Player
+
+Preconditions:
+
+- It is the current player's turn.
+- The player's hand contains at least one Bury card.
+
+Main Flow:
+
+1.	Player selects Bury from their hand.
+2.	System places the Bury card on the discard pile and logs it as lastPlayedCard.
+3.	System draws the top card from the deck and holds it in a temporary "buried card" cache phase.
+4.	System prompts the player to pick a depth index.
+5.	System inserts the drawn card into the deck at the chosen index.
+6.	System terminates the current player's turn without requiring another natural draw action.
+7.	System advances control seamlessly to the next sequential living player.
+
+Alternate Flows:
+
+1.a The player does not hold a Bury card.
+	1.a.1 System rejects execution (gameEngine.play.notInHand).
+
+Postconditions:
+- The Bury card is discarded.
+- The top card of the deck has been relocated to a custom position.
+- The current turn is ended, and control has advanced to the next player.
+
+---
+
+## Use Case 21: Play Personal Attack 3x
+
+Actor: Current Player
+
+Preconditions:
+
+- It is the current player's turn.
+- The player's hand contains at least one Personal Attack 3x card.
+
+Main Flow:
+
+1.	Player selects Personal Attack 3x from their hand.
+2.	System places the card on the discard pile and updates lastPlayedCard.
+3.	System updates the TurnTracker state, adding +3 total required turns to the current player's active turn pool.
+4.	System terminates the current turn action phase and resets to the play-or-pass prompt for the same player to begin their first of three penalty turns.
+
+Alternate Flows:
+
+1.a The player does not hold a Personal Attack 3X card.
+  1.a.1 System rejects execution (gameEngine.play.notInHand).
+
+Postconditions:
+- The card is in the discard pile.
+- The active player remains the same, but their remaining turn execution counter is set to 3.
