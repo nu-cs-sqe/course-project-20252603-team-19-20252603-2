@@ -8,6 +8,7 @@ public final class RuleManager {
     private static final String CANNOT_PLAY_DIRECTLY_KEY = "rule.play.cannotPlayDirectly";
     private static final String INVALID_TARGET_KEY = "rule.target.invalid";
     private static final String CAT_PAIR_NEED_TWO_KEY = "rule.catPair.needTwo";
+    private static final String CAT_PAIR_FERAL_CANNOT_BE_BASE = "rule.catPair.feralCannotBeBaseType";
     private static final String CAT_TRIPLE_NEED_THREE_KEY = "rule.catTriple.needThree";
     private static final String NOTHING_TO_NOPE_KEY = "rule.nope.nothingToCancel";
 
@@ -24,6 +25,9 @@ public final class RuleManager {
     }
 
     public void requireCatPair(Player actor, CardType cardType) {
+        if (cardType == CardType.FERAL_CAT) {
+            throw new IllegalStateException(CAT_PAIR_FERAL_CANNOT_BE_BASE);
+        }
         if (countOfType(actor, cardType) < CAT_PAIR_SIZE) {
             throw new IllegalStateException(CAT_PAIR_NEED_TWO_KEY);
         }

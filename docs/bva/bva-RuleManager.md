@@ -63,17 +63,17 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 
 ##### All-combination or each-choice: each-choice
 
-| Test Case # | System under test                                                             | Expected output                                                                                 | Implemented? |
-|-------------|-------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------|--------------|
-| TC1         | actor holds 2 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)`                 | returns normally                                                                                | yes          |
-| TC2         | actor holds 0 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)`                 | throws `IllegalStateException` with message `"rule.catPair.needTwo"`                            | yes          |
-| TC3         | actor holds 1 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)`                 | throws `IllegalStateException` with message `"rule.catPair.needTwo"`                            | yes          |
-| TC4         | actor holds 3 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)`                 | returns normally                                                                                | yes          |
-| TC5         | actor holds 2 `ATTACK`, `requireCatPair(actor, ATTACK)`                       | returns normally (any matching pair)                                                            | yes          |
-| TC6         | actor holds 1 `ATTACK` + 1 `CAT_CARDS`, `requireCatPair(actor, ATTACK)`       | throws `IllegalStateException` with message `"rule.catPair.needTwo"`                            | yes          |
-| TC7         | actor holds 1 `CAT_CARDS` + 1 `FERAL CAT`, `requireCatPair(actor, CAT_CARDS)` | returns normally                                                                                | yes          |
-| TC8         | actor holds 1 `ATTACK` + 1 `FERAL CAT`, `requireCatPair(actor, ATTACK)`       | throws `IllegalStateException` with message `"rule.catPair.needTwo"`                            | yes          |
-| TC9         | actor holds 1 `FERAL CAT` + 1 `FERAL CAT`, `requireCatPair(actor, FERAL_CAT)` | throws `IllegalStateException` with message `"rule.catPair.rule.catPair.feralCannotBeBaseType"` | no           | 
+| Test Case # | System under test                                                             | Expected output                                                                    | Implemented? |
+|-------------|-------------------------------------------------------------------------------|------------------------------------------------------------------------------------|--------------|
+| TC1         | actor holds 2 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)`                 | returns normally                                                                   | yes          |
+| TC2         | actor holds 0 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)`                 | throws `IllegalStateException` with message `"rule.catPair.needTwo"`               | yes          |
+| TC3         | actor holds 1 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)`                 | throws `IllegalStateException` with message `"rule.catPair.needTwo"`               | yes          |
+| TC4         | actor holds 3 `CAT_CARDS`, `requireCatPair(actor, CAT_CARDS)`                 | returns normally                                                                   | yes          |
+| TC5         | actor holds 2 `ATTACK`, `requireCatPair(actor, ATTACK)`                       | returns normally (any matching pair)                                               | yes          |
+| TC6         | actor holds 1 `ATTACK` + 1 `CAT_CARDS`, `requireCatPair(actor, ATTACK)`       | throws `IllegalStateException` with message `"rule.catPair.needTwo"`               | yes          |
+| TC7         | actor holds 1 `CAT_CARDS` + 1 `FERAL CAT`, `requireCatPair(actor, CAT_CARDS)` | returns normally                                                                   | yes          |
+| TC8         | actor holds 1 `ATTACK` + 1 `FERAL CAT`, `requireCatPair(actor, ATTACK)`       | throws `IllegalStateException` with message `"rule.catPair.needTwo"`               | yes          |
+| TC9         | actor holds 1 `FERAL CAT` + 1 `FERAL CAT`, `requireCatPair(actor, FERAL_CAT)` | throws `IllegalStateException` with message `"rule.catPair.feralCannotBeBaseType"` | yes          | 
 
 ---
 
