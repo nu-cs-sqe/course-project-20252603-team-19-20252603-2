@@ -238,6 +238,11 @@ public final class GameEngine {
 
     public void playClone() {
         ruleManager.requireSomethingToClone(lastPlayedCard);
+        Player cloner = getPlayer(getCurrentPlayerId());
+        int index = cloner.getIndexOfCard(CardType.CLONE);
+        if (index < 0) {
+            throw new IllegalStateException(NOT_IN_HAND_KEY);
+        }
         lastPlayedCard = null;
     }
 
