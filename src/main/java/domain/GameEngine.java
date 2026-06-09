@@ -270,6 +270,8 @@ public final class GameEngine {
                 break;
             case SEE_THE_FUTURE:
                 return playSeeTheFuture();
+            case SHUFFLE:
+                playShuffle();
             default:
                 break;
         }

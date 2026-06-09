@@ -578,7 +578,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | TC6         | ATTACK was played (next owes 2), then cloned                | turn goes to the next living player; `getForcedTurns()` increased (2→4);          | yes          |
 | TC7         | TARGETED_ATTACK was played, then cloned                     | turn goes to the targeted player; `getForcedTurns()` reduced (2->4)               | yes          |
 | TC8         | SEE_THE_FUTURE was played, then cloned                      | player peeks the top 3 cards; same player keeps the turn                          | yes          |
-| TC11        | SHUFFLE was played, then cloned                             | shuffles deck; same player keeps the turn                                         | no           |
+| TC11        | SHUFFLE was played, then cloned                             | shuffles deck; same player keeps the turn                                         | yes          |
 | TC12        | FAVOR was played, then cloned                               | favor card is played; same player keeps the turn                                  | no           |
 
 ---
