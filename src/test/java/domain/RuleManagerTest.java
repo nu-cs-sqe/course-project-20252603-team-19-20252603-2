@@ -200,8 +200,17 @@ class RuleManagerTest {
         actor.addCardToHand(new Card(CardType.CAT_CARDS));
         actor.addCardToHand(new Card(CardType.FERAL_CAT));
         assertDoesNotThrow(() -> ruleManager.requireCatTriple(actor, CardType.CAT_CARDS));
-
     }
+
+    @Test
+    void requireCatTriple_oneCatCardsAndTwoFeralCat_returnsNormally() {
+        Player actor = new Player(0);
+        actor.addCardToHand(new Card(CardType.CAT_CARDS));
+        actor.addCardToHand(new Card(CardType.FERAL_CAT));
+        actor.addCardToHand(new Card(CardType.FERAL_CAT));
+        assertDoesNotThrow(() -> ruleManager.requireCatTriple(actor, CardType.CAT_CARDS));
+    }
+
 
     @Test
     void requireSomethingToNope_nonNullLastCard_returnsNormally() {
