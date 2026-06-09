@@ -107,6 +107,10 @@ public final class GameEngine {
         return turnTracker.getCurrentDirection();
     }
 
+    public void setLastPlayedCard(CardType cardType) {
+        lastPlayedCard = cardType;
+    }
+
     public void playSkip() {
         playFromHand(CardType.SKIP);
         consumeOneForcedTurn();

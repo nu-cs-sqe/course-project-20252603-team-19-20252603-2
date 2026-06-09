@@ -580,6 +580,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | TC8         | SEE_THE_FUTURE was played, then cloned                      | player peeks the top 3 cards; same player keeps the turn                          | yes          |
 | TC11        | SHUFFLE was played, then cloned                             | shuffles deck; same player keeps the turn                                         | yes          |
 | TC12        | FAVOR was played, then cloned                               | favor card is played; same player keeps the turn                                  | yes          |
+| TC13        | CLONE was played, then cloned again                         | throws `IllegalStateException` with message `"rule.clone.cannotCloneClone"`       | yes          | 
 
 ---
 
