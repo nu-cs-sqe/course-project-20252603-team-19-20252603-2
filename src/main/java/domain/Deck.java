@@ -15,6 +15,11 @@ public class Deck {
 	private static final int numberOfFavors = 4;
 	private static final int numberOfReverses = 4;
 	private static final int numberOfTargetedAttacks = 3;
+	private static final int numberOfFeralCats = 4;
+	private static final int numberOfClones = 2;
+	private static final int numberOfSuperSkips = 2;
+	private static final int numberOfBurys = 2;
+	private static final int numberOfPersonalAttack3Xs = 1;
 	private static final int numberOfCatCards = 20;
 
 	private static final int deckSize = 63;
@@ -48,6 +53,11 @@ public class Deck {
 		addCards(CardType.FAVOR, numberOfFavors);
 		addCards(CardType.REVERSE, numberOfReverses);
 		addCards(CardType.TARGETED_ATTACK, numberOfTargetedAttacks);
+		addCards(CardType.FERAL_CAT, numberOfFeralCats);
+		addCards(CardType.CLONE, numberOfClones);
+		addCards(CardType.SUPER_SKIP, numberOfSuperSkips);
+		addCards(CardType.BURY, numberOfBurys);
+		addCards(CardType.PERSONAL_ATTACK_3X, numberOfPersonalAttack3Xs);
 		addCards(CardType.CAT_CARDS, numberOfCatCards);
 	}
 
