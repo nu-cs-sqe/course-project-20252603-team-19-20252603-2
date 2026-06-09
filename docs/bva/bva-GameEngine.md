@@ -600,7 +600,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test                                                                  | Expected output                                                           | Implemented? |
 |-------------|------------------------------------------------------------------------------------|---------------------------------------------------------------------------|--------------|
-| TC1         | current player given a SUPER SKIP, `playSuperSkip()` (2 players)                   | turn passes to player 1; draw pile unchanged                              | no           |
+| TC1         | current player given a SUPER SKIP, `playSuperSkip()` (2 players)                   | turn passes to player 1; draw pile unchanged                              | yes          |
 | TC2         | current player has no SUPER SKIP, `playSuperSkip()` (2 players)                    | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | no           |
 | TC3         | current player given a SUPER SKIP, forced turns = 4, `playSuperSkip()` (2 players) | forced turns reset to 1; turn passes to player 1; draw pile unchanged     | no           |                             
 

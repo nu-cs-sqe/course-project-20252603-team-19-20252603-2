@@ -289,6 +289,11 @@ public final class GameEngine {
         return new ArrayList<>();
     }
 
+    public void playSuperSkip() {
+        playFromHand(CardType.SUPER_SKIP);
+        consumeOneForcedTurn();
+    }
+
     private void returnTurnToLastPlayer() {
         turnTracker.setCurrentPlayer(lastPlayerId);
         forcedTurns = NORMAL_FORCED_TURNS;
