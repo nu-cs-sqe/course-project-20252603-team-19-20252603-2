@@ -143,6 +143,7 @@ public final class GameEngine {
         int transferred = forcedTurns == NORMAL_FORCED_TURNS ? 0 : forcedTurns;
         turnTracker.setCurrentPlayer(targetId);
         forcedTurns = transferred + TURNS_ADDED_BY_ATTACK;
+        lastPlayedCard = CardType.TARGETED_ATTACK;
     }
 
     public void playFavor(int targetId, int cardIndex) {
@@ -264,6 +265,30 @@ public final class GameEngine {
                 break;
             case ATTACK:
                 playAttack();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void playClone(int targetId) {
+        ruleManager.requireSomethingToClone(lastPlayedCard);
+        Player cloner = getPlayer(getCurrentPlayerId());
+        int index = cloner.getIndexOfCard(CardType.CLONE);
+        if (index < 0) {
+            throw new IllegalStateException(NOT_IN_HAND_KEY);
+        }
+        deck.discard(cloner.removeCardFromHand(index));
+        cloneLastAction(targetId);
+        lastPlayedCard = null;
+    }
+
+    private void cloneLastAction(int targetId) {
+        Player cloner = getPlayer(getCurrentPlayerId());
+        cloner.addCardToHand(new Card(lastPlayedCard));
+        switch (lastPlayedCard) {
+            case TARGETED_ATTACK:
+                playTargetedAttack(targetId);
                 break;
             default:
                 break;

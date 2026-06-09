@@ -576,7 +576,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | TC4         | SKIP was played (turn passed), then cloned                                   | turn goes to the next living player                                                  | yes         |
 | TC5         | REVERSE was played, then cloned                                              | direction restored; turn returns to the player who played REVERSE given 2 players    | yes         |
 | TC6         | ATTACK was played (next owes 2), then cloned                                 | turn goes to the next living player; `getForcedTurns()` increased (2→4);             | yes         |
-| TC7         | TARGETED_ATTACK was played, then cloned                                      | turn goes to the targeted player; `getForcedTurns()` reduced (2->4)                  | no          |
+| TC7         | TARGETED_ATTACK was played, then cloned                                      | turn goes to the targeted player; `getForcedTurns()` reduced (2->4)                  | yes         |
 | TC8         | SEE_THE_FUTURE was played, then cloned                                       | player peeks the top 3 cards; same player keeps the turn                             | no          |
 | TC9         | CAT CARD was played, last played player id = current player id, then cloned  | cat pair played; same player keeps the turn                                          | no          |
 | TC10        | CAT CARD was played, last played player id != current player id, then cloned | throws `IllegalStateException` with message `"rule.clone.cannotCloneAnotherCatCard"` | no          |
