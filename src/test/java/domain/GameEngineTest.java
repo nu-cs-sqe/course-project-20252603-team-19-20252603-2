@@ -921,6 +921,29 @@ class GameEngineTest {
         assertEquals("gameEngine.play.notInHand", ex.getMessage());
     }
 
+    @Test
+    void playSuperSkip_forcedTurnIsFour_endsTurnWithoutDrawingAndForcedTurnIsOne() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.ATTACK);
+        giveToCurrent(engine, CardType.SUPER_SKIP);
+        engine.getPlayer(1).addCardToHand(new Card(CardType.ATTACK));
+
+        engine.playAttack();
+        engine.playAttack();
+
+        final int expectedDraws = 4;
+        assertEquals(expectedDraws, engine.getForcedTurns());
+
+        int pileBefore = engine.getDrawPileSize();
+        final int drawsAfterSuperSkip = 1;
+
+        engine.playSuperSkip();
+
+        assertEquals(1, engine.getCurrentPlayerId());
+        assertEquals(pileBefore, engine.getDrawPileSize());
+        assertEquals(drawsAfterSuperSkip, engine.getForcedTurns());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
