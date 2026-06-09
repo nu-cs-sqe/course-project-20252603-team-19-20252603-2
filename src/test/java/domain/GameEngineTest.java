@@ -824,6 +824,17 @@ class GameEngineTest {
         assertEquals(4, engine.getForcedTurns());
     }
 
+    @Test
+    void playClone_onSeeTheFuture_returnsTopThreeAndKeepsSamePlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SEE_THE_FUTURE);
+        engine.playSeeTheFuture();
+        engine.getPlayer(0).addCardToHand(new Card(CardType.CLONE));
+
+        assertEquals(SEE_THE_FUTURE_COUNT, engine.playClone().size());
+        assertEquals(0, engine.getCurrentPlayerId());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
