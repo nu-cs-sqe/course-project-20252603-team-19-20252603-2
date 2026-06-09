@@ -899,6 +899,18 @@ class GameEngineTest {
         assertEquals("rule.clone.cannotCloneClone", ex.getMessage());
     }
 
+    @Test
+    void playSuperSkip_endsTurnWithoutDrawing() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SUPER_SKIP);
+        int pileBefore = engine.getDrawPileSize();
+
+        engine.playSuperSkip();
+
+        assertEquals(1, engine.getCurrentPlayerId());
+        assertEquals(pileBefore, engine.getDrawPileSize());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
