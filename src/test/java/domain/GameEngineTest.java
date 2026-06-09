@@ -852,6 +852,29 @@ class GameEngineTest {
         assertEquals(0,engine.getCurrentPlayerId());
     }
 
+    @Test
+    void playClone_onFavor_verifiesPlayFavorMethodIsCalledAndKeepsSamePlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.FAVOR);
+        engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
+
+        assertEquals(6, engine.getPlayerHand(0).size());
+        assertEquals(6, engine.getPlayerHand(1).size());
+
+        engine.playFavor(1,0);
+        engine.advanceToNextPlayer();
+
+        assertEquals(6, engine.getPlayerHand(0).size());
+        assertEquals(5, engine.getPlayerHand(1).size());
+        assertEquals(1, engine.getCurrentPlayerId());
+
+        engine.playClone(0,0);
+
+        assertEquals(5, engine.getPlayerHand(0).size());
+        assertEquals(5, engine.getPlayerHand(1).size());
+        assertEquals(1, engine.getCurrentPlayerId());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
