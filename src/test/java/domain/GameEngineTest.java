@@ -7,9 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
+import org.junit.jupiter.api.Test;
 
 class GameEngineTest {
 
@@ -488,7 +487,9 @@ class GameEngineTest {
         giveToCurrent(engine, CardType.CAT_CARDS);
         giveToCurrent(engine, CardType.FERAL_CAT);
 
-        List<CardType> selectedCards = List.of(CardType.CAT_CARDS, CardType.CAT_CARDS, CardType.FERAL_CAT);
+        List<CardType> selectedCards = List.of(
+                CardType.CAT_CARDS, CardType.CAT_CARDS, CardType.FERAL_CAT
+        );
 
         engine.playCatTriple(1, selectedCards, CardType.DEFUSE);
 
@@ -505,7 +506,9 @@ class GameEngineTest {
         giveToCurrent(engine, CardType.FERAL_CAT);
         giveToCurrent(engine, CardType.FERAL_CAT);
 
-        List<CardType> selectedCards = List.of(CardType.CAT_CARDS, CardType.FERAL_CAT, CardType.FERAL_CAT);
+        List<CardType> selectedCards = List.of(
+                CardType.CAT_CARDS, CardType.FERAL_CAT, CardType.FERAL_CAT
+        );
 
         engine.playCatTriple(1, selectedCards, CardType.DEFUSE);
 
@@ -522,7 +525,9 @@ class GameEngineTest {
         giveToCurrent(engine, CardType.FERAL_CAT);
         giveToCurrent(engine, CardType.FERAL_CAT);
 
-        List<CardType> selectedCards = List.of(CardType.FERAL_CAT, CardType.FERAL_CAT, CardType.FERAL_CAT);
+        List<CardType> selectedCards = List.of(
+                CardType.FERAL_CAT, CardType.FERAL_CAT, CardType.FERAL_CAT
+        );
 
         IllegalStateException ex = assertThrows(
                 IllegalStateException.class,
@@ -537,7 +542,9 @@ class GameEngineTest {
         giveToCurrent(engine, CardType.CAT_CARDS);
         giveToCurrent(engine, CardType.CLONE);
 
-        List<CardType> selectedCards = List.of(CardType.CAT_CARDS, CardType.CAT_CARDS, CardType.CLONE);
+        List<CardType> selectedCards = List.of(
+                CardType.CAT_CARDS, CardType.CAT_CARDS, CardType.CLONE
+        );
 
         engine.playCatTriple(1, selectedCards, CardType.DEFUSE);
 
@@ -556,7 +563,9 @@ class GameEngineTest {
         giveToCurrent(engine, CardType.CLONE);
         giveToCurrent(engine, CardType.CLONE);
 
-        List<CardType> selectedCards = List.of(CardType.CAT_CARDS, CardType.CLONE, CardType.CLONE);
+        List<CardType> selectedCards = List.of(
+                CardType.CAT_CARDS, CardType.CLONE, CardType.CLONE
+        );
 
         IllegalStateException ex = assertThrows(
                 IllegalStateException.class,
