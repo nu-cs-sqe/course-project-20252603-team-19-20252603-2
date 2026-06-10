@@ -150,6 +150,36 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 
 ---
 
+## Method 7: ```public void requireValidInsertIndex(int index, int size)```
+
+### Step 1-3 Results
+
+### Step 1-3 Results
+
+| Step   | Input                                                   | Output                                 |
+|--------|---------------------------------------------------------|----------------------------------------|
+| Step 1 | The insertion index chosen by the player                | nothing (legal) or exception (illegal) |
+| Step 2 | int index, int size                                     | void / `IllegalStateException`         |
+| Step 3 | int index = -1, 0, 30, 61, 62, 100, int size = 0, 1, 61 | returns normally / exception           |
+
+### Step 4:
+
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test                                                                | Expected output                                                        | Implemented? |
+|-------------|----------------------------------------------------------------------------------|------------------------------------------------------------------------|--------------|
+| TC1         | chosenDepth = -1, currentDeckSize = 61, `requireValidInsertIndex(-1, 61)         | throws `IllegalStateException` with message `"rule.bury.invalidIndex"` | no           |
+| TC2         | chosenDepth = 0, currentDeckSize = 61, `requireValidInsertIndex(0, 61)           | returns normally                                                       | no           |
+| TC3         | chosenDepth = 30, currentDeckSize = 61, `requireValidInsertIndex(30, 61)         | returns normally                                                       | no           |
+| TC4         | chosenDepth = 61, currentDeckSize = 61, `requireValidInsertIndex(61, 61)         | returns normally                                                       | no           |
+| TC5         | chosenDepth = 62, currentDeckSize = 61, `requireValidInsertIndex(62, 61)         | throws `IllegalStateException` with message `"rule.bury.invalidIndex"` | no           |
+| TC6         | chosenDepth = 100, currentDeckSize = 61, `requireValidInsertIndex(100, 61)       | throws `IllegalStateException` with message `"rule.bury.invalidIndex"` | no           |
+| TC7         | chosenDepth = 0, currentDeckSize = 0, requireValidInsertIndex(0, 0) (Empty Deck) | returns normally                                                       | no           | 
+| TC8         | chosenDepth = 1, currentDeckSize = 0, requireValidInsertIndex(1, 0) (Empty Deck) | throws `IllegalStateException` with message `"rule.bury.invalidIndex"` | no           | 
+| TC9         | chosenDepth = 1, currentDeckSize = 1, requireValidInsertIndex(1, 1) (Empty Deck) | returns normally                                                       | no           | 
+
+---
+
 ## Recall the 4 steps of BVA
 
 ### Step 1: Describe the input and output in terms of the domain.
