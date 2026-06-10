@@ -1050,7 +1050,16 @@ class GameEngineTest {
 
         assertEquals(0, engine.getCurrentPlayerId());
         assertEquals(expectedForcedTurns, engine.getForcedTurns());
+    }
 
+    @Test
+    void playPersonalAttack3X_withoutPersonalAttack3XInHand_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.PERSONAL_ATTACK_3X);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playPersonalAttack3X());
+        assertEquals("gameEngine.play.notInHand", ex.getMessage());
     }
 
     private void giveToCurrent(GameEngine engine, CardType type) {
