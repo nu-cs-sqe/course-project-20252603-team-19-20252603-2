@@ -3,10 +3,11 @@ package ui.controller;
 import domain.Card;
 import domain.CardType;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
 import ui.model.AppModel;
@@ -197,7 +198,12 @@ public class GameController {
 	}
 
 	private void playCatPair(List<CardView> cards, GameView view, AppModel appModel) {
-		CardView card = cards.get(0);
+		List<CardType> selectedCards = new ArrayList<>();
+		for (CardView card : cards) {
+			CardType type = card.getCardType();
+			selectedCards.add(type);
+		}
+
 		view.showDoubleSpecialComboScreen();
 		view.updateCatCardsPlayer(
 				livingOpponents(),
@@ -206,7 +212,7 @@ public class GameController {
 					view.hideCatCardScreen();
 					model.playCatPair(
 							targetId,
-							card.getCardType()
+							selectedCards
 					);
 					refreshAfterPlay(view, appModel);
 				}
@@ -214,15 +220,20 @@ public class GameController {
 	}
 
 	private void playCatTriple(List<CardView> cards, GameView view, AppModel appModel) {
-		CardType selectedType = cards.get(0).getCardType();
+		List<CardType> selectedCards = new ArrayList<>();
+		for (CardView card : cards) {
+			CardType type = card.getCardType();
+			selectedCards.add(type);
+		}
+
 		view.showTripleSpecialComboScreen();
 		view.updateTripleComboScreen(
 				appModel.getResourceBundle(),
 				livingOpponents(),
 				(targetId, desiredCard) -> {
-					discardCard(cards, view);
 					view.hideTripleSpecialComboScreen();
-					model.playCatTriple(targetId, selectedType, desiredCard);
+					model.playCatTriple(targetId, selectedCards, desiredCard);
+					discardCard(cards, view);
 					refreshAfterPlay(view, appModel);
 				}
 		);
@@ -309,6 +320,82 @@ public class GameController {
 		discardCard(cards, view);
 	}
 
+	private void playClone(List<CardView> cards, GameView view, AppModel appModel) {
+		CardType lastPlayedType = model.getLastPlayedCard();
+
+		int[] targetId = new int[1];
+		int[] cardIndex = new int[1];
+		if (lastPlayedType == CardType.TARGETED_ATTACK) {
+			view.showTargetedAttackScreen();
+			view.updateTargetedAttackPlayers(
+					livingOpponents(),
+					(id) -> {
+						targetId[0] = id;
+						model.playClone(targetId[0], cardIndex[0]);
+						view.hideTargetedAttackScreen();
+						refreshAfterPlay(view, appModel);
+					}
+			);
+		} else if (lastPlayedType == CardType.SEE_THE_FUTURE) {
+			List<Card> topThreeCards = model.playClone(targetId[0], cardIndex[0]);
+			view.showSeeTheFutureScreen();
+			view.updateSeeTheFutureCards(
+					appModel.getResourceBundle(),
+					topThreeCards
+			);
+		} else if (lastPlayedType == CardType.FAVOR) {
+			ResourceBundle bundle = appModel.getResourceBundle();
+			BiConsumer<Integer, Integer> onFavorCardSelected = (target, card) -> {
+				targetId[0] = target;
+				cardIndex[0] = card;
+				view.hideGrantFavorScreen();
+				model.playClone(targetId[0], cardIndex[0]);
+				refreshAfterPlay(view, appModel);
+			};
+			IntConsumer onOpponentSelected = (id) -> {
+				targetId[0] = id;
+				view.hideDemandFavorScreen();
+				view.showGrantFavorScreen();
+				view.updateGrantFavorSubTitle(
+						bundle,
+						model.getPlayerName(targetId[0]),
+						model.getLocalPlayerName()
+				);
+				view.updateFavorCards(
+						model.getSelectedHand(targetId[0]),
+						index -> {
+							cardIndex[0] = index;
+							onFavorCardSelected.accept(
+									targetId[0], cardIndex[0]
+							);
+						}
+				);
+			};
+			view.showDemandFavorScreen();
+			view.updateDemandFavorPlayers(
+					livingOpponents(),
+					onOpponentSelected
+			);
+		} else {
+			model.playClone(targetId[0], cardIndex[0]);
+		}
+		discardCard(cards, view);
+	}
+
+	private void playSuperSkip(List<CardView> cards, GameView view) {
+		model.playSuperSkip();
+		discardCard(cards, view);
+	}
+
+	private void playPersonalAttack3X(List<CardView> cards, GameView view) {
+		model.playPersonalAttack3X();
+		discardCard(cards, view);
+	}
+
+	private void playBury(List<CardView> cards, GameView view, AppModel appModel) {
+
+	}
+
 	private void playCard(List<CardView> cards, GameView view, AppModel appModel) {
 		if (cards.size() == CAT_PAIR_SIZE) {
 			playCatPair(cards, view, appModel);
@@ -346,6 +433,15 @@ public class GameController {
 				break;
 			case NOPE:
 				playNope(cards, view);
+				break;
+			case CLONE:
+				playClone(cards, view, appModel);
+				break;
+			case SUPER_SKIP:
+				playSuperSkip(cards, view);
+				break;
+			case PERSONAL_ATTACK_3X:
+				playPersonalAttack3X(cards, view);
 				break;
 			default:
 				break;

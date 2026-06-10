@@ -945,7 +945,7 @@ public class GameView extends StackPane {
 		defuseSlider.setPrefHeight(defuseSliderHeight);
 		defuseSlider.valueProperty().addListener(
 				(observable, oldValue, newValue) ->
-						updateDefuseSliderLabels()
+						Platform.runLater(() -> updateDefuseSliderLabels())
 		);
 	}
 
@@ -1406,7 +1406,17 @@ public class GameView extends StackPane {
 		CardType currentCardType = playerCard.getCardType();
 		if (!selectedHandCards.isEmpty()) {
 			CardType anchorType = selectedHandCards.get(0).getCardType();
-			if (currentCardType != anchorType) {
+
+			boolean isAnchorComboCard = (
+					anchorType == CardType.CAT_CARDS
+							|| anchorType == CardType.FERAL_CAT
+							|| anchorType == CardType.CLONE);
+			boolean isCurrentComboCard = (currentCardType == CardType.CAT_CARDS
+					|| currentCardType == CardType.FERAL_CAT
+					|| currentCardType == CardType.CLONE);
+
+			if (!(isAnchorComboCard && isCurrentComboCard)
+					&& currentCardType != anchorType) {
 				clearSelection();
 			}
 		}
