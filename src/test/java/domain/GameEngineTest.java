@@ -1098,6 +1098,24 @@ class GameEngineTest {
     }
 
     @Test
+    void playClone_onSuperSkip_forceTurnBecomeOneAndAdvancesToNextPlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.ATTACK);
+        engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
+        engine.playAttack();
+
+        final int expectedForcedTurns = 2;
+
+        assertEquals(expectedForcedTurns, engine.getForcedTurns());
+
+        engine.setLastPlayedCard(CardType.SUPER_SKIP);
+        engine.playClone(0, 0);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(1, engine.getForcedTurns());
+    }
+
+    @Test
     void playSuperSkip_endsTurnWithoutDrawing() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.SUPER_SKIP);
