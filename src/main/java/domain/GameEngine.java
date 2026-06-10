@@ -259,14 +259,13 @@ public final class GameEngine {
             throw new IllegalStateException(NOT_IN_HAND_KEY);
         }
         deck.discard(cloner.removeCardFromHand(index));
+        cloner.addCardToHand(new Card(lastPlayedCard));
         List<Card> viewedCards = cloneLastAction(targetId, cardIndex);
         lastPlayedCard = null;
         return viewedCards;
     }
 
     private List<Card> cloneLastAction(int targetId, int cardIndex) {
-        Player cloner = getPlayer(getCurrentPlayerId());
-        cloner.addCardToHand(new Card(lastPlayedCard));
         switch (lastPlayedCard) {
             case SKIP:
                 playSkip();

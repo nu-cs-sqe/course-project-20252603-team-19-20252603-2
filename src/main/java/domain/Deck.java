@@ -22,7 +22,7 @@ public class Deck {
 	private static final int numberOfPersonalAttack3Xs = 1;
 	private static final int numberOfCatCards = 20;
 
-	private static final int deckSize = 63;
+	private static final int deckSize = 74;
 
 	private static final String EMPTY_DECK_TYPE_KEY = "deck.emptyType";
 	private static final String PEEK_TOP_TOO_MANY_KEY = "deck.peekTop.tooManyRequested";

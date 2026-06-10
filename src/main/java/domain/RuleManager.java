@@ -57,7 +57,7 @@ public final class RuleManager {
             if (currentType == cardType
                     || (currentType == CardType.FERAL_CAT && cardType == CardType.CAT_CARDS)) {
                 count++;
-            } else if (currentType == CardType.CLONE) { // Brought up to the same line!
+            } else if (currentType == CardType.CLONE) {
                 cloneCount++;
             }
         }
