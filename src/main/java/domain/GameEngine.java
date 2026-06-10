@@ -175,14 +175,21 @@ public final class GameEngine {
         actionController.stealRandomCard(target, current);
     }
 
-    public void playCatTriple(int targetId, CardType selectedCard, CardType desiredCard) {
+    public void playCatTriple(int targetId, List<CardType> selectedCards, CardType desiredCard) {
         Player current = getPlayer(getCurrentPlayerId());
         Player target = getPlayer(targetId);
+
+        CardType selectedCard = selectedCards.contains(CardType.CAT_CARDS)
+                ? CardType.CAT_CARDS
+                : selectedCards.get(0);
+
         ruleManager.requireValidTarget(current, target);
         ruleManager.requireCatTriple(current, selectedCard);
-        discardOneFromCurrent(selectedCard);
-        discardOneFromCurrent(selectedCard);
-        discardOneFromCurrent(selectedCard);
+
+        for (CardType card : selectedCards) {
+            discardOneFromCurrent(card);
+        }
+
         recordPlay(selectedCard);
         actionController.stealDesiredCard(target, current, desiredCard);
     }
