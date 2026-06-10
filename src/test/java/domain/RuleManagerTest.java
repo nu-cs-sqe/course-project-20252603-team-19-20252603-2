@@ -300,4 +300,11 @@ class RuleManagerTest {
         );
         assertEquals("rule.bury.invalidIndex", ex.getMessage());
     }
+
+    @Test
+    void requireValidInsertIndex_indexOfZeroAndSize61_returnsNormally() {
+        final int index = 0;
+        final int size = 61;
+        assertDoesNotThrow(() -> ruleManager.requireValidInsertIndex(index, size));
+    }
 }
