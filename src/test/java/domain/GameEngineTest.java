@@ -565,6 +565,22 @@ class GameEngineTest {
     }
 
     @Test
+    void playCatTriple_threeClone_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(engine.getCurrentPlayerId()), CardType.CLONE);
+        giveToCurrent(engine, CardType.CLONE);
+        giveToCurrent(engine, CardType.CLONE);
+        giveToCurrent(engine, CardType.CLONE);
+
+        List<CardType> selectedCards = List.of(CardType.CLONE, CardType.CLONE, CardType.CLONE);
+
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playCatTriple(1, selectedCards, CardType.DEFUSE));
+        assertEquals("rule.catTriple.cloneCannotBeBaseType", ex.getMessage());
+    }
+
+    @Test
     void defuseDrawnKitten_survivesAndReinsertsKitten() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.EXPLODING_KITTEN);
