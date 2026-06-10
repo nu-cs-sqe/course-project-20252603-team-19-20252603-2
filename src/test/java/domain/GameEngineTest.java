@@ -516,6 +516,21 @@ class GameEngineTest {
     }
 
     @Test
+    void playCatTriple_threeFeralCat_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+
+        List<CardType> selectedCards = List.of(CardType.FERAL_CAT, CardType.FERAL_CAT, CardType.FERAL_CAT);
+
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playCatTriple(1, selectedCards, CardType.DEFUSE));
+        assertEquals("rule.catTriple.feralCannotBeBaseType", ex.getMessage());
+    }
+
+    @Test
     void defuseDrawnKitten_survivesAndReinsertsKitten() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.EXPLODING_KITTEN);
