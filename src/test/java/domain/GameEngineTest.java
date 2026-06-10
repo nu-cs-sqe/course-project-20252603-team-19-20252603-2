@@ -1003,6 +1003,16 @@ class GameEngineTest {
         assertEquals(1, engine.getCurrentPlayerId());
     }
 
+    @Test
+    void playBury_withoutBuryInHand_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.BURY);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playBury(0));
+        assertEquals("gameEngine.play.notInHand", ex.getMessage());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
