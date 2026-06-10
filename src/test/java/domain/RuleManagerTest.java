@@ -307,4 +307,11 @@ class RuleManagerTest {
         final int size = 61;
         assertDoesNotThrow(() -> ruleManager.requireValidInsertIndex(index, size));
     }
+
+    @Test
+    void requireValidInsertIndex_indexOf30AndSize61_returnsNormally() {
+        final int index = 30;
+        final int size = 61;
+        assertDoesNotThrow(() -> ruleManager.requireValidInsertIndex(index, size));
+    }
 }
