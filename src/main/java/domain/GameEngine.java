@@ -301,6 +301,9 @@ public final class GameEngine {
             case FAVOR:
                 playFavor(targetId, cardIndex);
                 break;
+            case SUPER_SKIP:
+                playSuperSkip();
+                break;
             default:
                 break;
         }
