@@ -447,6 +447,8 @@ class GameEngineTest {
     void playCatPair_withoutTwoOfType_throwsIllegalStateException() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         clearCardType(engine.getPlayer(0), CardType.CAT_CARDS);
+        clearCardType(engine.getPlayer(0), CardType.FERAL_CAT);
+        clearCardType(engine.getPlayer(0), CardType.CLONE);
         giveToCurrent(engine, CardType.CAT_CARDS);
         List<CardType> selectedCards = List.of(CardType.CAT_CARDS);
         IllegalStateException ex = assertThrows(
@@ -466,6 +468,19 @@ class GameEngineTest {
                 IllegalStateException.class,
                 () -> engine.playCatPair(1, selectedCards));
         assertEquals("rule.catPair.feralCannotBeBaseType", ex.getMessage());
+    }
+
+    @Test
+    void playCatPair_twoClone_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.CLONE);
+        giveToCurrent(engine, CardType.CLONE);
+        giveToCurrent(engine, CardType.CLONE);
+        List<CardType> selectedCards = List.of(CardType.CLONE, CardType.CLONE);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playCatPair(1, selectedCards));
+        assertEquals("rule.catPair.cloneCannotBeBaseType", ex.getMessage());
     }
 
     @Test
