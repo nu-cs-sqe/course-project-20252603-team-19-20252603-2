@@ -443,6 +443,17 @@ class GameEngineTest {
         assertEquals(CardType.ATTACK, engine.getLastPlayedCard());
     }
 
+    @Test
+    void playCatPair_withoutTwoOfType_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        List<CardType> selectedCards = List.of(CardType.CAT_CARDS);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playCatPair(1, selectedCards));
+        assertEquals("rule.catPair.needTwo", ex.getMessage());
+    }
 
     @Test
     void playCatTriple_targetHasDesiredCard_stealsItAndKeepsTurn() {
