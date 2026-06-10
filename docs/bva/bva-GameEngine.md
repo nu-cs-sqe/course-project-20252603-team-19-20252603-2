@@ -366,7 +366,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test                                                                                       | Expected output                                                                    | Implemented? |
 |-------------|---------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|--------------|
-| TC1         | 2 players, current 0 given 2 CAT_CARDS, `playCatPair(1, List.of(CAT_CARDS, CAT_CARDS))`                 | target hand shrinks by 1, current keeps the turn, `getLastPlayedCard()==CAT_CARDS` | no           |
+| TC1         | 2 players, current 0 given 2 CAT_CARDS, `playCatPair(1, List.of(CAT_CARDS, CAT_CARDS))`                 | target hand shrinks by 1, current keeps the turn, `getLastPlayedCard()==CAT_CARDS` | yes          |
 | TC2         | 2 players, current 0 given 1 CAT_CARDS AND 1 CLONE, `playCatPair(1, List.of(CAT_CARDS, CLONE))`         | target hand shrinks by 1, current keeps the turn, `getLastPlayedCard()==CAT_CARDS` | no           |
 | TC3         | 2 players, current 0 given 1 CAT_CARDS AND 1 FERAL_CAT, `playCatPair(1, List.of(CAT_CARDS, FERAL_CAT))` | target hand shrinks by 1, current keeps the turn, `getLastPlayedCard()==CAT_CARDS` | no           |
 | TC4         | current 0 given 2 ATTACK, `playCatPair(1, List.of(ATTACK, ATTACK))`                                     | target hand shrinks by 1, `getLastPlayedCard()==ATTACK`                            | no           |

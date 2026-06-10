@@ -164,14 +164,22 @@ public final class GameEngine {
         actionController.giveCard(target, current, cardIndex);
     }
 
-    public void playCatPair(int targetId, CardType cardType) {
+    public void playCatPair(int targetId, List<CardType> selectedCards) {
         Player current = getPlayer(getCurrentPlayerId());
         Player target = getPlayer(targetId);
+
+        CardType selectedCard = selectedCards.contains(CardType.CAT_CARDS)
+                ? CardType.CAT_CARDS
+                : selectedCards.get(0);
+
         ruleManager.requireValidTarget(current, target);
-        ruleManager.requireCatPair(current, cardType);
-        discardOneFromCurrent(cardType);
-        discardOneFromCurrent(cardType);
-        recordPlay(cardType);
+        ruleManager.requireCatPair(current, selectedCard);
+
+        for (CardType card : selectedCards) {
+            discardOneFromCurrent(card);
+        }
+
+        recordPlay(selectedCard);
         actionController.stealRandomCard(target, current);
     }
 
