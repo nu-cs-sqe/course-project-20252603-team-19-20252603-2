@@ -2,15 +2,15 @@ package ui.controller;
 
 import domain.Card;
 import domain.CardType;
+import domain.model.AppModel;
+import domain.model.GameModel;
+import domain.model.PlayerDisplayInfo;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.function.BiConsumer;
 import java.util.function.IntConsumer;
 import java.util.stream.Collectors;
-import ui.model.AppModel;
-import ui.model.GameModel;
-import ui.model.PlayerDisplayInfo;
 import ui.navigation.ScreenRouter;
 import ui.view.CardView;
 import ui.view.GameView;

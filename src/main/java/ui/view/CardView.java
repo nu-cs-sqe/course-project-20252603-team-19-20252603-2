@@ -1,5 +1,6 @@
 package ui.view;
 
+import domain.CardServices;
 import domain.CardType;
 import java.util.Map;
 import java.util.Random;
@@ -8,7 +9,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Rectangle;
-import ui.CardServices;
 
 public class CardView extends StackPane {
 	private final Map<String, Integer> imageCountDict = Map.ofEntries(

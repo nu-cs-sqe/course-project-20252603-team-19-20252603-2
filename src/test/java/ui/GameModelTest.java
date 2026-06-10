@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import domain.model.GameModel;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import ui.model.GameModel;
 
 class GameModelTest {
 
