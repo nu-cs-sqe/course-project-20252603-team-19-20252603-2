@@ -354,21 +354,25 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 ### Step 1-3 Results
 
-| Step   | Input                                                                | Output                                                                                             |
-|--------|----------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|
-| Step 1 | current holds 2 of `cardType`; a target                              | one random card moves from target to current; `lastPlayedCard` = `cardType`; same player continues |
-| Step 2 | `int` target id + `CardType`                                         | void / exception for bad target or too few of the type                                             |
-| Step 3 | 2 cats + valid target, 2 of a non-cat type, fewer than 2 of the type | steal happens / steal happens / `rule.catPair.needTwo`                                             |
+| Step   | Input                                                                                                  | Output                                                                                                                                |
+|--------|--------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| Step 1 | current holds a valid 2 card combo of `CardType`; a target                                             | one random card moves from target to current; `lastPlayedCard` = `selectedCard`; same player continues                                |
+| Step 2 | `int` target id + a list of the cards selected                                                         | void / exception for bad target or too few of the type or invalid pair                                                                |
+| Step 3 | valid 2 card combo + valid target, 2 of a non-cat type, fewer than 2 of the type, invalid 2 card combo | steal happens / steal happens / `rule.catPair.needTwo` / `rule.catPair.feralCannotBeBaseType` or `rule.catPair.cloneCannotBeBaseType` |
 
 ### Step 4:
 
 ##### All-combination or each-choice: each-choice
 
-| Test Case # | System under test                                                   | Expected output                                                                    | Implemented? |
-|-------------|---------------------------------------------------------------------|------------------------------------------------------------------------------------|--------------|
-| TC1         | 2 players, current 0 given 2 CAT_CARDS, `playCatPair(1, CAT_CARDS)` | target hand shrinks by 1, current keeps the turn, `getLastPlayedCard()==CAT_CARDS` | yes          |
-| TC2         | current 0 given 2 ATTACK, `playCatPair(1, ATTACK)`                  | target hand shrinks by 1, `getLastPlayedCard()==ATTACK`                            | yes          |
-| TC3         | current holds fewer than 2 of the type, `playCatPair(1, CAT_CARDS)` | throws `IllegalStateException` with message `"rule.catPair.needTwo"`               | yes          |
+| Test Case # | System under test                                                                                       | Expected output                                                                    | Implemented? |
+|-------------|---------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|--------------|
+| TC1         | 2 players, current 0 given 2 CAT_CARDS, `playCatPair(1, List.of(CAT_CARDS, CAT_CARDS))`                 | target hand shrinks by 1, current keeps the turn, `getLastPlayedCard()==CAT_CARDS` | no           |
+| TC2         | 2 players, current 0 given 1 CAT_CARDS AND 1 CLONE, `playCatPair(1, List.of(CAT_CARDS, CLONE))`         | target hand shrinks by 1, current keeps the turn, `getLastPlayedCard()==CAT_CARDS` | no           |
+| TC3         | 2 players, current 0 given 1 CAT_CARDS AND 1 FERAL_CAT, `playCatPair(1, List.of(CAT_CARDS, FERAL_CAT))` | target hand shrinks by 1, current keeps the turn, `getLastPlayedCard()==CAT_CARDS` | no           |
+| TC4         | current 0 given 2 ATTACK, `playCatPair(1, List.of(ATTACK, ATTACK))`                                     | target hand shrinks by 1, `getLastPlayedCard()==ATTACK`                            | no           |
+| TC5         | current holds fewer than 2 of the type, `playCatPair(1, List.of(CAT_CARDS))`                            | throws `IllegalStateException` with message `"rule.catPair.needTwo"`               | no           |
+| TC6         | 2 players, current 0 given 2 FERAL_CAT, `playCatPair(1, List.of(FERAL_CAT, FERAL_CAT))`                 | throws `IllegalStateException with message `"rule.catPair.feralCannotBeBaseType"`  | no           |                                                                            
+| TC7         | 2 players, current 0 given 2 CLONE, `playCatPair(1, List.of(CLONE, CLONE))`                             | throws `IllegalStateException with message `"rule.catPair.cloneCannotBeBaseType"`  | no           |
 
 ---
 
