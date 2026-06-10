@@ -536,21 +536,28 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 ### Step 1-3 Results
 
-| Step   | Input                                                                                     | Output                                                                                                                                      |
-|--------|-------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| Step 1 | current holds 3 of `selectedCard`; a target; a `desiredCard` to demand                    | the desired card moves from target to current if the target has it (else nothing); `lastPlayedCard` = `selectedCard`; same player continues |
-| Step 2 | `int` target id + two `CardType`                                                          | void / exception for bad target or fewer than three of `selectedCard`                                                                       |
-| Step 3 | 3 selected + target has desired, 3 selected + target lacks desired, fewer than 3 selected | steal happens / no steal / `rule.catTriple.needThree`                                                                                       |
+| Step   | Input                                                                                                                           | Output                                                                                                                                      |
+|--------|---------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| Step 1 | current holds a valid 3 card combo; a target; a `desiredCard` to demand                                                         | the desired card moves from target to current if the target has it (else nothing); `lastPlayedCard` = `selectedCard`; same player continues |
+| Step 2 | `int` target id + one `CardType` + a list of the cards selected                                                                 | void / exception for bad target or fewer than three `selected cards`                                                                        |
+| Step 3 | valid 3 card combo + target has desired, valid 3 card combo + target lacks desired, fewer than 3 selected, invalid 3 card combo | steal happens / no steal / `rule.catTriple.needThree`                                                                                       |
 
 ### Step 4:
 
 ##### All-combination or each-choice: each-choice
 
-| Test Case # | System under test                                                                      | Expected output                                                                                  | Implemented? |
-|-------------|----------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|--------------|
-| TC1         | current given 3 ATTACK, `playCatTriple(1, ATTACK, DEFUSE)` (target has a Defuse)       | target loses the Defuse, current gains it, current keeps the turn, `getLastPlayedCard()==ATTACK` | yes          |
-| TC2         | current given 3 ATTACK, `playCatTriple(1, ATTACK, EXPLODING_KITTEN)` (target lacks it) | no card stolen; `getLastPlayedCard()==ATTACK`                                                    | yes          |
-| TC3         | current holds fewer than 3 ATTACK, `playCatTriple(1, ATTACK, DEFUSE)`                  | throws `IllegalStateException` with message `"rule.catTriple.needThree"`                         | yes          |
+| Test Case # | System under test                                                                                                                                                | Expected output                                                                                    | Implemented? |
+|-------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------|--------------|
+| TC1         | current given 3 ATTACK, `playCatTriple(1, List.of(Attack, Attack, Attack), DEFUSE)` (target has a Defuse)                                                        | target loses the Defuse, current gains it, current keeps the turn, `getLastPlayedCard()==ATTACK`   | no           |
+| TC2         | current given 3 ATTACK, `playCatTriple(1, List.of(Attack, Attack, Attack), EXPLODING_KITTEN)` (target lacks it)                                                  | no card stolen; `getLastPlayedCard()==ATTACK`                                                      | no           |
+| TC3         | current holds fewer than 3 ATTACK, `playCatTriple(1, List.of(Attack, Attack), DEFUSE)`                                                                           | throws `IllegalStateException` with message `"rule.catTriple.needThree"`                           | no           |
+| TC4         | current given `List.of("Attack", "Defuse", "Favor")`, `playCatTriple(1, List.of("Attack", "Defuse", "Favor"), DEFUSE)` (target has a Defuse)                     | throws `IllegalStateException` with message `"rule.catTriple.needThree"`                           | no           |
+| TC5         | current given `List.of("CAT_CARD", "CAT_CARD", "FERAL_CAT")`, `playCatTriple(1, List.of("CAT_CARD", "CAT_CARD", "FERAL_CAT"), DEFUSE)` (target has a DEFUSE)     | target loses the Defuse, current gains it, current keeps the turn, `getLastPlayedCard()==CAT_CARD` | no           |
+| TC6         | current given `List.of("CAT_CARD", "FERAL_CAT", "FERAL_CAT")`, `playCatTriple(1, List.of("CAT_CARD", "FERAL_CAT", "FERAL_CAT"), DEFUSE)` (target has a DEFUSE)   | target loses the Defuse, current gains it, current keeps the turn, `getLastPlayedCard()==CAT_CARD` | no           |
+| TC7         | current given `List.of("FERAL_CAT", "FERAL_CAT", "FERAL_CAT")`, `playCatTriple(1, List.of("FERAL_CAT", "FERAL_CAT", "FERAL_CAT"), DEFUSE)` (target has a DEFUSE) | throws `IllegalStateException` with message `"rule.catTriple.feralCannotBeBaseType"`               | no           |
+| TC8         | current given `List.of("CAT_CARD", "CAT_CARD", "CLONE")`, `playCatTriple(1, List.of("CAT_CARD", "CAT_CARD", "CLONE"), DEFUSE)` (target has a DEFUSE)             | target loses the Defuse, current gains it, current keeps the turn, `getLastPlayedCard()==CAT_CARD` | no           |
+| TC9         | current given `List.of("CAT_CARD", "CLONE", "CLONE")`, `playCatTriple(1, List.of("CAT_CARD", "CLONE", "CLONE"), DEFUSE)` (target has a DEFUSE)                   | throws `IllegalStateException` with message `"rule.catTriple.needThree"`                           | no           |
+| TC10        | current given `List.of("CLONE", "CLONE", "CLONE")`, `playCatTriple(1, List.of("CLONE", "CLONE", "CLONE"), DEFUSE)` (target has a DEFUSE)                         | throws `IllegalStateException` with message `"rule.catTriple.cloneCannotBeBaseType"`               | no           |
 
 ---
 
