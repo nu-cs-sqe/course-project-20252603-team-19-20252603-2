@@ -548,6 +548,23 @@ class GameEngineTest {
     }
 
     @Test
+    void playCatTriple_oneCatCardTwoClone_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(engine.getCurrentPlayerId()), CardType.CAT_CARDS);
+        clearCardType(engine.getPlayer(engine.getCurrentPlayerId()), CardType.CLONE);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CLONE);
+        giveToCurrent(engine, CardType.CLONE);
+
+        List<CardType> selectedCards = List.of(CardType.CAT_CARDS, CardType.CLONE, CardType.CLONE);
+
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playCatTriple(1, selectedCards, CardType.DEFUSE));
+        assertEquals("rule.catTriple.needThree", ex.getMessage());
+    }
+
+    @Test
     void defuseDrawnKitten_survivesAndReinsertsKitten() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.EXPLODING_KITTEN);
