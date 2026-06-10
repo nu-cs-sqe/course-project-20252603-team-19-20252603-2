@@ -963,6 +963,26 @@ class GameEngineTest {
         assertEquals(1, engine.getCurrentPlayerId());
     }
 
+    @Test
+    void playBury_onIndex30_topCardMovesToIndex30AndTurnAdvances() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+
+        final int expectedDrawPileSize = 61;
+        final int drawPileSize = engine.getDrawPileSize();
+        final int reinsertIndex = 30;
+
+        assertEquals(expectedDrawPileSize, drawPileSize);
+
+        Card firstCard = engine.getDrawPile().get(0);
+
+        giveToCurrent(engine, CardType.BURY);
+
+        engine.playBury(reinsertIndex);
+
+        assertEquals(firstCard, engine.getDrawPile().get(reinsertIndex));
+        assertEquals(1, engine.getCurrentPlayerId());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
