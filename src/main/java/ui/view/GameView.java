@@ -41,7 +41,9 @@ public class GameView extends StackPane {
 			"ExplodingKitten", "Defuse", "Attack",
 			"Shuffle", "Skip", "SeeTheFuture",
 			"Nope", "CatCards", "Favor",
-			"Reverse", "TargetedAttack",
+			"Reverse", "TargetedAttack", "FeralCat",
+			"Clone", "SuperSkip", "Bury",
+			"PersonalAttack3X"
 	};
 
 	private BorderPane topBar;
