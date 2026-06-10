@@ -944,6 +944,25 @@ class GameEngineTest {
         assertEquals(drawsAfterSuperSkip, engine.getForcedTurns());
     }
 
+    @Test
+    void playBury_onIndex1_topCardMovesToIndex1AndTurnAdvances() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+
+        final int expectedDrawPileSize = 61;
+        final int drawPileSize = engine.getDrawPileSize();
+
+        assertEquals(expectedDrawPileSize, drawPileSize);
+
+        Card firstCard = engine.getDrawPile().get(0);
+
+        giveToCurrent(engine, CardType.BURY);
+
+        engine.playBury(1);
+
+        assertEquals(firstCard, engine.getDrawPile().get(1));
+        assertEquals(1, engine.getCurrentPlayerId());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
