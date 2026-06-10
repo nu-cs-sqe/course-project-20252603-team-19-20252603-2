@@ -103,6 +103,11 @@ public class GameModel {
 		localPlayerId = engine.getCurrentPlayerId();
 	}
 
+	public void playBury(int index) {
+		engine.playBury(index);
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
 	public void defuseExplodingKitten(int reinsertIndex) {
 		engine.defuseDrawnKitten(reinsertIndex);
 		localPlayerId = engine.getCurrentPlayerId();
@@ -147,6 +152,10 @@ public class GameModel {
 
 	public CardType getLastPlayedCard() {
 		return engine.getLastPlayedCard();
+	}
+
+	public CardType peekTopCardForBury() {
+		return engine.getDrawPile().get(0).getCardType();
 	}
 
 	public boolean currentPlayerHasDefuse() {

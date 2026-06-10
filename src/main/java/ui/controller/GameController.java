@@ -117,6 +117,13 @@ public class GameController {
 			refreshAfterPlay(view, appModel);
 			handleGameOver(appModel, router);
 		});
+		view.setOnBuryButton((reinsertIndex) -> {
+			model.playBury(reinsertIndex);
+			view.hideBuryScreen();
+			refreshAfterPlay(view, appModel);
+			CardView buryCard = new CardView("Bury");
+			discardCard(buryCard, view);
+		});
 	}
 
 	private void handleGameOver(AppModel appModel, ScreenRouter router) {
@@ -393,7 +400,14 @@ public class GameController {
 	}
 
 	private void playBury(List<CardView> cards, GameView view, AppModel appModel) {
-
+		CardType topCard = model.peekTopCardForBury();
+		view.showBuryScreen(
+				appModel.getResourceBundle(),
+				model.getDeckSize() - 1
+		);
+		view.updateBuryCard(
+				topCard
+		);
 	}
 
 	private void playCard(List<CardView> cards, GameView view, AppModel appModel) {
@@ -442,6 +456,9 @@ public class GameController {
 				break;
 			case PERSONAL_ATTACK_3X:
 				playPersonalAttack3X(cards, view);
+				break;
+			case BURY:
+				playBury(cards, view, appModel);
 				break;
 			default:
 				break;

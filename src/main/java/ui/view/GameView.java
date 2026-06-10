@@ -55,6 +55,7 @@ public class GameView extends StackPane {
 	private ScrollPane handScrollPane;
 	private HBox modalCardRow;
 	private HBox defuseSliderInfo;
+	private HBox burySliderInfo;
 	private VBox feedContainer;
 	private VBox discardPile;
 	private VBox modalOverlayScreen;
@@ -63,17 +64,23 @@ public class GameView extends StackPane {
 	private VBox modalBody;
 	private VBox modalPlayerButtons;
 	private VBox defuseOverlayScreen;
+	private VBox buryOverlayScreen;
 	private VBox tripleComboOverlayScreen;
 	private VBox tripleComboCard;
 	private VBox tripleTargetButtons;
 	private VBox defuseSection;
 	private VBox defuseSliderBody;
+	private VBox burySection;
+	private VBox buryCard;
+	private VBox burySliderBody;
 	private ScrollPane scrollPane;
 	private ScrollPane modalCardScroll;
 	private StackPane discardPileSection;
 	private StackPane modalDialogScreen;
 	private StackPane defuseDialogScreen;
+	private StackPane buryDialogScreen;
 	private Slider defuseSlider;
+	private Slider burySlider;
 
 	private Text logoText;
 	private Text deckTitleText;
@@ -90,6 +97,12 @@ public class GameView extends StackPane {
 	private Text defuseSliderLow;
 	private Text defuseSliderCurrent;
 	private Text defuseSliderHigh;
+	private Text buryTitle;
+	private Text burySubTitle;
+	private Text burySliderTitle;
+	private Text burySliderLow;
+	private Text burySliderCurrent;
+	private Text burySliderHigh;
 	private Text playerAvatarLabel;
 	private String seeTheFutureTitleText;
 	private String seeTheFutureSubTitleText;
@@ -105,6 +118,10 @@ public class GameView extends StackPane {
 	private String defuseCurrentLabelText;
 	private String defuseBottomLabelText;
 	private int defuseSliderMaxIndex;
+	private String buryTopLabelText;
+	private String buryCurrentLabelText;
+	private String buryBottomLabelText;
+	private int burySliderMaxIndex;
 	private Label deckCountLabel;
 	private Label localHandLabel;
 	private Label playerAvatarCardCount;
@@ -116,6 +133,7 @@ public class GameView extends StackPane {
 	private Button modalDismissButton;
 	private Button defuseButton;
 	private Button explodeButton;
+	private Button buryButton;
 
 	private ComboBox<CardType> cardGuessComboBox;
 
@@ -144,6 +162,8 @@ public class GameView extends StackPane {
 	private static final int discardCardHeight = 260;
 	private static final int peekCardWidth = 140;
 	private static final int peekCardHeight = 200;
+	private static final int buryCardWidth = 140;
+	private static final int buryCardHeight = 200;
 	private static final int targetedAttackDialogWindowHeight = 145;
 	private static final int targetedAttackButtonHeight = 60;
 	private static final int demandFavorDialogWindowHeight = 145;
@@ -151,15 +171,18 @@ public class GameView extends StackPane {
 	private static final int catCardDialogWindowHeight = 145;
 	private static final int catCardButtonHeight = 60;
 	private static final int defuseSliderHeight = 24;
+	private static final int burySliderHeight = 24;
 	private static final int maxNumberOfCardSelected = 3;
 	private static final int targetedAttackTitleWrap = 400;
 	private static final int demandFavorTitleWrap = 400;
 	private static final int grantFavorTitleWrap = 400;
 	private static final int catCardTitleWrap = 400;
 	private static final int defuseContentWidth = 300;
+	private static final int buryContentWidth = 300;
 	private static final double handScrollPaneInitialValue = 0.5;
 	private static final int tripleComboInstructionWordWrap = 320;
 	private static final int tripleTargetButtonsSpacing = 8;
+	private static final int buryTextBoxSpacing = 5;
 
 	public GameView() {
 		this.getStyleClass().add("game-root");
@@ -205,11 +228,16 @@ public class GameView extends StackPane {
 		tripleComboOverlayScreen.setVisible(false);
 		tripleComboOverlayScreen.setManaged(false);
 
+		buryOverlayScreen = createBuryOverlay();
+		buryOverlayScreen.setVisible(false);
+		buryOverlayScreen.setManaged(false);
+
 		this.getChildren().addAll(
 				gameContainer,
 				modalOverlayScreen,
 				defuseOverlayScreen,
-				tripleComboOverlayScreen
+				tripleComboOverlayScreen,
+				buryOverlayScreen
 		);
 
 		String stylePath = "/styles/game-style.css";
@@ -1056,6 +1084,150 @@ public class GameView extends StackPane {
 		return overlay;
 	}
 
+	private VBox createBuryTextBox() {
+		VBox buryTextBox = new VBox(buryTextBoxSpacing);
+
+		buryTitle = new Text();
+		buryTitle.setTextAlignment(TextAlignment.CENTER);
+		buryTitle.setWrappingWidth(buryContentWidth);
+		buryTitle.getStyleClass().add("bury-title");
+
+		burySubTitle = new Text();
+		burySubTitle.setTextAlignment(TextAlignment.CENTER);
+		burySubTitle.setWrappingWidth(buryContentWidth);
+		burySubTitle.getStyleClass().add("bury-subtitle");
+
+		buryTextBox.getChildren().addAll(
+				buryTitle,
+				burySubTitle
+		);
+
+		return buryTextBox;
+	}
+
+	private void createBuryCard() {
+		buryCard = new VBox();
+	}
+
+	private void createBurySliderTitle() {
+		burySliderTitle = new Text();
+		burySliderTitle.setTextAlignment(TextAlignment.CENTER);
+		burySliderTitle.setWrappingWidth(buryContentWidth);
+		burySliderTitle.getStyleClass().add("slider-label");
+	}
+
+	private void createBurySlider() {
+		burySlider = new Slider();
+		burySlider.getStyleClass().add("custom-slider");
+		burySlider.setPrefWidth(buryContentWidth);
+		burySlider.setMinWidth(buryContentWidth);
+		burySlider.setMaxWidth(buryContentWidth);
+		burySlider.setMinHeight(burySliderHeight);
+		burySlider.setPrefHeight(burySliderHeight);
+		burySlider.valueProperty().addListener(
+				(observable, oldValue, newValue) ->
+						Platform.runLater(() -> updateBurySliderLabels())
+		);
+	}
+
+	private void updateBurySliderLabels() {
+		int position = (int) burySlider.getValue();
+		burySliderLow.setText(buryTopLabelText + " (0)");
+		burySliderCurrent.setText(buryCurrentLabelText + ": " + position);
+		burySliderHigh.setText(
+				buryBottomLabelText + " (" + burySliderMaxIndex + ")"
+		);
+	}
+
+	private void createBurySliderInfo() {
+		burySliderInfo = new HBox();
+		burySliderInfo.setAlignment(Pos.CENTER);
+		burySliderInfo.setMaxWidth(buryContentWidth);
+		burySliderInfo.setPrefWidth(buryContentWidth);
+
+		burySliderLow = new Text();
+		burySliderCurrent = new Text();
+		burySliderHigh = new Text();
+
+		burySliderLow.getStyleClass().add("bury-stat-text");
+		burySliderCurrent.getStyleClass().add("bury-stat-text-chosen");
+		burySliderHigh.getStyleClass().add("bury-stat-text");
+
+		HBox leftColumn = new HBox(burySliderLow);
+		leftColumn.setAlignment(Pos.CENTER_LEFT);
+		HBox.setHgrow(leftColumn, Priority.ALWAYS);
+
+		HBox centerColumn = new HBox(burySliderCurrent);
+		centerColumn.setAlignment(Pos.CENTER);
+		HBox.setHgrow(centerColumn, Priority.ALWAYS);
+
+		HBox rightColumn = new HBox(burySliderHigh);
+		rightColumn.setAlignment(Pos.CENTER_RIGHT);
+		HBox.setHgrow(rightColumn, Priority.ALWAYS);
+
+		burySliderInfo.getChildren().addAll(
+				leftColumn,
+				centerColumn,
+				rightColumn
+		);
+	}
+
+	private void createBurySliderBody() {
+		burySliderBody = new VBox();
+		burySliderBody.getStyleClass().add("slider-container");
+		burySliderBody.setAlignment(Pos.CENTER);
+		burySliderBody.setFillWidth(true);
+		burySliderBody.setMaxWidth(buryContentWidth);
+		burySliderBody.setPrefWidth(buryContentWidth);
+
+		createBurySliderTitle();
+		createBurySlider();
+		createBurySliderInfo();
+
+		burySliderBody.getChildren().addAll(
+				burySliderTitle,
+				burySlider,
+				burySliderInfo
+		);
+	}
+
+	private void createBuryButton() {
+		buryButton = new Button();
+		buryButton.getStyleClass().add("bury-button");
+	}
+
+	private VBox createBuryOverlay() {
+		VBox overlay= new VBox();
+		overlay.getStyleClass().add("bury-overlay");
+		overlay.setAlignment(Pos.CENTER);
+		overlay.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+		VBox buryTextBox = createBuryTextBox();
+		createBuryCard();
+		createBurySliderBody();
+		createBuryButton();
+
+		buryDialogScreen = new StackPane();
+		buryDialogScreen.setAlignment(Pos.CENTER);
+		buryDialogScreen.getStyleClass().add("bury-modal");
+
+		burySection = new VBox();
+		burySection.getStyleClass().add("bury-section");
+		burySection.setAlignment(Pos.CENTER);
+		burySection.setFillWidth(false);
+		burySection.getChildren().addAll(
+				buryTextBox,
+				buryCard,
+				burySliderBody,
+				buryButton
+		);
+
+		buryDialogScreen.getChildren().add(burySection);
+		overlay.getChildren().add(buryDialogScreen);
+
+		return overlay;
+	}
+
 	public void updateDisplay(ResourceBundle bundle) {
 		logoText.setText(bundle.getString("gameView.logo"));
 		quitButton.setText(bundle.getString("gameView.quit"));
@@ -1083,6 +1255,13 @@ public class GameView extends StackPane {
 		defuseTopLabelText = bundle.getString("defuse.topLabel");
 		defuseCurrentLabelText = bundle.getString("defuse.currentLabel");
 		defuseBottomLabelText = bundle.getString("defuse.bottomLabel");
+		buryTitle.setText(bundle.getString("bury.title"));
+		burySubTitle.setText(bundle.getString("bury.subtitle"));
+		burySliderTitle.setText(bundle.getString("bury.sliderLabel"));
+		buryButton.setText(bundle.getString("bury.buryButton"));
+		buryTopLabelText = bundle.getString("bury.topLabel");
+		buryCurrentLabelText = bundle.getString("bury.currentLabel");
+		buryBottomLabelText = bundle.getString("bury.bottomLabel");
 	}
 
 	public void showOpponents(List<PlayerDisplayInfo> opponents) {
@@ -1258,6 +1437,36 @@ public class GameView extends StackPane {
 		updateDefuseSliderLabels();
 	}
 
+	public void updateBuryCard(CardType card) {
+		buryCard.getChildren().clear();
+
+		String cardName = cardCollection.get(card);
+		CardView topCard = new CardView(cardName);
+		topCard.getStyleClass().remove("hand-card");
+		topCard.getStyleClass().add(
+				"future-peeked-card"
+		);
+		preprocessCard(topCard, buryCardWidth, buryCardHeight);
+
+		buryCard.getChildren().add(
+				topCard
+		);
+	}
+
+	private void updateBurySlider(int deckSize) {
+		int maxIndex = Math.max(deckSize, 0);
+		burySliderMaxIndex = maxIndex;
+		burySlider.setMin(0);
+		burySlider.setMax(maxIndex);
+		burySlider.setValue(0);
+		burySlider.setBlockIncrement(1);
+		burySlider.setMajorTickUnit(1);
+		burySlider.setMinorTickCount(0);
+		burySlider.setSnapToTicks(true);
+		burySlider.setDisable(false);
+		updateBurySliderLabels();
+	}
+
 	public void showDefuseScreen(ResourceBundle bundle, int deckSize) {
 		defuseTopLabelText = bundle.getString("defuse.topLabel");
 		defuseCurrentLabelText = bundle.getString("defuse.currentLabel");
@@ -1273,6 +1482,23 @@ public class GameView extends StackPane {
 	public void hideDefuseScreen() {
 		defuseOverlayScreen.setVisible(false);
 		defuseOverlayScreen.setManaged(false);
+	}
+
+	public void showBuryScreen(ResourceBundle bundle, int deckSize) {
+		buryTopLabelText = bundle.getString("bury.topLabel");
+		buryCurrentLabelText = bundle.getString("bury.currentLabel");
+		buryBottomLabelText = bundle.getString("bury.bottomLabel");
+
+		updateBurySlider(deckSize);
+		updateBurySliderLabels();
+
+		buryOverlayScreen.setVisible(true);
+		buryOverlayScreen.setManaged(true);
+	}
+
+	public void hideBuryScreen() {
+		buryOverlayScreen.setVisible(false);
+		buryOverlayScreen.setManaged(false);
 	}
 
 	public void updateSeeTheFutureCards(ResourceBundle bundle, List<Card> cards) {
@@ -1526,5 +1752,11 @@ public class GameView extends StackPane {
 
 	public void setOnExplodeButton(Runnable handler) {
 		explodeButton.setOnAction(event -> handler.run());
+	}
+
+	public void setOnBuryButton(IntConsumer handler) {
+		buryButton.setOnAction(event -> handler.accept(
+				(int) burySlider.getValue()
+		));
 	}
 }
