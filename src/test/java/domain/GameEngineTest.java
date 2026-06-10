@@ -397,6 +397,22 @@ class GameEngineTest {
     }
 
     @Test
+    void playCatPair_oneCatCardOneClone_stealsOneCardFromTargetAndKeepsTurn() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CLONE);
+        int targetHandBefore = engine.getPlayerHand(1).size();
+
+        List<CardType> selectedCards = List.of(CardType.CAT_CARDS, CardType.CLONE);
+
+        engine.playCatPair(1, selectedCards);
+
+        assertEquals(targetHandBefore - 1, engine.getPlayerHand(1).size());
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(CardType.CAT_CARDS, engine.getLastPlayedCard());
+    }
+
+    @Test
     void playCatTriple_targetHasDesiredCard_stealsItAndKeepsTurn() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.ATTACK);
