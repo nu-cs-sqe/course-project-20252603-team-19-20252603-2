@@ -456,6 +456,19 @@ class GameEngineTest {
     }
 
     @Test
+    void playCatPair_twoFeralCat_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.FERAL_CAT);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+        List<CardType> selectedCards = List.of(CardType.FERAL_CAT, CardType.FERAL_CAT);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playCatPair(1, selectedCards));
+        assertEquals("rule.catPair.feralCannotBeBaseType", ex.getMessage());
+    }
+
+    @Test
     void playCatTriple_targetHasDesiredCard_stealsItAndKeepsTurn() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.ATTACK);
