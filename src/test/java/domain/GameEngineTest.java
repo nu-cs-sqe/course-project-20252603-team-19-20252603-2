@@ -436,6 +436,22 @@ class GameEngineTest {
     }
 
     @Test
+    void playCatTriple_targetLacksDesiredCard_stealsNothing() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.ATTACK);
+        giveToCurrent(engine, CardType.ATTACK);
+        giveToCurrent(engine, CardType.ATTACK);
+        int targetHandBefore = engine.getPlayerHand(1).size();
+
+        List<CardType> selectedCards = List.of(CardType.ATTACK, CardType.ATTACK, CardType.ATTACK);
+
+        engine.playCatTriple(1, selectedCards, CardType.EXPLODING_KITTEN);
+
+        assertEquals(targetHandBefore, engine.getPlayerHand(1).size());
+        assertEquals(CardType.ATTACK, engine.getLastPlayedCard());
+    }
+
+    @Test
     void defuseDrawnKitten_survivesAndReinsertsKitten() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.EXPLODING_KITTEN);
