@@ -289,4 +289,15 @@ class RuleManagerTest {
                 () -> ruleManager.requireSomethingToClone(CardType.CLONE));
         assertEquals("rule.clone.cannotCloneClone", ex.getMessage());
     }
+
+    @Test
+    void requireValidInsertIndex_indexOfNegativeOneAndSize61_throwsIllegalStateException() {
+        final int index = -1;
+        final int size = 61;
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> ruleManager.requireValidInsertIndex(index, size)
+        );
+        assertEquals("rule.bury.invalidIndex", ex.getMessage());
+    }
 }
