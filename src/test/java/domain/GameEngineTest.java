@@ -1116,6 +1116,20 @@ class GameEngineTest {
     }
 
     @Test
+    void playClone_onPersonalAttack3X_forceTurnBecomesFourAndSamePlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.CLONE);
+        engine.setLastPlayedCard(CardType.PERSONAL_ATTACK_3X);
+
+        final int expectedForcedTurns = 4;
+
+        engine.playClone(0, 0);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(expectedForcedTurns, engine.getForcedTurns());
+    }
+
+    @Test
     void playSuperSkip_endsTurnWithoutDrawing() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.SUPER_SKIP);
