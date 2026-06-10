@@ -99,7 +99,7 @@ public final class RuleManager {
     }
 
     public void requireValidInsertIndex(int index, int size) {
-        if (index < 0) {
+        if (index < 0 || index > size) {
             throw new IllegalStateException(INVALID_INSERT_INDEX_KEY);
         }
     }
