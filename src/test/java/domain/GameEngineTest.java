@@ -531,6 +531,23 @@ class GameEngineTest {
     }
 
     @Test
+    void playCatTriple_twoCatCardAndOneClone_stealsItAndKeepsTurn() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CLONE);
+
+        List<CardType> selectedCards = List.of(CardType.CAT_CARDS, CardType.CAT_CARDS, CardType.CLONE);
+
+        engine.playCatTriple(1, selectedCards, CardType.DEFUSE);
+
+        assertFalse(engine.getPlayer(1).hasCard(CardType.DEFUSE));
+        assertTrue(engine.getPlayer(0).hasCard(CardType.DEFUSE));
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(CardType.CAT_CARDS, engine.getLastPlayedCard());
+    }
+
+    @Test
     void defuseDrawnKitten_survivesAndReinsertsKitten() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.EXPLODING_KITTEN);
