@@ -12,6 +12,7 @@ public final class GameEngine {
     private static final int TOTAL_DEFUSES = 6;
     private static final int NORMAL_FORCED_TURNS = 1;
     private static final int TURNS_ADDED_BY_ATTACK = 2;
+    private static final int TURNS_ADDED_PERSONAL_ATTACK = 3;
 
     private static final String NUM_PLAYERS_OUT_OF_RANGE_KEY = "gameEngine.numPlayers.outOfRange";
     private static final String INVALID_PLAYER_ID_KEY = "gameEngine.getPlayer.invalidId";
@@ -305,6 +306,11 @@ public final class GameEngine {
         Card firstCard = deck.drawTop();
         deck.insertAt(firstCard, index);
         consumeOneForcedTurn();
+    }
+
+    public void playPersonalAttack3X() {
+        playFromHand(CardType.PERSONAL_ATTACK_3X);
+        forcedTurns += TURNS_ADDED_PERSONAL_ATTACK;
     }
 
     private void returnTurnToLastPlayer() {
