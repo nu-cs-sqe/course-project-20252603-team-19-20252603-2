@@ -22,6 +22,7 @@ public final class RuleManager {
     private static final String NOTHING_TO_NOPE_KEY = "rule.nope.nothingToCancel";
     private static final String NOTHING_TO_CLONE_KEY = "rule.clone.nothingToClone";
     private static final String CANNOT_CLONE_CLONE_CARD_KEY = "rule.clone.cannotCloneClone";
+    private static final String INVALID_INSERT_INDEX_KEY = "rule.bury.invalidIndex";
 
     public void requirePlayable(CardType type) {
         if (type == CardType.DEFUSE || type == CardType.EXPLODING_KITTEN) {
@@ -94,6 +95,12 @@ public final class RuleManager {
         }
         if (lastPlayedCard == CardType.CLONE) {
             throw new IllegalStateException(CANNOT_CLONE_CLONE_CARD_KEY);
+        }
+    }
+
+    public void requireValidInsertIndex(int index, int size) {
+        if (index < 0) {
+            throw new IllegalStateException(INVALID_INSERT_INDEX_KEY);
         }
     }
 }
