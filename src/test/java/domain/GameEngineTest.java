@@ -1035,6 +1035,24 @@ class GameEngineTest {
         assertEquals("rule.bury.invalidIndex", ex.getMessage());
     }
 
+    @Test
+    void playPersonalAttack3X_forcedTurnIs1_forcedturnsIs4AndSamePlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.PERSONAL_ATTACK_3X);
+
+        final int initialForcedTurns = 1;
+        final int expectedForcedTurns = 4;
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(initialForcedTurns, engine.getForcedTurns());
+
+        engine.playPersonalAttack3X();
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(expectedForcedTurns, engine.getForcedTurns());
+
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
