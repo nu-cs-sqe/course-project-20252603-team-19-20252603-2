@@ -304,6 +304,9 @@ public final class GameEngine {
             case SUPER_SKIP:
                 playSuperSkip();
                 break;
+            case PERSONAL_ATTACK_3X:
+                playPersonalAttack3X();
+                break;
             default:
                 break;
         }

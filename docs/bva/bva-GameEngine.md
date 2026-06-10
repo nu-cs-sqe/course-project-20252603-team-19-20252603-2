@@ -593,7 +593,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | TC12        | FAVOR was played, then cloned                               | favor card is played; same player keeps the turn                                                    | yes          |
 | TC13        | CLONE was played, then cloned again                         | throws `IllegalStateException` with message `"rule.clone.cannotCloneClone"`                         | yes          |
 | TC14        | SUPER_SKIP was played, then cloned                          | turn goes to the next living player and ignores the forced turns; `getForcedTurns()` should equal 1 | yes          |
-| TC15        | PERSONAL_ATTACK_3X was played, then clone                   | forced turns increased by 3; same player keeps the turn                                             | no           | 
+| TC15        | PERSONAL_ATTACK_3X was played, then clone                   | forced turns increased by 3; same player keeps the turn                                             | yes          | 
 
 ---
 
