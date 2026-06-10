@@ -534,6 +534,9 @@ class GameEngineTest {
     @Test
     void playCatTriple_invalidThreeCardCombo_throwsIllegalStateException() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.ATTACK);
+        clearCardType(engine.getPlayer(0), CardType.DEFUSE);
+        clearCardType(engine.getPlayer(0), CardType.FAVOR);
         giveToCurrent(engine, CardType.ATTACK);
         giveToCurrent(engine, CardType.DEFUSE);
         giveToCurrent(engine, CardType.FAVOR);
@@ -587,6 +590,7 @@ class GameEngineTest {
     @Test
     void playCatTriple_threeFeralCat_throwsIllegalStateException() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.FERAL_CAT);
         giveToCurrent(engine, CardType.FERAL_CAT);
         giveToCurrent(engine, CardType.FERAL_CAT);
         giveToCurrent(engine, CardType.FERAL_CAT);
