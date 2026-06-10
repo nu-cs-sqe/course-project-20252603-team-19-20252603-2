@@ -199,6 +199,7 @@ public final class GameEngine {
         Card kitten = current.removeCardFromHand(kittenIndex);
         deck.discard(current.removeCardFromHand(current.getIndexOfCard(CardType.DEFUSE)));
         deck.insertAt(kitten, reinsertIndex);
+        lastPlayedCard = null;
         consumeOneForcedTurn();
     }
 
@@ -254,11 +255,9 @@ public final class GameEngine {
     public List<Card> playClone(int targetId, int cardIndex) {
         ruleManager.requireSomethingToClone(lastPlayedCard);
         Player cloner = getPlayer(getCurrentPlayerId());
-        int index = cloner.getIndexOfCard(CardType.CLONE);
-        if (index < 0) {
-            throw new IllegalStateException(NOT_IN_HAND_KEY);
-        }
-        deck.discard(cloner.removeCardFromHand(index));
+        CardType lastCard = lastPlayedCard;
+        playFromHand(CardType.CLONE);
+        lastPlayedCard = lastCard;
         cloner.addCardToHand(new Card(lastPlayedCard));
         List<Card> viewedCards = cloneLastAction(targetId, cardIndex);
         lastPlayedCard = null;
