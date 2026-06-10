@@ -9,7 +9,9 @@ public class CardServices {
 			"ExplodingKitten", "Defuse", "Attack",
 			"Shuffle", "Skip", "SeeTheFuture",
 			"Nope", "CatCards", "Favor",
-			"Reverse", "TargetedAttack",
+			"Reverse", "TargetedAttack", "FeralCat",
+			"Clone", "SuperSkip", "Bury",
+			"PersonalAttack3X"
 	};
 	private static final String invalidCardName = "cardServices.cardDoesNotExist";
 

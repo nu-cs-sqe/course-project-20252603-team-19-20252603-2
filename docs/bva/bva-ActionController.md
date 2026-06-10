@@ -15,11 +15,12 @@ This file holds the BVA analysis for every public method of the `ActionControlle
 | Step 3 | a full deck | size unchanged, same multiset of cards |
 
 ### Step 4:
+
 ##### All-combination or each-choice: each-choice
 
-| Test Case # | System under test | Expected output | Implemented? |
-|-------------|------------------|-----------------|--------------|
-| TC1 | `shuffleDeck(new Deck())` | deck size unchanged (63) | yes |
+| Test Case # | System under test         | Expected output          | Implemented? |
+|-------------|---------------------------|--------------------------|--------------|
+| TC1         | `shuffleDeck(new Deck())` | deck size unchanged (74) | yes          |
 
 ---
 

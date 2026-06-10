@@ -1317,3 +1317,135 @@
     -fx-translate-y: 2px;
     -fx-effect: dropshadow(one-pass-box, #000000, 0, 1.0, 1, 1);
 }
+
+/* --- THE DARK BACKGROUND OVERLAY --- */
+.bury-overlay {
+    /* A dark, semi-transparent blue/black to dim the background */
+    -fx-background-color: rgba(15, 25, 40, 0.85);
+
+    /* Ensures the overlay flexes to fill the entire window */
+    -fx-alignment: center;
+}
+
+/* --- 1. MAIN MODAL CONTAINER --- */
+.bury-modal {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #000000;
+    -fx-border-width: 5px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 24px;
+    -fx-padding: 24px;
+    -fx-alignment: center;
+    -fx-effect: dropshadow(two-pass-box, #000000, 0, 1.0, 10, 10);
+    -fx-max-width: 400px;
+    -fx-min-width: 400px;
+    -fx-max-height: 600px;
+    -fx-min-height: 600px;
+}
+
+.bury-section {
+    -fx-alignment: center;
+    -fx-spacing: 15px;
+}
+
+/* --- 2. TYPOGRAPHY --- */
+.bury-title {
+    -fx-font-family: "Arial black";
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-fill: #2b82c9; /* Bright blue */
+}
+
+.bury-subtitle {
+    -fx-font-family: "Arial black";
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-fill: #57534e; /* Dark stone gray */
+}
+
+/* --- 3. INNER SLIDER CONTAINER --- */
+.slider-box {
+    -fx-background-color: #f5f5f4; /* Light gray */
+    -fx-border-color: #000000;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-padding: 15px;
+}
+
+.slider-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #444444;
+}
+
+.slider-value {
+    -fx-font-size: 14px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #2b82c9;
+}
+
+/* --- 4. CUSTOM JAVA-FX SLIDER --- */
+.custom-slider {
+    -fx-pref-width: 300px;
+    -fx-min-width: 300px;
+    -fx-max-width: 300px;
+    -fx-min-height: 24px;
+    -fx-pref-height: 24px;
+}
+
+.custom-slider .track {
+    -fx-background-color: #d6d3d1;
+    -fx-background-insets: 0;
+    -fx-background-radius: 3px;
+    -fx-pref-height: 8px;
+    -fx-min-height: 8px;
+}
+
+.custom-slider .thumb {
+    -fx-background-color: #2b82c9;
+    -fx-pref-width: 18px;
+    -fx-pref-height: 18px;
+    -fx-background-radius: 50%;
+}
+
+/* Text indicators below the slider */
+.bury-stat-text {
+    -fx-fill: #78716c;
+    -fx-font-family: Arial Black;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.bury-stat-text-chosen {
+    -fx-fill: #2b82c9;
+    -fx-font-family: Arial Black;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* --- 5. ACTION BUTTON --- */
+.bury-button {
+    -fx-background-color: #55b6eb; /* Light sky blue */
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 18px;
+    -fx-font-family: Arial black;
+    -fx-font-weight: bold;
+    -fx-border-color: #000000;
+    -fx-border-width: 3px;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 14px;
+    -fx-padding: 15px 20px;
+    -fx-effect: dropshadow(three-pass-box, #000000, 0, 1.0, 5, 5);
+    -fx-background-insets: 2px;
+    -fx-cursor: hand;
+}
+
+.bury-button:hover {
+    -fx-background-color: #8ad2f5;
+}
+
+.bury-button:pressed {
+    /* Push-down animation */
+    -fx-effect: none;
+}

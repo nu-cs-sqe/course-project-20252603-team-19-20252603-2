@@ -12,6 +12,7 @@ public final class GameEngine {
     private static final int TOTAL_DEFUSES = 6;
     private static final int NORMAL_FORCED_TURNS = 1;
     private static final int TURNS_ADDED_BY_ATTACK = 2;
+    private static final int TURNS_ADDED_PERSONAL_ATTACK = 3;
 
     private static final String NUM_PLAYERS_OUT_OF_RANGE_KEY = "gameEngine.numPlayers.outOfRange";
     private static final String INVALID_PLAYER_ID_KEY = "gameEngine.getPlayer.invalidId";
@@ -95,12 +96,24 @@ public final class GameEngine {
         return deck.getDiscardPile();
     }
 
+    public List<Card> getDrawPile() {
+        return deck.getDrawPile();
+    }
+
     public int getForcedTurns() {
         return forcedTurns;
     }
 
     public CardType getLastPlayedCard() {
         return lastPlayedCard;
+    }
+
+    public int getCurrentDirection() {
+        return turnTracker.getCurrentDirection();
+    }
+
+    public void setLastPlayedCard(CardType cardType) {
+        lastPlayedCard = cardType;
     }
 
     public void playSkip() {
@@ -115,6 +128,7 @@ public final class GameEngine {
 
     public List<Card> playSeeTheFuture() {
         playFromHand(CardType.SEE_THE_FUTURE);
+        lastPlayedCard = CardType.SEE_THE_FUTURE;
         return actionController.peekTopThree(deck);
     }
 
@@ -139,6 +153,7 @@ public final class GameEngine {
         int transferred = forcedTurns == NORMAL_FORCED_TURNS ? 0 : forcedTurns;
         turnTracker.setCurrentPlayer(targetId);
         forcedTurns = transferred + TURNS_ADDED_BY_ATTACK;
+        lastPlayedCard = CardType.TARGETED_ATTACK;
     }
 
     public void playFavor(int targetId, int cardIndex) {
@@ -149,25 +164,40 @@ public final class GameEngine {
         actionController.giveCard(target, current, cardIndex);
     }
 
-    public void playCatPair(int targetId, CardType cardType) {
+    public void playCatPair(int targetId, List<CardType> selectedCards) {
         Player current = getPlayer(getCurrentPlayerId());
         Player target = getPlayer(targetId);
+
+        CardType selectedCard = selectedCards.contains(CardType.CAT_CARDS)
+                ? CardType.CAT_CARDS
+                : selectedCards.get(0);
+
         ruleManager.requireValidTarget(current, target);
-        ruleManager.requireCatPair(current, cardType);
-        discardOneFromCurrent(cardType);
-        discardOneFromCurrent(cardType);
-        recordPlay(cardType);
+        ruleManager.requireCatPair(current, selectedCard);
+
+        for (CardType card : selectedCards) {
+            discardOneFromCurrent(card);
+        }
+
+        recordPlay(selectedCard);
         actionController.stealRandomCard(target, current);
     }
 
-    public void playCatTriple(int targetId, CardType selectedCard, CardType desiredCard) {
+    public void playCatTriple(int targetId, List<CardType> selectedCards, CardType desiredCard) {
         Player current = getPlayer(getCurrentPlayerId());
         Player target = getPlayer(targetId);
+
+        CardType selectedCard = selectedCards.contains(CardType.CAT_CARDS)
+                ? CardType.CAT_CARDS
+                : selectedCards.get(0);
+
         ruleManager.requireValidTarget(current, target);
         ruleManager.requireCatTriple(current, selectedCard);
-        discardOneFromCurrent(selectedCard);
-        discardOneFromCurrent(selectedCard);
-        discardOneFromCurrent(selectedCard);
+
+        for (CardType card : selectedCards) {
+            discardOneFromCurrent(card);
+        }
+
         recordPlay(selectedCard);
         actionController.stealDesiredCard(target, current, desiredCard);
     }
@@ -184,6 +214,7 @@ public final class GameEngine {
         Card kitten = current.removeCardFromHand(kittenIndex);
         deck.discard(current.removeCardFromHand(current.getIndexOfCard(CardType.DEFUSE)));
         deck.insertAt(kitten, reinsertIndex);
+        lastPlayedCard = null;
         consumeOneForcedTurn();
     }
 
@@ -234,6 +265,71 @@ public final class GameEngine {
             default:
                 break;
         }
+    }
+
+    public List<Card> playClone(int targetId, int cardIndex) {
+        ruleManager.requireSomethingToClone(lastPlayedCard);
+        Player cloner = getPlayer(getCurrentPlayerId());
+        CardType lastCard = lastPlayedCard;
+        playFromHand(CardType.CLONE);
+        lastPlayedCard = lastCard;
+        cloner.addCardToHand(new Card(lastPlayedCard));
+        List<Card> viewedCards = cloneLastAction(targetId, cardIndex);
+        lastPlayedCard = null;
+        return viewedCards;
+    }
+
+    private List<Card> cloneLastAction(int targetId, int cardIndex) {
+        switch (lastPlayedCard) {
+            case SKIP:
+                playSkip();
+                break;
+            case REVERSE:
+                playReverse();
+                break;
+            case ATTACK:
+                playAttack();
+                break;
+            case SEE_THE_FUTURE:
+                return playSeeTheFuture();
+            case SHUFFLE:
+                playShuffle();
+                break;
+            case TARGETED_ATTACK:
+                playTargetedAttack(targetId);
+                break;
+            case FAVOR:
+                playFavor(targetId, cardIndex);
+                break;
+            case SUPER_SKIP:
+                playSuperSkip();
+                break;
+            case PERSONAL_ATTACK_3X:
+                playPersonalAttack3X();
+                break;
+            default:
+                break;
+        }
+        return new ArrayList<>();
+    }
+
+    public void playSuperSkip() {
+        playFromHand(CardType.SUPER_SKIP);
+        advanceToNextPlayer();
+        forcedTurns = 1;
+    }
+
+    public void playBury(int index) {
+        ruleManager.requireValidInsertIndex(index, getDrawPileSize());
+        playFromHand(CardType.BURY);
+        Card firstCard = deck.drawTop();
+        deck.insertAt(firstCard, index);
+        consumeOneForcedTurn();
+    }
+
+    public void playPersonalAttack3X() {
+        playFromHand(CardType.PERSONAL_ATTACK_3X);
+        forcedTurns += TURNS_ADDED_PERSONAL_ATTACK;
     }
 
     private void returnTurnToLastPlayer() {

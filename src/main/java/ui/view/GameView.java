@@ -41,7 +41,9 @@ public class GameView extends StackPane {
 			"ExplodingKitten", "Defuse", "Attack",
 			"Shuffle", "Skip", "SeeTheFuture",
 			"Nope", "CatCards", "Favor",
-			"Reverse", "TargetedAttack",
+			"Reverse", "TargetedAttack", "FeralCat",
+			"Clone", "SuperSkip", "Bury",
+			"PersonalAttack3X"
 	};
 
 	private BorderPane topBar;
@@ -52,7 +54,6 @@ public class GameView extends StackPane {
 	private HBox handScrollContent;
 	private ScrollPane handScrollPane;
 	private HBox modalCardRow;
-	private HBox defuseSliderInfo;
 	private VBox feedContainer;
 	private VBox discardPile;
 	private VBox modalOverlayScreen;
@@ -60,18 +61,16 @@ public class GameView extends StackPane {
 	private VBox modalTextBox;
 	private VBox modalBody;
 	private VBox modalPlayerButtons;
-	private VBox defuseOverlayScreen;
+	private DepthSliderModal defuseModal;
+	private DepthSliderModal buryModal;
 	private VBox tripleComboOverlayScreen;
 	private VBox tripleComboCard;
 	private VBox tripleTargetButtons;
-	private VBox defuseSection;
-	private VBox defuseSliderBody;
+	private VBox buryCard;
 	private ScrollPane scrollPane;
 	private ScrollPane modalCardScroll;
 	private StackPane discardPileSection;
 	private StackPane modalDialogScreen;
-	private StackPane defuseDialogScreen;
-	private Slider defuseSlider;
 
 	private Text logoText;
 	private Text deckTitleText;
@@ -83,11 +82,6 @@ public class GameView extends StackPane {
 	private Text tripleComboHeader;
 	private Text tripleComboInstruction;
 	private Text guessBoxLabel;
-	private Text defuseTitle;
-	private Text defuseSliderTitle;
-	private Text defuseSliderLow;
-	private Text defuseSliderCurrent;
-	private Text defuseSliderHigh;
 	private Text playerAvatarLabel;
 	private String seeTheFutureTitleText;
 	private String seeTheFutureSubTitleText;
@@ -99,10 +93,6 @@ public class GameView extends StackPane {
 	private String grantFavorTitleText;
 	private String catCardTitleText;
 	private String catCardSubTitleText;
-	private String defuseTopLabelText;
-	private String defuseCurrentLabelText;
-	private String defuseBottomLabelText;
-	private int defuseSliderMaxIndex;
 	private Label deckCountLabel;
 	private Label localHandLabel;
 	private Label playerAvatarCardCount;
@@ -112,7 +102,6 @@ public class GameView extends StackPane {
 	private Button drawCard;
 	private Button playCardButton;
 	private Button modalDismissButton;
-	private Button defuseButton;
 	private Button explodeButton;
 
 	private ComboBox<CardType> cardGuessComboBox;
@@ -142,22 +131,46 @@ public class GameView extends StackPane {
 	private static final int discardCardHeight = 260;
 	private static final int peekCardWidth = 140;
 	private static final int peekCardHeight = 200;
+	private static final int buryCardWidth = 140;
+	private static final int buryCardHeight = 200;
 	private static final int targetedAttackDialogWindowHeight = 145;
 	private static final int targetedAttackButtonHeight = 60;
 	private static final int demandFavorDialogWindowHeight = 145;
 	private static final int demandFavorButtonHeight = 60;
 	private static final int catCardDialogWindowHeight = 145;
 	private static final int catCardButtonHeight = 60;
-	private static final int defuseSliderHeight = 24;
+	private static final int depthSliderHeight = 24;
 	private static final int maxNumberOfCardSelected = 3;
 	private static final int targetedAttackTitleWrap = 400;
 	private static final int demandFavorTitleWrap = 400;
 	private static final int grantFavorTitleWrap = 400;
 	private static final int catCardTitleWrap = 400;
-	private static final int defuseContentWidth = 300;
+	private static final int depthModalContentWidth = 300;
 	private static final double handScrollPaneInitialValue = 0.5;
 	private static final int tripleComboInstructionWordWrap = 320;
 	private static final int tripleTargetButtonsSpacing = 8;
+	private static final int buryTextBoxSpacing = 5;
+
+	private static final class DepthSliderModal {
+		private final VBox overlay = new VBox();
+		private final StackPane dialog = new StackPane();
+		private final VBox section = new VBox();
+		private final VBox sliderBody = new VBox();
+		private final HBox sliderInfo = new HBox();
+		private final Slider slider = new Slider();
+		private final Text title = new Text();
+		private final Text subtitle = new Text();
+		private final Text sliderTitle = new Text();
+		private final Text sliderLow = new Text();
+		private final Text sliderCurrent = new Text();
+		private final Text sliderHigh = new Text();
+		private final Button primaryButton = new Button();
+
+		private String topLabelText = "";
+		private String currentLabelText = "";
+		private String bottomLabelText = "";
+		private int sliderMaxIndex;
+	}
 
 	public GameView() {
 		this.getStyleClass().add("game-root");
@@ -195,19 +208,22 @@ public class GameView extends StackPane {
 		modalOverlayScreen.setVisible(false);
 		modalOverlayScreen.setManaged(false);
 
-		defuseOverlayScreen = createDefuseOverlay();
-		defuseOverlayScreen.setVisible(false);
-		defuseOverlayScreen.setManaged(false);
+		defuseModal = createDefuseModal();
+		hideDepthModal(defuseModal);
 
 		tripleComboOverlayScreen = createTripleComboOverlay();
 		tripleComboOverlayScreen.setVisible(false);
 		tripleComboOverlayScreen.setManaged(false);
 
+		buryModal = createBuryModal();
+		hideDepthModal(buryModal);
+
 		this.getChildren().addAll(
 				gameContainer,
 				modalOverlayScreen,
-				defuseOverlayScreen,
-				tripleComboOverlayScreen
+				defuseModal.overlay,
+				tripleComboOverlayScreen,
+				buryModal.overlay
 		);
 
 		String stylePath = "/styles/game-style.css";
@@ -919,139 +935,220 @@ public class GameView extends StackPane {
 		modalBody.getChildren().clear();
 	}
 
-	private void createDefuseText() {
-		defuseTitle = new Text();
-		defuseTitle.setTextAlignment(TextAlignment.CENTER);
-		defuseTitle.setWrappingWidth(defuseContentWidth);
-		defuseTitle.getStyleClass().add("defuse-header");
+	private DepthSliderModal createDepthSliderModal(
+			String overlayStyle,
+			String dialogStyle,
+			String sectionStyle,
+			String titleStyle,
+			String subtitleStyle,
+			String sliderStyle,
+			String lowLabelStyle,
+			String currentLabelStyle,
+			String highLabelStyle,
+			String primaryButtonStyle
+	) {
+		DepthSliderModal modal = new DepthSliderModal();
+
+		modal.overlay.getStyleClass().add(overlayStyle);
+		modal.overlay.setAlignment(Pos.CENTER);
+		modal.overlay.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+		modal.dialog.setAlignment(Pos.CENTER);
+		modal.dialog.getStyleClass().add(dialogStyle);
+
+		modal.section.getStyleClass().add(sectionStyle);
+		modal.section.setAlignment(Pos.CENTER);
+		modal.section.setFillWidth(false);
+
+		configureModalText(modal.title, titleStyle);
+		configureModalText(modal.subtitle, subtitleStyle);
+		configureModalText(modal.sliderTitle, "slider-label");
+		configureDepthSlider(modal, sliderStyle);
+		configureSliderInfo(
+				modal,
+				lowLabelStyle,
+				currentLabelStyle,
+				highLabelStyle
+		);
+		configureSliderBody(modal);
+		configurePrimaryButton(modal, primaryButtonStyle);
+
+		modal.dialog.getChildren().add(modal.section);
+		modal.overlay.getChildren().add(modal.dialog);
+		return modal;
 	}
 
-	private void createDefuseSliderTitle() {
-		defuseSliderTitle = new Text();
-		defuseSliderTitle.setTextAlignment(TextAlignment.CENTER);
-		defuseSliderTitle.setWrappingWidth(defuseContentWidth);
-		defuseSliderTitle.getStyleClass().add("slider-label");
+	private void configureModalText(Text text, String styleClass) {
+		text.setTextAlignment(TextAlignment.CENTER);
+		text.setWrappingWidth(depthModalContentWidth);
+		if (styleClass != null) {
+			text.getStyleClass().add(styleClass);
+		}
 	}
 
-	private void createDefuseSlider() {
-		defuseSlider = new Slider();
-		defuseSlider.getStyleClass().add("depth-slider");
-		defuseSlider.setPrefWidth(defuseContentWidth);
-		defuseSlider.setMinWidth(defuseContentWidth);
-		defuseSlider.setMaxWidth(defuseContentWidth);
-		defuseSlider.setMinHeight(defuseSliderHeight);
-		defuseSlider.setPrefHeight(defuseSliderHeight);
-		defuseSlider.valueProperty().addListener(
+	private void configureDepthSlider(DepthSliderModal modal, String sliderStyle) {
+		modal.slider.getStyleClass().add(sliderStyle);
+		modal.slider.setPrefWidth(depthModalContentWidth);
+		modal.slider.setMinWidth(depthModalContentWidth);
+		modal.slider.setMaxWidth(depthModalContentWidth);
+		modal.slider.setMinHeight(depthSliderHeight);
+		modal.slider.setPrefHeight(depthSliderHeight);
+		modal.slider.valueProperty().addListener(
 				(observable, oldValue, newValue) ->
-						updateDefuseSliderLabels()
+						Platform.runLater(
+								() -> updateDepthSliderLabels(modal)
+						)
 		);
 	}
 
-	private void updateDefuseSliderLabels() {
-		int position = (int) defuseSlider.getValue();
-		defuseSliderLow.setText(defuseTopLabelText + " (0)");
-		defuseSliderCurrent.setText(defuseCurrentLabelText + ": " + position);
-		defuseSliderHigh.setText(
-				defuseBottomLabelText + " (" + defuseSliderMaxIndex + ")"
-		);
-	}
+	private void configureSliderInfo(
+			DepthSliderModal modal,
+			String lowLabelStyle,
+			String currentLabelStyle,
+			String highLabelStyle
+	) {
+		modal.sliderInfo.setAlignment(Pos.CENTER);
+		modal.sliderInfo.setMaxWidth(depthModalContentWidth);
+		modal.sliderInfo.setPrefWidth(depthModalContentWidth);
 
-	private void createDefuseSliderInfo() {
-		defuseSliderInfo = new HBox();
-		defuseSliderInfo.setAlignment(Pos.CENTER);
-		defuseSliderInfo.setMaxWidth(defuseContentWidth);
-		defuseSliderInfo.setPrefWidth(defuseContentWidth);
+		modal.sliderLow.getStyleClass().add(lowLabelStyle);
+		modal.sliderCurrent.getStyleClass().add(currentLabelStyle);
+		modal.sliderHigh.getStyleClass().add(highLabelStyle);
 
-		defuseSliderLow = new Text();
-		defuseSliderCurrent = new Text();
-		defuseSliderHigh = new Text();
+		HBox leftColumn = createSliderInfoColumn(modal.sliderLow, Pos.CENTER_LEFT);
+		HBox centerColumn = createSliderInfoColumn(modal.sliderCurrent, Pos.CENTER);
+		HBox rightColumn = createSliderInfoColumn(modal.sliderHigh, Pos.CENTER_RIGHT);
 
-		defuseSliderLow.getStyleClass().add("stat-text");
-		defuseSliderCurrent.getStyleClass().add("stat-text-chosen");
-		defuseSliderHigh.getStyleClass().add("stat-text");
-
-		HBox leftColumn = new HBox(defuseSliderLow);
-		leftColumn.setAlignment(Pos.CENTER_LEFT);
-		HBox.setHgrow(leftColumn, Priority.ALWAYS);
-
-		HBox centerColumn = new HBox(defuseSliderCurrent);
-		centerColumn.setAlignment(Pos.CENTER);
-		HBox.setHgrow(centerColumn, Priority.ALWAYS);
-
-		HBox rightColumn = new HBox(defuseSliderHigh);
-		rightColumn.setAlignment(Pos.CENTER_RIGHT);
-		HBox.setHgrow(rightColumn, Priority.ALWAYS);
-
-		defuseSliderInfo.getChildren().addAll(
+		modal.sliderInfo.getChildren().addAll(
 				leftColumn,
 				centerColumn,
 				rightColumn
 		);
 	}
 
-	private void createDefuseSliderBody() {
-		defuseSliderBody = new VBox();
-		defuseSliderBody.getStyleClass().add("slider-container");
-		defuseSliderBody.setAlignment(Pos.CENTER);
-		defuseSliderBody.setFillWidth(true);
-		defuseSliderBody.setMaxWidth(defuseContentWidth);
-		defuseSliderBody.setPrefWidth(defuseContentWidth);
+	private HBox createSliderInfoColumn(Text label, Pos alignment) {
+		HBox column = new HBox(label);
+		column.setAlignment(alignment);
+		HBox.setHgrow(column, Priority.ALWAYS);
+		return column;
+	}
 
-		createDefuseSliderTitle();
-		createDefuseSlider();
-		createDefuseSliderInfo();
-
-		defuseSliderBody.getChildren().addAll(
-				defuseSliderTitle,
-				defuseSlider,
-				defuseSliderInfo
+	private void configureSliderBody(DepthSliderModal modal) {
+		modal.sliderBody.getStyleClass().add("slider-container");
+		modal.sliderBody.setAlignment(Pos.CENTER);
+		modal.sliderBody.setFillWidth(true);
+		modal.sliderBody.setMaxWidth(depthModalContentWidth);
+		modal.sliderBody.setPrefWidth(depthModalContentWidth);
+		modal.sliderBody.getChildren().addAll(
+				modal.sliderTitle,
+				modal.slider,
+				modal.sliderInfo
 		);
 	}
 
-	private void createDefuseButton() {
-		defuseButton = new Button();
-		defuseButton.getStyleClass().add("btn-defuse");
-		defuseButton.setMaxWidth(defuseContentWidth);
-		defuseButton.setPrefWidth(defuseContentWidth);
+	private void configurePrimaryButton(
+			DepthSliderModal modal, String primaryButtonStyle
+	) {
+		modal.primaryButton.getStyleClass().add(primaryButtonStyle);
+		modal.primaryButton.setMaxWidth(depthModalContentWidth);
+		modal.primaryButton.setPrefWidth(depthModalContentWidth);
 	}
 
-	private void createExplodeButton() {
+	private void updateDepthSliderLabels(DepthSliderModal modal) {
+		int position = (int) modal.slider.getValue();
+		modal.sliderLow.setText(modal.topLabelText + " (0)");
+		modal.sliderCurrent.setText(modal.currentLabelText + ": " + position);
+		modal.sliderHigh.setText(
+				modal.bottomLabelText + " (" + modal.sliderMaxIndex + ")"
+		);
+	}
+
+	private void updateDepthSlider(DepthSliderModal modal, int deckSize) {
+		int maxIndex = Math.max(deckSize, 0);
+		modal.sliderMaxIndex = maxIndex;
+		modal.slider.setMin(0);
+		modal.slider.setMax(maxIndex);
+		modal.slider.setValue(0);
+		modal.slider.setBlockIncrement(1);
+		modal.slider.setMajorTickUnit(1);
+		modal.slider.setMinorTickCount(0);
+		modal.slider.setSnapToTicks(true);
+		modal.slider.setDisable(false);
+		updateDepthSliderLabels(modal);
+	}
+
+	private void showDepthModal(DepthSliderModal modal) {
+		modal.overlay.setVisible(true);
+		modal.overlay.setManaged(true);
+	}
+
+	private void hideDepthModal(DepthSliderModal modal) {
+		modal.overlay.setVisible(false);
+		modal.overlay.setManaged(false);
+	}
+
+	private VBox createDepthModalTextBox(DepthSliderModal modal) {
+		VBox textBox = new VBox(buryTextBoxSpacing);
+		textBox.getChildren().addAll(
+				modal.title,
+				modal.subtitle
+		);
+		return textBox;
+	}
+
+	private Button createExplodeButton() {
 		explodeButton = new Button();
 		explodeButton.getStyleClass().add("btn-explode");
-		explodeButton.setMaxWidth(defuseContentWidth);
-		explodeButton.setPrefWidth(defuseContentWidth);
+		explodeButton.setMaxWidth(depthModalContentWidth);
+		explodeButton.setPrefWidth(depthModalContentWidth);
+		return explodeButton;
 	}
 
-	private VBox createDefuseOverlay() {
-		VBox overlay = new VBox();
-		overlay.getStyleClass().add("defuse-overlay");
-		overlay.setAlignment(Pos.CENTER);
-		overlay.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
-		createDefuseText();
-		createDefuseSliderBody();
-		createDefuseButton();
-		createExplodeButton();
-
-		defuseDialogScreen = new StackPane();
-		defuseDialogScreen.setAlignment(Pos.CENTER);
-		defuseDialogScreen.getStyleClass().add("defuse-modal-card");
-
-		defuseSection = new VBox();
-		defuseSection.getStyleClass().add("defuse-section");
-		defuseSection.setAlignment(Pos.CENTER);
-		defuseSection.setFillWidth(false);
-		defuseSection.getChildren().addAll(
-				defuseTitle,
-				defuseSliderBody,
-				defuseButton,
-				explodeButton
+	private DepthSliderModal createDefuseModal() {
+		DepthSliderModal modal = createDepthSliderModal(
+				"defuse-overlay",
+				"defuse-modal-card",
+				"defuse-section",
+				"defuse-header",
+				null,
+				"depth-slider",
+				"stat-text",
+				"stat-text-chosen",
+				"stat-text",
+				"btn-defuse"
 		);
 
-		defuseDialogScreen.getChildren().add(defuseSection);
-		overlay.getChildren().add(defuseDialogScreen);
+		modal.section.getChildren().addAll(
+				modal.title,
+				modal.sliderBody,
+				modal.primaryButton,
+				createExplodeButton()
+		);
+		return modal;
+	}
 
-		return overlay;
+	private DepthSliderModal createBuryModal() {
+		DepthSliderModal modal = createDepthSliderModal(
+				"bury-overlay",
+				"bury-modal",
+				"bury-section",
+				"bury-title",
+				"bury-subtitle",
+				"custom-slider",
+				"bury-stat-text",
+				"bury-stat-text-chosen",
+				"bury-stat-text",
+				"bury-button"
+		);
+
+		buryCard = new VBox();
+		modal.section.getChildren().addAll(
+				createDepthModalTextBox(modal),
+				buryCard,
+				modal.sliderBody,
+				modal.primaryButton
+		);
+		return modal;
 	}
 
 	public void updateDisplay(ResourceBundle bundle) {
@@ -1074,13 +1171,20 @@ public class GameView extends StackPane {
 		grantFavorTitleText = bundle.getString("favor.grantTitle");
 		catCardTitleText = bundle.getString("catCardSpecialCombo.title");
 		catCardSubTitleText = bundle.getString("catCardSpecialCombo.subTitle");
-		defuseTitle.setText(bundle.getString("defuse.title"));
-		defuseSliderTitle.setText(bundle.getString("defuse.sliderLabel"));
-		defuseButton.setText(bundle.getString("defuse.defuseButton"));
+		defuseModal.title.setText(bundle.getString("defuse.title"));
+		defuseModal.sliderTitle.setText(bundle.getString("defuse.sliderLabel"));
+		defuseModal.primaryButton.setText(bundle.getString("defuse.defuseButton"));
 		explodeButton.setText(bundle.getString("defuse.explodeButton"));
-		defuseTopLabelText = bundle.getString("defuse.topLabel");
-		defuseCurrentLabelText = bundle.getString("defuse.currentLabel");
-		defuseBottomLabelText = bundle.getString("defuse.bottomLabel");
+		defuseModal.topLabelText = bundle.getString("defuse.topLabel");
+		defuseModal.currentLabelText = bundle.getString("defuse.currentLabel");
+		defuseModal.bottomLabelText = bundle.getString("defuse.bottomLabel");
+		buryModal.title.setText(bundle.getString("bury.title"));
+		buryModal.subtitle.setText(bundle.getString("bury.subtitle"));
+		buryModal.sliderTitle.setText(bundle.getString("bury.sliderLabel"));
+		buryModal.primaryButton.setText(bundle.getString("bury.buryButton"));
+		buryModal.topLabelText = bundle.getString("bury.topLabel");
+		buryModal.currentLabelText = bundle.getString("bury.currentLabel");
+		buryModal.bottomLabelText = bundle.getString("bury.bottomLabel");
 	}
 
 	public void showOpponents(List<PlayerDisplayInfo> opponents) {
@@ -1242,35 +1346,50 @@ public class GameView extends StackPane {
 		}
 	}
 
-	private void updateDefuseSlider(int deckSize) {
-		int maxIndex = Math.max(deckSize, 0);
-		defuseSliderMaxIndex = maxIndex;
-		defuseSlider.setMin(0);
-		defuseSlider.setMax(maxIndex);
-		defuseSlider.setValue(0);
-		defuseSlider.setBlockIncrement(1);
-		defuseSlider.setMajorTickUnit(1);
-		defuseSlider.setMinorTickCount(0);
-		defuseSlider.setSnapToTicks(true);
-		defuseSlider.setDisable(false);
-		updateDefuseSliderLabels();
+	public void updateBuryCard(CardType card) {
+		buryCard.getChildren().clear();
+
+		String cardName = cardCollection.get(card);
+		CardView topCard = new CardView(cardName);
+		topCard.getStyleClass().remove("hand-card");
+		topCard.getStyleClass().add(
+				"future-peeked-card"
+		);
+		preprocessCard(topCard, buryCardWidth, buryCardHeight);
+
+		buryCard.getChildren().add(
+				topCard
+		);
 	}
 
 	public void showDefuseScreen(ResourceBundle bundle, int deckSize) {
-		defuseTopLabelText = bundle.getString("defuse.topLabel");
-		defuseCurrentLabelText = bundle.getString("defuse.currentLabel");
-		defuseBottomLabelText = bundle.getString("defuse.bottomLabel");
+		defuseModal.topLabelText = bundle.getString("defuse.topLabel");
+		defuseModal.currentLabelText = bundle.getString("defuse.currentLabel");
+		defuseModal.bottomLabelText = bundle.getString("defuse.bottomLabel");
 
-		updateDefuseSlider(deckSize);
-		updateDefuseSliderLabels();
+		updateDepthSlider(defuseModal, deckSize);
+		updateDepthSliderLabels(defuseModal);
 
-		defuseOverlayScreen.setVisible(true);
-		defuseOverlayScreen.setManaged(true);
+		showDepthModal(defuseModal);
 	}
 
 	public void hideDefuseScreen() {
-		defuseOverlayScreen.setVisible(false);
-		defuseOverlayScreen.setManaged(false);
+		hideDepthModal(defuseModal);
+	}
+
+	public void showBuryScreen(ResourceBundle bundle, int deckSize) {
+		buryModal.topLabelText = bundle.getString("bury.topLabel");
+		buryModal.currentLabelText = bundle.getString("bury.currentLabel");
+		buryModal.bottomLabelText = bundle.getString("bury.bottomLabel");
+
+		updateDepthSlider(buryModal, deckSize);
+		updateDepthSliderLabels(buryModal);
+
+		showDepthModal(buryModal);
+	}
+
+	public void hideBuryScreen() {
+		hideDepthModal(buryModal);
 	}
 
 	public void updateSeeTheFutureCards(ResourceBundle bundle, List<Card> cards) {
@@ -1404,7 +1523,17 @@ public class GameView extends StackPane {
 		CardType currentCardType = playerCard.getCardType();
 		if (!selectedHandCards.isEmpty()) {
 			CardType anchorType = selectedHandCards.get(0).getCardType();
-			if (currentCardType != anchorType) {
+
+			boolean isAnchorComboCard = (
+					anchorType == CardType.CAT_CARDS
+							|| anchorType == CardType.FERAL_CAT
+							|| anchorType == CardType.CLONE);
+			boolean isCurrentComboCard = (currentCardType == CardType.CAT_CARDS
+					|| currentCardType == CardType.FERAL_CAT
+					|| currentCardType == CardType.CLONE);
+
+			if (!(isAnchorComboCard && isCurrentComboCard)
+					&& currentCardType != anchorType) {
 				clearSelection();
 			}
 		}
@@ -1507,12 +1636,18 @@ public class GameView extends StackPane {
 	}
 
 	public void setOnDefuseButton(IntConsumer handler) {
-		defuseButton.setOnAction(event -> handler.accept(
-				(int) defuseSlider.getValue()
+		defuseModal.primaryButton.setOnAction(event -> handler.accept(
+				(int) defuseModal.slider.getValue()
 		));
 	}
 
 	public void setOnExplodeButton(Runnable handler) {
 		explodeButton.setOnAction(event -> handler.run());
+	}
+
+	public void setOnBuryButton(IntConsumer handler) {
+		buryModal.primaryButton.setOnAction(event -> handler.accept(
+				(int) buryModal.slider.getValue()
+		));
 	}
 }

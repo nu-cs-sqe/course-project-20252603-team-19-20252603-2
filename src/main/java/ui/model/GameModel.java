@@ -22,7 +22,7 @@ public class GameModel {
 		return engine != null;
 	}
 
-	public boolean ableToDrawCard() {
+	public boolean isDeckEmpty() {
 		return engine.isDeckEmpty();
 	}
 
@@ -77,14 +77,35 @@ public class GameModel {
 		localPlayerId = engine.getCurrentPlayerId();
 	}
 
-	public void playCatPair(int targetId, CardType cardType) {
-		engine.playCatPair(targetId, cardType);
+	public void playCatPair(int targetId, List<CardType> selectedCards) {
+		engine.playCatPair(targetId, selectedCards);
 	}
 
 	public void playCatTriple(
-			int targetId, CardType selectedCard, CardType desiredCard
+			int targetId, List<CardType> selectedCards, CardType desiredCard
 	) {
-		engine.playCatTriple(targetId, selectedCard, desiredCard);
+		engine.playCatTriple(targetId, selectedCards, desiredCard);
+	}
+
+	public List<Card> playClone(int targetId, int cardIndex) {
+		List<Card> cards = engine.playClone(targetId, cardIndex);
+		localPlayerId = engine.getCurrentPlayerId();
+		return cards;
+	}
+
+	public void playSuperSkip() {
+		engine.playSuperSkip();
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
+	public void playPersonalAttack3X() {
+		engine.playPersonalAttack3X();
+		localPlayerId = engine.getCurrentPlayerId();
+	}
+
+	public void playBury(int index) {
+		engine.playBury(index);
+		localPlayerId = engine.getCurrentPlayerId();
 	}
 
 	public void defuseExplodingKitten(int reinsertIndex) {
@@ -127,6 +148,14 @@ public class GameModel {
 
 	public int getLocalPlayerId() {
 		return localPlayerId;
+	}
+
+	public CardType getLastPlayedCard() {
+		return engine.getLastPlayedCard();
+	}
+
+	public CardType peekTopCardForBury() {
+		return engine.getDrawPile().get(0).getCardType();
 	}
 
 	public boolean currentPlayerHasDefuse() {

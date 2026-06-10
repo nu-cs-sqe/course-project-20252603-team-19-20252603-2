@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class GameEngineTest {
@@ -19,8 +20,8 @@ class GameEngineTest {
     private static final int STARTING_HAND_SIZE = 5;
     private static final int SEE_THE_FUTURE_COUNT = 3;
     private static final int STACKED_ATTACK_FORCED_TURNS = 4;
-    private static final int DRAW_PILE_SIZE_MIN_PLAYERS = 50;
-    private static final int DRAW_PILE_SIZE_MAX_PLAYERS = 38;
+    private static final int DRAW_PILE_SIZE_MIN_PLAYERS = 61;
+    private static final int DRAW_PILE_SIZE_MAX_PLAYERS = 49;
 
     @Test
     void constructor_minPlayers_succeeds() {
@@ -153,13 +154,13 @@ class GameEngineTest {
     }
 
     @Test
-    void getDrawPileSize_minPlayers_returns50() {
+    void getDrawPileSize_minPlayers_returns61() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         assertEquals(DRAW_PILE_SIZE_MIN_PLAYERS, engine.getDrawPileSize());
     }
 
     @Test
-    void getDrawPileSize_maxPlayers_returns38() {
+    void getDrawPileSize_maxPlayers_returns49() {
         GameEngine engine = new GameEngine(MAX_PLAYERS);
         assertEquals(DRAW_PILE_SIZE_MAX_PLAYERS, engine.getDrawPileSize());
     }
@@ -380,13 +381,47 @@ class GameEngineTest {
     }
 
     @Test
-    void playCatPair_stealsOneCardFromTargetAndKeepsTurn() {
+    void playCatPair_twoCatCards_stealsOneCardFromTargetAndKeepsTurn() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.CAT_CARDS);
         giveToCurrent(engine, CardType.CAT_CARDS);
         int targetHandBefore = engine.getPlayerHand(1).size();
 
-        engine.playCatPair(1, CardType.CAT_CARDS);
+        List<CardType> selectedCards = List.of(CardType.CAT_CARDS, CardType.CAT_CARDS);
+
+        engine.playCatPair(1, selectedCards);
+
+        assertEquals(targetHandBefore - 1, engine.getPlayerHand(1).size());
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(CardType.CAT_CARDS, engine.getLastPlayedCard());
+    }
+
+    @Test
+    void playCatPair_oneCatCardOneClone_stealsOneCardFromTargetAndKeepsTurn() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CLONE);
+        int targetHandBefore = engine.getPlayerHand(1).size();
+
+        List<CardType> selectedCards = List.of(CardType.CAT_CARDS, CardType.CLONE);
+
+        engine.playCatPair(1, selectedCards);
+
+        assertEquals(targetHandBefore - 1, engine.getPlayerHand(1).size());
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(CardType.CAT_CARDS, engine.getLastPlayedCard());
+    }
+
+    @Test
+    void playCatPair_oneCatCardOneFeralCat_stealsOneCardFromTargetAndKeepsTurn() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+        int targetHandBefore = engine.getPlayerHand(1).size();
+
+        List<CardType> selectedCards = List.of(CardType.CAT_CARDS, CardType.FERAL_CAT);
+
+        engine.playCatPair(1, selectedCards);
 
         assertEquals(targetHandBefore - 1, engine.getPlayerHand(1).size());
         assertEquals(0, engine.getCurrentPlayerId());
@@ -400,7 +435,9 @@ class GameEngineTest {
         giveToCurrent(engine, CardType.ATTACK);
         int targetHandBefore = engine.getPlayerHand(1).size();
 
-        engine.playCatPair(1, CardType.ATTACK);
+        List<CardType> selectedCards = List.of(CardType.ATTACK, CardType.ATTACK);
+
+        engine.playCatPair(1, selectedCards);
 
         assertEquals(targetHandBefore - 1, engine.getPlayerHand(1).size());
         assertEquals(CardType.ATTACK, engine.getLastPlayedCard());
@@ -410,10 +447,40 @@ class GameEngineTest {
     void playCatPair_withoutTwoOfType_throwsIllegalStateException() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         clearCardType(engine.getPlayer(0), CardType.CAT_CARDS);
+        clearCardType(engine.getPlayer(0), CardType.FERAL_CAT);
+        clearCardType(engine.getPlayer(0), CardType.CLONE);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        List<CardType> selectedCards = List.of(CardType.CAT_CARDS);
         IllegalStateException ex = assertThrows(
                 IllegalStateException.class,
-                () -> engine.playCatPair(1, CardType.CAT_CARDS));
+                () -> engine.playCatPair(1, selectedCards));
         assertEquals("rule.catPair.needTwo", ex.getMessage());
+    }
+
+    @Test
+    void playCatPair_twoFeralCat_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.FERAL_CAT);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+        List<CardType> selectedCards = List.of(CardType.FERAL_CAT, CardType.FERAL_CAT);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playCatPair(1, selectedCards));
+        assertEquals("rule.catPair.feralCannotBeBaseType", ex.getMessage());
+    }
+
+    @Test
+    void playCatPair_twoClone_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.CLONE);
+        giveToCurrent(engine, CardType.CLONE);
+        giveToCurrent(engine, CardType.CLONE);
+        List<CardType> selectedCards = List.of(CardType.CLONE, CardType.CLONE);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playCatPair(1, selectedCards));
+        assertEquals("rule.catPair.cloneCannotBeBaseType", ex.getMessage());
     }
 
     @Test
@@ -423,7 +490,9 @@ class GameEngineTest {
         giveToCurrent(engine, CardType.ATTACK);
         giveToCurrent(engine, CardType.ATTACK);
 
-        engine.playCatTriple(1, CardType.ATTACK, CardType.DEFUSE);
+        List<CardType> selectedCards = List.of(CardType.ATTACK, CardType.ATTACK, CardType.ATTACK);
+
+        engine.playCatTriple(1, selectedCards, CardType.DEFUSE);
 
         assertFalse(engine.getPlayer(1).hasCard(CardType.DEFUSE));
         assertTrue(engine.getPlayer(0).hasCard(CardType.DEFUSE));
@@ -439,7 +508,9 @@ class GameEngineTest {
         giveToCurrent(engine, CardType.ATTACK);
         int targetHandBefore = engine.getPlayerHand(1).size();
 
-        engine.playCatTriple(1, CardType.ATTACK, CardType.EXPLODING_KITTEN);
+        List<CardType> selectedCards = List.of(CardType.ATTACK, CardType.ATTACK, CardType.ATTACK);
+
+        engine.playCatTriple(1, selectedCards, CardType.EXPLODING_KITTEN);
 
         assertEquals(targetHandBefore, engine.getPlayerHand(1).size());
         assertEquals(CardType.ATTACK, engine.getLastPlayedCard());
@@ -451,10 +522,142 @@ class GameEngineTest {
         clearCardType(engine.getPlayer(0), CardType.ATTACK);
         giveToCurrent(engine, CardType.ATTACK);
         giveToCurrent(engine, CardType.ATTACK);
+
+        List<CardType> selectedCards = List.of(CardType.ATTACK, CardType.ATTACK);
+
         IllegalStateException ex = assertThrows(
                 IllegalStateException.class,
-                () -> engine.playCatTriple(1, CardType.ATTACK, CardType.DEFUSE));
+                () -> engine.playCatTriple(1, selectedCards, CardType.DEFUSE));
         assertEquals("rule.catTriple.needThree", ex.getMessage());
+    }
+
+    @Test
+    void playCatTriple_invalidThreeCardCombo_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.ATTACK);
+        clearCardType(engine.getPlayer(0), CardType.DEFUSE);
+        clearCardType(engine.getPlayer(0), CardType.FAVOR);
+        giveToCurrent(engine, CardType.ATTACK);
+        giveToCurrent(engine, CardType.DEFUSE);
+        giveToCurrent(engine, CardType.FAVOR);
+
+        List<CardType> selectedCards = List.of(CardType.ATTACK, CardType.DEFUSE, CardType.FAVOR);
+
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playCatTriple(1, selectedCards, CardType.DEFUSE));
+        assertEquals("rule.catTriple.needThree", ex.getMessage());
+    }
+
+    @Test
+    void playCatTriple_twoCatCardAndOneFeralCat_stealsItAndKeepsTurn() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+
+        List<CardType> selectedCards = List.of(
+                CardType.CAT_CARDS, CardType.CAT_CARDS, CardType.FERAL_CAT
+        );
+
+        engine.playCatTriple(1, selectedCards, CardType.DEFUSE);
+
+        assertFalse(engine.getPlayer(1).hasCard(CardType.DEFUSE));
+        assertTrue(engine.getPlayer(0).hasCard(CardType.DEFUSE));
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(CardType.CAT_CARDS, engine.getLastPlayedCard());
+    }
+
+    @Test
+    void playCatTriple_oneCatCardAndTwoFeralCat_stealsItAndKeepsTurn() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+
+        List<CardType> selectedCards = List.of(
+                CardType.CAT_CARDS, CardType.FERAL_CAT, CardType.FERAL_CAT
+        );
+
+        engine.playCatTriple(1, selectedCards, CardType.DEFUSE);
+
+        assertFalse(engine.getPlayer(1).hasCard(CardType.DEFUSE));
+        assertTrue(engine.getPlayer(0).hasCard(CardType.DEFUSE));
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(CardType.CAT_CARDS, engine.getLastPlayedCard());
+    }
+
+    @Test
+    void playCatTriple_threeFeralCat_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.FERAL_CAT);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+
+        List<CardType> selectedCards = List.of(
+                CardType.FERAL_CAT, CardType.FERAL_CAT, CardType.FERAL_CAT
+        );
+
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playCatTriple(1, selectedCards, CardType.DEFUSE));
+        assertEquals("rule.catTriple.feralCannotBeBaseType", ex.getMessage());
+    }
+
+    @Test
+    void playCatTriple_twoCatCardAndOneClone_stealsItAndKeepsTurn() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CLONE);
+
+        List<CardType> selectedCards = List.of(
+                CardType.CAT_CARDS, CardType.CAT_CARDS, CardType.CLONE
+        );
+
+        engine.playCatTriple(1, selectedCards, CardType.DEFUSE);
+
+        assertFalse(engine.getPlayer(1).hasCard(CardType.DEFUSE));
+        assertTrue(engine.getPlayer(0).hasCard(CardType.DEFUSE));
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(CardType.CAT_CARDS, engine.getLastPlayedCard());
+    }
+
+    @Test
+    void playCatTriple_oneCatCardTwoClone_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(engine.getCurrentPlayerId()), CardType.CAT_CARDS);
+        clearCardType(engine.getPlayer(engine.getCurrentPlayerId()), CardType.CLONE);
+        clearCardType(engine.getPlayer(engine.getCurrentPlayerId()), CardType.FERAL_CAT);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CLONE);
+        giveToCurrent(engine, CardType.CLONE);
+
+        List<CardType> selectedCards = List.of(
+                CardType.CAT_CARDS, CardType.CLONE, CardType.CLONE
+        );
+
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playCatTriple(1, selectedCards, CardType.DEFUSE));
+        assertEquals("rule.catTriple.needThree", ex.getMessage());
+    }
+
+    @Test
+    void playCatTriple_threeClone_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(engine.getCurrentPlayerId()), CardType.CLONE);
+        giveToCurrent(engine, CardType.CLONE);
+        giveToCurrent(engine, CardType.CLONE);
+        giveToCurrent(engine, CardType.CLONE);
+
+        List<CardType> selectedCards = List.of(CardType.CLONE, CardType.CLONE, CardType.CLONE);
+
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playCatTriple(1, selectedCards, CardType.DEFUSE));
+        assertEquals("rule.catTriple.cloneCannotBeBaseType", ex.getMessage());
     }
 
     @Test
@@ -735,6 +938,363 @@ class GameEngineTest {
         giveToCurrent(engine, CardType.EXPLODING_KITTEN);
         engine.explodeCurrentPlayer();
         assertEquals(0, engine.getPlayer(0).getHandSize());
+    }
+
+    @Test
+    void playClone_clearsLastPlayedCard() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SKIP);
+        engine.playSkip();
+        engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
+
+        engine.playClone(0, 0);
+
+        assertNull(engine.getLastPlayedCard());
+    }
+
+    @Test
+    void playClone_nothingToClone_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playClone(0, 0));
+        assertEquals("rule.clone.nothingToClone", ex.getMessage());
+    }
+
+    @Test
+    void playClone_clonerLacksClone_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SKIP);
+        engine.playSkip();
+        clearCardType(engine.getPlayer(1), CardType.CLONE);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playClone(0, 0));
+        assertEquals("gameEngine.play.notInHand", ex.getMessage());
+    }
+
+    @Test
+    void playClone_onSkip_turnGoesToTheNextLivingPlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SKIP);
+        engine.playSkip();
+        engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
+
+        engine.playClone(0, 0);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(1, engine.getForcedTurns());
+    }
+
+    @Test
+    void playClone_onReverse_directionRestored() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.REVERSE);
+        engine.playReverse();
+        engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
+
+        assertEquals(-1, engine.getCurrentDirection());
+
+        engine.playClone(0, 0);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(1, engine.getCurrentDirection());
+    }
+
+    @Test
+    void playClone_onAttack_nextLivingPlayerDrawsFourTimes() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.ATTACK);
+        engine.playAttack();
+        engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
+
+        final int expectedForcedTurns = 4;
+
+        engine.playClone(0, 0);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(expectedForcedTurns, engine.getForcedTurns());
+    }
+
+    @Test
+    void playClone_onTargetedAttack_targetedPlayerDrawsFourTimes() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.TARGETED_ATTACK);
+        engine.playTargetedAttack(1);
+        engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
+
+        final int expectedForcedTurns = 4;
+
+        engine.playClone(0, 0);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(expectedForcedTurns, engine.getForcedTurns());
+    }
+
+    @Test
+    void playClone_onSeeTheFuture_returnsTopThreeAndKeepsSamePlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SEE_THE_FUTURE);
+        engine.playSeeTheFuture();
+        engine.getPlayer(0).addCardToHand(new Card(CardType.CLONE));
+
+        assertEquals(SEE_THE_FUTURE_COUNT, engine.playClone(0, 0).size());
+        assertEquals(0, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void playClone_onShuffle_shufflesDeckAndKeepsSamePlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SHUFFLE);
+
+        int pileSize = engine.getDrawPileSize();
+
+        engine.playShuffle();
+        assertEquals(pileSize, engine.getDrawPileSize());
+
+        engine.getPlayer(0).addCardToHand(new Card(CardType.CLONE));
+        engine.playClone(0, 0);
+
+        assertEquals(pileSize, engine.getDrawPileSize());
+        assertEquals(0, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void playClone_onFavor_verifiesPlayFavorMethodIsCalledAndKeepsSamePlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.FAVOR);
+        engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
+
+        final int expectedHandSize = 6;
+
+        assertEquals(expectedHandSize, engine.getPlayerHand(0).size());
+        assertEquals(expectedHandSize, engine.getPlayerHand(1).size());
+
+        engine.playFavor(1, 0);
+        engine.advanceToNextPlayer();
+
+        final int player0HandSize = 6;
+        final int player1HandSize = 5;
+
+        assertEquals(player0HandSize, engine.getPlayerHand(0).size());
+        assertEquals(player1HandSize, engine.getPlayerHand(1).size());
+        assertEquals(1, engine.getCurrentPlayerId());
+
+        engine.playClone(0, 0);
+
+        final int finalPlayerHandSize = 5;
+
+        assertEquals(finalPlayerHandSize, engine.getPlayerHand(0).size());
+        assertEquals(finalPlayerHandSize, engine.getPlayerHand(1).size());
+        assertEquals(1, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void playClone_onClone_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        engine.setLastPlayedCard(CardType.CLONE);
+        engine.getPlayer(0).addCardToHand(new Card(CardType.CLONE));
+
+        IllegalStateException ex = assertThrows(IllegalStateException.class, () -> {
+            engine.playClone(0, 0);
+        });
+
+        assertEquals("rule.clone.cannotCloneClone", ex.getMessage());
+    }
+
+    @Test
+    void playClone_onSuperSkip_forceTurnBecomeOneAndAdvancesToNextPlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.ATTACK);
+        engine.getPlayer(1).addCardToHand(new Card(CardType.CLONE));
+        engine.playAttack();
+
+        final int expectedForcedTurns = 2;
+
+        assertEquals(expectedForcedTurns, engine.getForcedTurns());
+
+        engine.setLastPlayedCard(CardType.SUPER_SKIP);
+        engine.playClone(0, 0);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(1, engine.getForcedTurns());
+    }
+
+    @Test
+    void playClone_onPersonalAttack3X_forceTurnBecomesFourAndSamePlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.CLONE);
+        engine.setLastPlayedCard(CardType.PERSONAL_ATTACK_3X);
+
+        final int expectedForcedTurns = 4;
+
+        engine.playClone(0, 0);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(expectedForcedTurns, engine.getForcedTurns());
+    }
+
+    @Test
+    void playSuperSkip_endsTurnWithoutDrawing() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SUPER_SKIP);
+        int pileBefore = engine.getDrawPileSize();
+
+        engine.playSuperSkip();
+
+        assertEquals(1, engine.getCurrentPlayerId());
+        assertEquals(pileBefore, engine.getDrawPileSize());
+    }
+
+    @Test
+    void playSuperSkip_withoutSkipInHand_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.SUPER_SKIP);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playSuperSkip());
+        assertEquals("gameEngine.play.notInHand", ex.getMessage());
+    }
+
+    @Test
+    void playSuperSkip_forcedTurnIsFour_endsTurnWithoutDrawingAndForcedTurnIsOne() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.ATTACK);
+        giveToCurrent(engine, CardType.SUPER_SKIP);
+        engine.getPlayer(1).addCardToHand(new Card(CardType.ATTACK));
+
+        engine.playAttack();
+        engine.playAttack();
+
+        final int expectedDraws = 4;
+        assertEquals(expectedDraws, engine.getForcedTurns());
+
+        int pileBefore = engine.getDrawPileSize();
+        final int drawsAfterSuperSkip = 1;
+
+        engine.playSuperSkip();
+
+        assertEquals(1, engine.getCurrentPlayerId());
+        assertEquals(pileBefore, engine.getDrawPileSize());
+        assertEquals(drawsAfterSuperSkip, engine.getForcedTurns());
+    }
+
+    @Test
+    void playBury_onIndex1_topCardMovesToIndex1AndTurnAdvances() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+
+        final int expectedDrawPileSize = 61;
+        final int drawPileSize = engine.getDrawPileSize();
+
+        assertEquals(expectedDrawPileSize, drawPileSize);
+
+        Card firstCard = engine.getDrawPile().get(0);
+
+        giveToCurrent(engine, CardType.BURY);
+
+        engine.playBury(1);
+
+        assertEquals(firstCard, engine.getDrawPile().get(1));
+        assertEquals(1, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void playBury_onIndex30_topCardMovesToIndex30AndTurnAdvances() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+
+        final int expectedDrawPileSize = 61;
+        final int drawPileSize = engine.getDrawPileSize();
+        final int reinsertIndex = 30;
+
+        assertEquals(expectedDrawPileSize, drawPileSize);
+
+        Card firstCard = engine.getDrawPile().get(0);
+
+        giveToCurrent(engine, CardType.BURY);
+
+        engine.playBury(reinsertIndex);
+
+        assertEquals(firstCard, engine.getDrawPile().get(reinsertIndex));
+        assertEquals(1, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void playBury_onIndex60_topCardMovesToIndex60AndTurnAdvances() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+
+        final int expectedDrawPileSize = 61;
+        final int drawPileSize = engine.getDrawPileSize();
+        final int reinsertIndex = 60;
+
+        assertEquals(expectedDrawPileSize, drawPileSize);
+
+        Card firstCard = engine.getDrawPile().get(0);
+
+        giveToCurrent(engine, CardType.BURY);
+
+        engine.playBury(reinsertIndex);
+
+        assertEquals(firstCard, engine.getDrawPile().get(reinsertIndex));
+        assertEquals(1, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void playBury_withoutBuryInHand_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.BURY);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playBury(0));
+        assertEquals("gameEngine.play.notInHand", ex.getMessage());
+    }
+
+    @Test
+    void playBury_onIndex62_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        final int index = 62;
+        giveToCurrent(engine, CardType.BURY);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playBury(index));
+        assertEquals("rule.bury.invalidIndex", ex.getMessage());
+    }
+
+    @Test
+    void playBury_onIndexNegativeOne_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        final int index = -1;
+        giveToCurrent(engine, CardType.BURY);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playBury(index));
+        assertEquals("rule.bury.invalidIndex", ex.getMessage());
+    }
+
+    @Test
+    void playPersonalAttack3X_forcedTurnIs1_forcedturnsIs4AndSamePlayer() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.PERSONAL_ATTACK_3X);
+
+        final int initialForcedTurns = 1;
+        final int expectedForcedTurns = 4;
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(initialForcedTurns, engine.getForcedTurns());
+
+        engine.playPersonalAttack3X();
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(expectedForcedTurns, engine.getForcedTurns());
+    }
+
+    @Test
+    void playPersonalAttack3X_withoutPersonalAttack3xInHand_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.PERSONAL_ATTACK_3X);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playPersonalAttack3X());
+        assertEquals("gameEngine.play.notInHand", ex.getMessage());
     }
 
     private void giveToCurrent(GameEngine engine, CardType type) {

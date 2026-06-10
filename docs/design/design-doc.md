@@ -49,6 +49,11 @@
 - `FAVOR`
 - `REVERSE`
 - `TARGETED_ATTACK`
+- `FERAL_CARD`
+- `CLONE`
+- `SUPER_SKIP`
+- `BURY`
+- `PERSONAL_ATTACK_3X`
 
 ---
 
@@ -111,6 +116,8 @@
   non-kitten card, so Attack / Targeted Attack stacking is honoured.
 - `getDiscardPile(): List<Card>` — defensive copy of the discard pile for the
   UI to render.
+- `getDrawPile(): List<Card>` — live view of the draw pile (used by the UI to
+  peek the top card before Bury resolution).
 - `getForcedTurns(): int` — draws the current player still owes before the turn
   passes (1 normally; raised by Attack / Targeted Attack).
 - `getLastPlayedCard(): CardType` — the most recently played card type (what a
@@ -129,12 +136,28 @@
   but the chosen living opponent (not the neighbour) owes the turns.
 - `playFavor(int targetId, int cardIndex)` — discards a FAVOR; the target gives
   the card at `cardIndex` to the current player; same player continues.
-- `playCatPair(int targetId, CardType cardType)` — discards two cards of
-  `cardType` (any matching pair, not only cats) and steals one random card from
-  the target; records `cardType` as the last played card; same player continues.
-- `playCatTriple(int targetId, CardType selectedCard, CardType desiredCard)` —
-  discards three of `selectedCard` and takes the `desiredCard` from the target if
-  the target has it (otherwise steals nothing); same player continues.
+- `playCatPair(int targetId, List<CardType> selectedCards)` — discards the two
+  cards in `selectedCards` (any matching pair; `CAT_CARDS` is the base type when
+  any cat is selected; at most one `CLONE` may count toward the pair; `FERAL_CAT`
+  and `CLONE` cannot be the base type) and steals one random card from the
+  target; records the resolved base type as the last played card; same player
+  continues.
+- `playCatTriple(int targetId, List<CardType> selectedCards, CardType desiredCard)` —
+  discards the three cards in `selectedCards` (same base-type / Clone / Feral Cat
+  rules as the pair) and takes `desiredCard` from the target if the target has it
+  (otherwise steals nothing); same player continues.
+- `playClone(int targetId, int cardIndex): List<Card>` — discards CLONE, gives
+  the cloner a copy of `lastPlayedCard`, then re-executes that card's effect
+  (`targetId` / `cardIndex` required for Targeted Attack and Favor). Returns the
+  See the Future peek list when cloning that card; empty list otherwise. Clears
+  `lastPlayedCard`. Throws if nothing to clone or if the last card was CLONE.
+- `playSuperSkip()` — discards SUPER_SKIP, advances to the next living player,
+  and sets `forcedTurns` to 1.
+- `playBury(int index)` — validates `index` against draw-pile size, discards
+  BURY, draws the top card, reinserts it at `index`, and consumes one owed turn.
+- `playPersonalAttack3X()` — discards PERSONAL_ATTACK_3X and adds 3 to
+  `forcedTurns` (current player owes four draws before the turn passes); same
+  player continues.
 - `playNope(int noperId)` — the noper discards a NOPE to undo the last played
   card based on its type: SKIP/REVERSE return the turn to the player who played
   it (REVERSE also restores direction); ATTACK/TARGETED_ATTACK reduce the forced
@@ -161,8 +184,13 @@ For each turn the UI drives the engine as follows:
    `play*` method (e.g. `playSkip`, `playAttack`, `playFavor`). Each returns
    after validating; catch `IllegalArgumentException` / `IllegalStateException`
    and show the message (resolve the key against the locale bundle).
-   - `playSkip`, `playReverse`, `playAttack`, `playTargetedAttack` end the turn
-     themselves — after them, go to step 5.
+   - `playSkip`, `playReverse`, `playAttack`, `playTargetedAttack`, `playSuperSkip`
+     end the turn themselves — after them, go to step 5.
+   - `playBury(int index)` consumes one owed turn (may or may not pass the turn,
+     depending on Attack stacking); UI shows a depth slider before calling it.
+   - `playPersonalAttack3X()` adds three owed draws; same player continues.
+   - `playClone(targetId, cardIndex)` re-runs the last played card; modal target/card
+     picks are required when cloning Targeted Attack, Favor, or See the Future.
 3. When the player chooses to draw, check `isDeckEmpty()`; if empty the game is
    over (`isGameOver()`), go to step 6.
 4. Call `drawCardForCurrentPlayer()`.
@@ -249,14 +277,24 @@ trivially unit-testable.
   `IllegalArgumentException` (`rule.target.invalid`) if `target` is the actor
   themselves or is not alive.
 - `requireCatPair(Player actor, CardType cardType)` — throws
-  `IllegalStateException` (`rule.catPair.needTwo`) if the actor holds fewer than
-  two cards of `cardType` (works for any matching pair, not only cats).
+  `IllegalStateException` if the pair is illegal: `rule.catPair.feralCannotBeBaseType`
+  when `cardType` is `FERAL_CAT`, `rule.catPair.cloneCannotBeBaseType` when
+  `cardType` is `CLONE`, or `rule.catPair.needTwo` when the actor holds fewer than
+  two matching cards. Counting treats `FERAL_CAT` as a cat when the base type is
+  `CAT_CARDS`, and allows at most one `CLONE` to stand in for a missing card.
 - `requireCatTriple(Player actor, CardType selectedCard)` — throws
-  `IllegalStateException` (`rule.catTriple.needThree`) if the actor holds fewer
-  than three of `selectedCard`.
+  `IllegalStateException` with the triple analogues of the pair keys above when
+  the actor holds fewer than three matching cards (same Feral Cat / Clone counting
+  rules).
 - `requireSomethingToNope(CardType lastPlayedCard)` — throws
   `IllegalStateException` (`rule.nope.nothingToCancel`) if `lastPlayedCard` is
   `null`.
+- `requireSomethingToClone(CardType lastPlayedCard)` — throws
+  `IllegalStateException` (`rule.clone.nothingToClone`) if `lastPlayedCard` is
+  `null`, or (`rule.clone.cannotCloneClone`) if it is `CLONE`.
+- `requireValidInsertIndex(int index, int size)` — throws
+  `IllegalStateException` (`rule.bury.invalidIndex`) when `index` is outside
+  `[0, size]` (Defuse reinsert and Bury depth selection).
 
 ---
 
@@ -451,7 +489,14 @@ restricted to homogeneous card types to support matching pair/triplet combo mech
 - `handScrollPane`: `ScrollPane` — horizontal-only hand viewport (`.hand-cards-col-2`); pannable left/right, vertical scroll blocked, `vvalue` pinned to `0`.
 - `modalOverlayScreen`: `VBox` — shared backdrop for See the Future, Targeted Attack, Favor, and double special-combo modals.
 - `tripleComboOverlayScreen`: `VBox` — dedicated backdrop for the three-of-a-kind special combo (`.combo-three-overlay`).
-- `defuseOverlayScreen`: `VBox` — dedicated backdrop for Exploding Kitten defuse resolution.
+- `defuseModal`: `DepthSliderModal` — shared depth-slider modal instance configured with
+  Defuse styling/copy, a primary Defuse button, and the extra Explode button.
+- `buryModal`: `DepthSliderModal` — shared depth-slider modal instance configured with
+  Bury styling/copy and a primary Bury confirm button.
+- `DepthSliderModal`: private static holder for the shared slider-modal nodes (`overlay`,
+  `dialog`, `section`, `sliderBody`, `sliderInfo`, `slider`, title/subtitle/label texts,
+  primary button, localized label text, and max slider index).
+- `buryCard`: `VBox` — Bury-specific card preview slot inserted into `buryModal`.
 - `modalDialogScreen`, `modalCardRow`, `modalCardScroll`, `modalPlayerButtons` — reusable modal chrome for card/target selection flows.
 - `tripleComboCard`, `cardGuessComboBox`, `tripleTargetButtons` — triple-combo UI (title, `ComboBox<CardType>` guess, per-opponent target buttons).
 - `feedContainer`: `VBox` — vertical logging module appending incoming event feeds.
@@ -535,6 +580,8 @@ restricted to homogeneous card types to support matching pair/triplet combo mech
   updating active turn fields.
 - `updateHandCount(int handSize, String playerName)` — string processor; builds and prints local user 
   inventory lengths.
+- `updateDrawCount(ResourceBundle bundle, int drawCount)` — updates the draw button label to
+  `{gameView.drawCard} X{drawCount}` (forced-turn counter from `GameEngine.getForcedTurns()`).
 - `updatePlayerCards(List<Card> hand)` — layout flush loop; resets user hand panels, maps cards, then 
   calls `centerHandScrollInitially()`.
 - `showDemandFavorScreen()` / `hideDemandFavorScreen()` — shared modal for Favor target pick 
@@ -561,8 +608,17 @@ restricted to homogeneous card types to support matching pair/triplet combo mech
 - `updateCatCardsPlayer(List<PlayerDisplayInfo>, IntConsumer)` — opponent buttons for double 
   special combo.
 - `showDefuseScreen(ResourceBundle, int deckSize)` / `hideDefuseScreen()` — defuse slider overlay.
+- `showBuryScreen(ResourceBundle, int deckSize)` / `hideBuryScreen()` — Bury slider overlay;
+  `deckSize` is post-draw pile size minus one (same convention as defuse).
+- `updateBuryCard(CardType card)` — renders the drawn top card in the Bury modal.
+- `createDepthSliderModal(...)` — shared factory for Defuse/Bury modal chrome, including
+  overlay, dialog, section, slider title, slider, slider labels, and primary button.
+- `createDefuseModal()` / `createBuryModal()` — configure the shared depth modal with
+  mode-specific CSS classes and add mode-specific content (Explode button or Bury card preview).
+- `updateDepthSlider(...)` / `updateDepthSliderLabels(...)` / `showDepthModal(...)` /
+  `hideDepthModal(...)` — shared depth-slider state and visibility helpers.
 - `setOnSeeTheFutureDismissButton(Runnable)` / `setOnDefuseButton(IntConsumer)` / 
-  `setOnExplodeButton(Runnable)` — modal action hooks.
+  `setOnExplodeButton(Runnable)` / `setOnBuryButton(IntConsumer)` — modal action hooks.
 - `selectCard(CardView card)` — layout modifier; shifts visual item properties to tracking selections 
   and updates action button disable states.
 - `deselectCard(CardView card)` — layout modifier; resets targeted item style definitions back to 
@@ -613,6 +669,7 @@ multi-selection UI operations.
   asynchronous JavaFX `Image`, binds dimensions, constructs a structural rounded `Rectangle` clip path mask, 
   and registers styling classes.
 - `getCardName(): String` — data getter; reveals the card instance's raw string identity tag.
+- `getCardName(ResourceBundle bundle): String` — localized display name via `cardView.{cardName}` keys.
 - `getCardType(): CardType` — data getter; reveals the card instance's structural domain rule type token.
 
 ---
@@ -627,7 +684,8 @@ Consumed exclusively by `CardView` during visual instantiation.
 
 ### Data Members
 - `rootPath`: `String` — base classpath prefix for all card asset directories (`/assets/`).
-- `cards`: `String[]` — canonical whitelist of supported card folder identity tags.
+- `cards`: `String[]` — canonical whitelist of supported card folder identity tags
+  (includes expansion cards: `Clone`, `SuperSkip`, `Bury`, `PersonalAttack3X`, `FeralCat`).
 - `invalidCardName`: `String` — i18n message key emitted when validation rejects an unknown card name (`cardServices.cardDoesNotExist`).
 
 ### Methods
@@ -698,7 +756,7 @@ to `GameEngine` through the model layer.
 - `CAT_TRIPLE_SIZE`: `int` — hand selection count ($3$) that routes to triple special combo.
 
 ### Methods
-- `GameController(GameView view, AppModel appModel, ScreenRouter router)` — instantiates `GameModel`, wires quit/draw/play/defuse/explode/see-the-future-dismiss handlers, and defines refresh/start pipelines.
+- `GameController(GameView view, AppModel appModel, ScreenRouter router)` — instantiates `GameModel`, wires quit/draw/play/defuse/explode/bury/see-the-future-dismiss handlers, and defines refresh/start pipelines.
 - `startGame()` — executes `startGameAction`; invoked by `MainApp` when navigating to the game screen (boots engine and runs `refreshAction`).
 - `handleGameOver(AppModel, ScreenRouter)` — when `model.isGameOver()`, stores winner display name in `AppModel` and calls `router.showWinner()`.
 - `handleExplodingKitten(GameView, AppModel)` — on drawn `EXPLODING_KITTEN`: opens defuse slider when local seat holds Defuse, otherwise calls `model.explodeCurrentPlayer()`.
@@ -708,6 +766,12 @@ to `GameEngine` through the model layer.
 - `playTargetedAttack` — victim picker over living opponents; discards and refreshes on confirm.
 - `playSeeTheFuture` — discards card, peeks top three via `model.playSeeTheFuture()`, opens peek modal.
 - `playSkip` / `playReverse` / `playAttack` / `playShuffle` / `playNope` — discard then delegate to matching `GameModel.play*` method.
+- `playClone` — branches on `model.getLastPlayedCard()`: Targeted Attack and Favor reopen their
+  target/card modals; See the Future opens the peek modal with the cloned peek; other types resolve
+  immediately. Always discards the Clone card afterward.
+- `playSuperSkip` / `playPersonalAttack3X` — discard and delegate to `GameModel`.
+- `playBury` — peeks top draw-pile card via `model.peekTopCardForBury()`, opens Bury slider; confirm
+  handled by `setOnBuryButton` (calls `model.playBury`, hides overlay, refreshes, discards Bury card).
 - `livingOpponents()` — filters `model.getOpponents()` to seats where `playerId != localPlayerId` and `isAlive`.
 - `refreshAfterPlay(GameView, AppModel)` — syncs hand, deck count, forced turns, turn banner, and opponent row after a play resolves.
 - `discardCard` / `computeLog` — moves played `CardView` nodes to discard pile and formats play log lines.
@@ -779,14 +843,20 @@ turn tracking, and hand queries without embedding JavaFX dependencies.
 ### Methods
 - `startGame(List<String> playerNames)` — copies names and constructs `GameEngine` for `playerNames.size()`.
 - `isGameStarted(): boolean` — reports whether `engine` has been initialized.
-- `ableToDrawCard(): boolean` — delegates to `engine.isDeckEmpty()` (inverted guard semantics for UI draw eligibility).
+- `isDeckEmpty(): boolean` — delegates to `engine.isDeckEmpty()` for UI draw guards.
 - `drawCard(): Card` — delegates to `engine.drawCardForCurrentPlayer()`.
 - `getDeckSize(): int` — delegates to `engine.getDrawPileSize()`.
 - `endTurnByDrawing()` — delegates to `engine.endTurnByDrawing()` and syncs `localPlayerId`.
 - `playSkip()` / `playReverse()` / `playAttack()` / `playShuffle()` — action delegates; each syncs `localPlayerId` after engine call.
 - `playSeeTheFuture(): List<Card>` — delegates peek to engine.
 - `playTargetedAttack(int targetId)` / `playFavor(int targetId, int cardIndex)` / `playNope()` — targeted and reactive play delegates.
-- `playCatPair(int targetId, CardType)` / `playCatTriple(int targetId, CardType selected, CardType desired)` — special-combo steals.
+- `playCatPair(int targetId, List<CardType> selectedCards)` /
+  `playCatTriple(int targetId, List<CardType> selectedCards, CardType desired)` — special-combo steals.
+- `playClone(int targetId, int cardIndex): List<Card>` / `playSuperSkip()` /
+  `playPersonalAttack3X()` / `playBury(int index)` — expansion-card delegates; each syncs
+  `localPlayerId` after the engine call.
+- `getLastPlayedCard(): CardType` — delegates to engine (Clone eligibility).
+- `peekTopCardForBury(): CardType` — reads the top draw-pile card type before Bury reinsert.
 - `defuseExplodingKitten(int reinsertIndex)` / `explodeCurrentPlayer()` — Exploding Kitten resolution paths.
 - `isGameOver(): boolean` / `getWinnerId(): int` — end-state queries from engine.
 - `getForcedTurns(): int` — remaining forced draws for the local UI turn banner.
@@ -897,13 +967,22 @@ Key `game-style.css` hooks added or relied on by recent UI work:
 - `.hand-cards-col-2` — fixed hand viewport height ($200$px); horizontal scroll only (enforced in `GameView.createPlayerHandSection`).
 - `.combo-three-overlay`, `.combo-three-card`, `.combo-three-*` — dedicated triple special-combo modal chrome (separate from shared `modalOverlayScreen`).
 - `.favor-request-box` / `.favor-grant-box` — two-step Favor modals on the shared overlay; grant step uses `modalCardScroll` for opponent hand cards.
+- `.defuse-overlay`, `.defuse-modal-card`, `.defuse-section`, `.btn-defuse` — Defuse-specific
+  skin applied to the shared depth-slider modal.
+- `.bury-overlay`, `.bury-modal`, `.bury-section`, `.bury-title`, `.bury-subtitle`, `.bury-button`,
+  `.bury-stat-text`, `.bury-stat-text-chosen` — Bury-specific skin applied to the shared
+  depth-slider modal.
 
 `winner-style.css` styles `WinnerView` (`win-overlay`, `win-modal-card`, `win-header`, `btn-play-again`, etc.).
 
 ### i18n keys (message bundles)
 
 - `catCardSpecialCombo.title`, `.subtitle`, `.guessLabel`, `.targetPrefix` — double/triple combo modals (`message_en.properties`, `message_zh.properties`).
+- `defuse.title`, `.sliderLabel`, `.topLabel`, `.currentLabel`, `.bottomLabel`, `.defuseButton`, `.explodeButton` — defuse overlay copy.
+- `bury.title`, `.subtitle`, `.sliderLabel`, `.topLabel`, `.currentLabel`, `.bottomLabel`, `.buryButton` — Bury overlay copy.
+- `rule.clone.nothingToClone`, `rule.clone.cannotCloneClone`, `rule.bury.invalidIndex` — Clone / Bury validation messages.
+- `rule.catPair.feralCannotBeBaseType`, `rule.catPair.cloneCannotBeBaseType`, and triple analogues — special-combo validation.
+- `gameView.drawCard` — draw-button forced-turn label prefix.
 - `winner.title`, `.subtitle`, `.description`, `.playAgain`, `.mainMenu` — winner screen copy.
 
 ---
-

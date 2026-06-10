@@ -18,7 +18,7 @@ public class DeckTest {
 	void deck_createFullDeck_correctSize() {
 		Deck deck = new Deck();
 
-		final int fullDeckSize = 63;
+		final int fullDeckSize = 74;
 
 		List<Card> cards = deck.getDrawPile();
 
@@ -70,6 +70,11 @@ public class DeckTest {
 		final int numberOfFavor = 4;
 		final int numberOfReverse = 4;
 		final int numberOfTargetedAttack = 3;
+		final int numberOfFeralCat = 4;
+		final int numberOfClone = 2;
+		final int numberOfSuperSkip = 2;
+		final int numberOfBury = 2;
+		final int numberOfPersonalAttack3X = 1;
 		final int numberOfCatCards = 20;
 
 		assertCards(cards, index, CardType.EXPLODING_KITTEN, numberOfExplodingKitten);
@@ -92,6 +97,16 @@ public class DeckTest {
 		index += numberOfReverse;
 		assertCards(cards, index, CardType.TARGETED_ATTACK, numberOfTargetedAttack);
 		index += numberOfTargetedAttack;
+		assertCards(cards, index, CardType.FERAL_CAT, numberOfFeralCat);
+		index += numberOfFeralCat;
+		assertCards(cards, index, CardType.CLONE, numberOfClone);
+		index += numberOfClone;
+		assertCards(cards, index, CardType.SUPER_SKIP, numberOfSuperSkip);
+		index += numberOfSuperSkip;
+		assertCards(cards, index, CardType.BURY, numberOfBury);
+		index += numberOfBury;
+		assertCards(cards, index, CardType.PERSONAL_ATTACK_3X, numberOfPersonalAttack3X);
+		index += numberOfPersonalAttack3X;
 		assertCards(cards, index, CardType.CAT_CARDS, numberOfCatCards);
 	}
 
@@ -138,10 +153,10 @@ public class DeckTest {
 	}
 
 	@Test
-	void drawTop_fullDeck_size63_returnsCardAndBecomesSize62() {
+	void drawTop_fullDeck_size74_returnsCardAndBecomesSize73() {
 		Deck deck = new Deck();
 
-		final int expectedSize = 62;
+		final int expectedSize = 73;
 
 		Card drawn = deck.drawTop();
 
@@ -210,7 +225,7 @@ public class DeckTest {
 
 		List<Card> shuffledDeck = deck.getDrawPile();
 
-		final int expectedSize = 63;
+		final int expectedSize = 74;
 
 		assertEquals(expectedSize, shuffledDeck.size());
 
@@ -304,7 +319,7 @@ public class DeckTest {
 		final int n = 3;
 		List<Card> result = deck.peekTop(n);
 
-		final int expectedDeckSize = 63;
+		final int expectedDeckSize = 74;
 		final int expectedResultSize = 3;
 
 		assertEquals(expectedResultSize, result.size());
@@ -322,7 +337,7 @@ public class DeckTest {
 
 		final int n = 55;
 
-		final int expectedDeckSize = 63;
+		final int expectedDeckSize = 74;
 		final int expectedResultSize = 55;
 
 		List<Card> result = deck.peekTop(n);
@@ -340,13 +355,13 @@ public class DeckTest {
 	}
 
 	@Test
-	void peekTopIs63ReturnsAllCards() {
+	void peekTopIs74ReturnsAllCards() {
 		Deck deck = new Deck();
 
-		final int n = 63;
+		final int n = 74;
 
-		final int expectedDeckSize = 63;
-		final int expectedResultSize = 63;
+		final int expectedDeckSize = 74;
+		final int expectedResultSize = 74;
 
 		List<Card> result = deck.peekTop(n);
 
@@ -366,7 +381,7 @@ public class DeckTest {
 	void peekTopGreaterThanDeckSizeThrowsIllegalStateException() {
 		Deck deck = new Deck();
 
-		final int n = 64;
+		final int n = 75;
 
 		Exception exception = assertThrows(IllegalStateException.class, () -> {
 			deck.peekTop(n);
@@ -427,7 +442,7 @@ public class DeckTest {
 	void getSize_InitialDeck_ReturnsDeckSize() {
 		Deck deck = new Deck();
 
-		final int fullDeckSize = 63;
+		final int fullDeckSize = 74;
 		int expectedDeckSize = fullDeckSize;
 		int actualDeckSize = deck.getSize();
 
@@ -524,11 +539,11 @@ public class DeckTest {
 
 
 	@Test
-	void insertAt_InitialDeckIndex64_ThrowsException() {
+	void insertAt_InitialDeckIndex75_ThrowsException() {
 		Deck deck = new Deck();
 		Card cardToInsert = new Card(CardType.EXPLODING_KITTEN);
 
-		final int insertIndex = 64;
+		final int insertIndex = 75;
 
 		Exception exception = assertThrows(IllegalArgumentException.class, () -> {
 			deck.insertAt(cardToInsert, insertIndex);
