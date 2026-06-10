@@ -622,7 +622,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 | Test Case # | System under test                                                                         | Expected output                                                           | Implemented? |
 |-------------|-------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|--------------|
-| TC1         | current player given a BURY and reinserts at 1, `playBury(1)` (2 players)                 | turn passes to player 1; top card moved to index 1                        | no           |
+| TC1         | current player given a BURY and reinserts at 1, `playBury(1)` (2 players)                 | turn passes to player 1; top card moved to index 1                        | yes          |
 | TC2         | current player given a BURY and reinserts at deck size = 30, `playBury(30)` (2 players)   | turn passes to player 1; top card moved to index 30                       | no           |
 | TC3         | current player given a BURY and reinserts at deck size = 61, `playBury(61)` (2 players)   | turn passes to player 1; top card moved to index 61                       | no           |
 | TC4         | current player has no BURY, `playSuperSkip()` (2 players)                                 | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | no           |

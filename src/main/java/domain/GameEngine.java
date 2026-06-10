@@ -95,6 +95,10 @@ public final class GameEngine {
         return deck.getDiscardPile();
     }
 
+    public List<Card> getDrawPile() {
+        return deck.getDrawPile();
+    }
+
     public int getForcedTurns() {
         return forcedTurns;
     }
@@ -293,6 +297,14 @@ public final class GameEngine {
         playFromHand(CardType.SUPER_SKIP);
         advanceToNextPlayer();
         forcedTurns = 1;
+    }
+
+    public void playBury(int index) {
+        ruleManager.requireValidInsertIndex(index, getDrawPileSize());
+        playFromHand(CardType.BURY);
+        Card firstCard = deck.drawTop();
+        deck.insertAt(firstCard, index);
+        consumeOneForcedTurn();
     }
 
     private void returnTurnToLastPlayer() {
