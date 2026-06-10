@@ -631,6 +631,27 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 ---
 
+## Method 18: ```public void playPersonalAttack3X()```
+
+### Step 1-3 Results
+
+| Step   | Input                                                                                                                       | Output                                                                   |
+|--------|-----------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------|
+| Step 1 | The number of active turns stacked on the current player (currentForcedTurns) and current player holds a personal attack 3x | PERSONAL_ATTACK_3X discarded; forced turns plus 3; same player continues |
+| Step 2 | game state                                                                                                                  | void / `IllegalStateException` if no PERSONAL_ATTACK_3X held             |
+| Step 3 | holds PERSONAL_ATTACK_3X (normal turn), holds no PERSONAL_ATTACK_3X                                                         | forced turns plus 3 / `gameEngine.play.notInHand`                        |
+
+### Step 4:
+
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test                                                                                | Expected output                                                           | Implemented? |
+|-------------|--------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|--------------|
+| TC1         | current player given a PERSONAL ATTACK 3X, forced turn = 1, `playPersonalAttack3X()` (2 players) | force turn becomes 4; same player playing                                 | no           |
+| TC2         | current player has no PERSONAL ATTACK 3X, `playPersonalAttack3X()` (2 players)                   | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | no           |
+
+---
+
 ## Recall the 4 steps of BVA
 
 ### Step 1: Describe the input and output in terms of the domain.
