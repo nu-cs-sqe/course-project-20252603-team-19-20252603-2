@@ -648,7 +648,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | Test Case # | System under test                                                                                | Expected output                                                           | Implemented? |
 |-------------|--------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|--------------|
 | TC1         | current player given a PERSONAL ATTACK 3X, forced turn = 1, `playPersonalAttack3X()` (2 players) | force turn becomes 4; same player playing                                 | yes          |
-| TC2         | current player has no PERSONAL ATTACK 3X, `playPersonalAttack3X()` (2 players)                   | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | no           |
+| TC2         | current player has no PERSONAL ATTACK 3X, `playPersonalAttack3X()` (2 players)                   | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | yes          |
 
 ---
 
