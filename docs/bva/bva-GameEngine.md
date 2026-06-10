@@ -626,7 +626,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | TC2         | current player given a BURY and reinserts at deck size = 30, `playBury(30)` (2 players)                          | turn passes to player 1; top card moved to index 30                       | yes          |
 | TC3         | current player given a BURY and reinserts at deck size = 60 (account the drawn card), `playBury(60)` (2 players) | turn passes to player 1; top card moved to index 60                       | yes          |
 | TC4         | current player has no BURY, `playSuperSkip()` (2 players)                                                        | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | yes          |
-| TC5         | current player given a BURY and reinserts at deck size = 62, `playBury(62)` (2 players)                          | throws `IllegalStateException` with message `"rule.bury.invalidIndex"`    | no           |
+| TC5         | current player given a BURY and reinserts at deck size = 62, `playBury(62)` (2 players)                          | throws `IllegalStateException` with message `"rule.bury.invalidIndex"`    | yes          |
 | TC6         | current player given a BURY and reinserts at deck size = -1, `playBury(-1)` (2 players)                          | throws `IllegalStateException` with message `"rule.bury.invalidIndex"`    | no           |
 
 ---
