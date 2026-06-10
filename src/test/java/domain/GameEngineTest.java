@@ -629,6 +629,7 @@ class GameEngineTest {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         clearCardType(engine.getPlayer(engine.getCurrentPlayerId()), CardType.CAT_CARDS);
         clearCardType(engine.getPlayer(engine.getCurrentPlayerId()), CardType.CLONE);
+        clearCardType(engine.getPlayer(engine.getCurrentPlayerId()), CardType.FERAL_CAT);
         giveToCurrent(engine, CardType.CAT_CARDS);
         giveToCurrent(engine, CardType.CLONE);
         giveToCurrent(engine, CardType.CLONE);

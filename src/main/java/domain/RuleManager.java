@@ -1,7 +1,5 @@
 package domain;
 
-import java.util.Currency;
-
 public final class RuleManager {
 
     private static final int CAT_PAIR_SIZE = 2;

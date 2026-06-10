@@ -22,7 +22,7 @@ public class GameModel {
 		return engine != null;
 	}
 
-	public boolean ableToDrawCard() {
+	public boolean isDeckEmpty() {
 		return engine.isDeckEmpty();
 	}
 
