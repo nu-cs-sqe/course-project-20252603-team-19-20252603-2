@@ -481,6 +481,22 @@ class GameEngineTest {
         assertEquals("rule.catTriple.needThree", ex.getMessage());
     }
 
+    @Test
+    void playCatTriple_twoCatCardAndoneFeralCat_stealsItAndKeepsTurn() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.FERAL_CAT);
+
+        List<CardType> selectedCards = List.of(CardType.CAT_CARDS, CardType.CAT_CARDS, CardType.FERAL_CAT);
+
+        engine.playCatTriple(1, selectedCards, CardType.DEFUSE);
+
+        assertFalse(engine.getPlayer(1).hasCard(CardType.DEFUSE));
+        assertTrue(engine.getPlayer(0).hasCard(CardType.DEFUSE));
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(CardType.CAT_CARDS, engine.getLastPlayedCard());
+    }
 
     @Test
     void defuseDrawnKitten_survivesAndReinsertsKitten() {
