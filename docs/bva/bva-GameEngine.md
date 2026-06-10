@@ -604,6 +604,33 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | TC2         | current player has no SUPER SKIP, `playSuperSkip()` (2 players)                    | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | yes          |
 | TC3         | current player given a SUPER SKIP, forced turns = 4, `playSuperSkip()` (2 players) | forced turns reset to 1; turn passes to player 1; draw pile unchanged     | yes          |                             
 
+---
+
+## Method 17 ```public void playBury(int index)```
+
+### Step 1-3 Results
+
+| Step   | Input                                                                                                                                                      | Output                                                                                                                    |
+|--------|------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| Step 1 | current player holds a BURY                                                                                                                                | The BURY card is discarded; the top card of the deck is pulled into a temporary mid-air holding cache.                    |
+| Step 2 | game state and deck size                                                                                                                                   | void / `IllegalStateException` if no BURY card held or reinsert index bigger or smaller than deck size                    |
+| Step 3 | holds BURY and reinserts at 0, middle (deck size / 2), deck size, holds no BURY, holds BURY and reinserts at -1, holds BURY and reinserts at deck size + 1 | inserts card back into deck / `gameEngine.play.notInHand` / `deck.insertAt.negativeIndex` / `deck.insertAt.indexTooLarge` |
+
+### Step 4:
+
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test                                                                         | Expected output                                                           | Implemented? |
+|-------------|-------------------------------------------------------------------------------------------|---------------------------------------------------------------------------|--------------|
+| TC1         | current player given a BURY and reinserts at 1, `playBury(1)` (2 players)                 | turn passes to player 1; top card moved to index 1                        | no           |
+| TC2         | current player given a BURY and reinserts at deck size = 30, `playBury(30)` (2 players)   | turn passes to player 1; top card moved to index 30                       | no           |
+| TC3         | current player given a BURY and reinserts at deck size = 61, `playBury(61)` (2 players)   | turn passes to player 1; top card moved to index 61                       | no           |
+| TC4         | current player has no BURY, `playSuperSkip()` (2 players)                                 | throws `IllegalStateException` with message `"gameEngine.play.notInHand"` | no           |
+| TC5         | current player given a BURY and reinserts at deck size = 100, `playBury(100)` (2 players) | throws `IllegalStateException` with message `"rule.bury.invalidIndex"`    | no           |
+| TC6         | current player given a BURY and reinserts at deck size = -1, `playBury(-1)` (2 players)   | throws `IllegalStateException` with message `"rule.bury.invalidIndex"`    | no           |
+
+---
+
 ## Recall the 4 steps of BVA
 
 ### Step 1: Describe the input and output in terms of the domain.
