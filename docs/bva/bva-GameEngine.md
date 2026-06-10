@@ -557,7 +557,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | TC7         | current given `List.of("FERAL_CAT", "FERAL_CAT", "FERAL_CAT")`, `playCatTriple(1, List.of("FERAL_CAT", "FERAL_CAT", "FERAL_CAT"), DEFUSE)` (target has a DEFUSE) | throws `IllegalStateException` with message `"rule.catTriple.feralCannotBeBaseType"`               | yes          |
 | TC8         | current given `List.of("CAT_CARD", "CAT_CARD", "CLONE")`, `playCatTriple(1, List.of("CAT_CARD", "CAT_CARD", "CLONE"), DEFUSE)` (target has a DEFUSE)             | target loses the Defuse, current gains it, current keeps the turn, `getLastPlayedCard()==CAT_CARD` | yes          |
 | TC9         | current given `List.of("CAT_CARD", "CLONE", "CLONE")`, `playCatTriple(1, List.of("CAT_CARD", "CLONE", "CLONE"), DEFUSE)` (target has a DEFUSE)                   | throws `IllegalStateException` with message `"rule.catTriple.needThree"`                           | yes          |
-| TC10        | current given `List.of("CLONE", "CLONE", "CLONE")`, `playCatTriple(1, List.of("CLONE", "CLONE", "CLONE"), DEFUSE)` (target has a DEFUSE)                         | throws `IllegalStateException` with message `"rule.catTriple.cloneCannotBeBaseType"`               | no           |
+| TC10        | current given `List.of("CLONE", "CLONE", "CLONE")`, `playCatTriple(1, List.of("CLONE", "CLONE", "CLONE"), DEFUSE)` (target has a DEFUSE)                         | throws `IllegalStateException` with message `"rule.catTriple.cloneCannotBeBaseType"`               | yes          |
 
 ---
 
