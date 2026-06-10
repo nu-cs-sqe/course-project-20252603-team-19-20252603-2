@@ -372,7 +372,7 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 | TC4         | current 0 given 2 ATTACK, `playCatPair(1, List.of(ATTACK, ATTACK))`                                     | target hand shrinks by 1, `getLastPlayedCard()==ATTACK`                            | yes          |
 | TC5         | current holds fewer than 2 of the type, `playCatPair(1, List.of(CAT_CARDS))`                            | throws `IllegalStateException` with message `"rule.catPair.needTwo"`               | yes          |
 | TC6         | 2 players, current 0 given 2 FERAL_CAT, `playCatPair(1, List.of(FERAL_CAT, FERAL_CAT))`                 | throws `IllegalStateException with message `"rule.catPair.feralCannotBeBaseType"`  | yes          |                                                                            
-| TC7         | 2 players, current 0 given 2 CLONE, `playCatPair(1, List.of(CLONE, CLONE))`                             | throws `IllegalStateException with message `"rule.catPair.cloneCannotBeBaseType"`  | no           |
+| TC7         | 2 players, current 0 given 2 CLONE, `playCatPair(1, List.of(CLONE, CLONE))`                             | throws `IllegalStateException with message `"rule.catPair.cloneCannotBeBaseType"`  | yes          |
 
 ---
 
