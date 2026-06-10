@@ -1053,7 +1053,7 @@ class GameEngineTest {
     }
 
     @Test
-    void playPersonalAttack3X_withoutPersonalAttack3XInHand_throwsIllegalStateException() {
+    void playPersonalAttack3X_withoutPersonalAttack3xInHand_throwsIllegalStateException() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         clearCardType(engine.getPlayer(0), CardType.PERSONAL_ATTACK_3X);
         IllegalStateException ex = assertThrows(
