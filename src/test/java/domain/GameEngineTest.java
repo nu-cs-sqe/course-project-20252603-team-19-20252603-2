@@ -1024,6 +1024,17 @@ class GameEngineTest {
         assertEquals("rule.bury.invalidIndex", ex.getMessage());
     }
 
+    @Test
+    void playBury_onIndexNegativeOne_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        final int index = -1;
+        giveToCurrent(engine, CardType.BURY);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playBury(index));
+        assertEquals("rule.bury.invalidIndex", ex.getMessage());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
