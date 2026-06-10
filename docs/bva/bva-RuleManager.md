@@ -175,7 +175,7 @@ This file holds the BVA analysis for every public method of the `RuleManager` cl
 | TC5         | chosenDepth = 62, currentDeckSize = 61, `requireValidInsertIndex(62, 61)         | throws `IllegalStateException` with message `"rule.bury.invalidIndex"` | yes          |
 | TC6         | chosenDepth = 100, currentDeckSize = 61, `requireValidInsertIndex(100, 61)       | throws `IllegalStateException` with message `"rule.bury.invalidIndex"` | yes          |
 | TC7         | chosenDepth = 0, currentDeckSize = 0, requireValidInsertIndex(0, 0) (Empty Deck) | returns normally                                                       | yes          | 
-| TC8         | chosenDepth = 1, currentDeckSize = 0, requireValidInsertIndex(1, 0) (Empty Deck) | throws `IllegalStateException` with message `"rule.bury.invalidIndex"` | no           | 
+| TC8         | chosenDepth = 1, currentDeckSize = 0, requireValidInsertIndex(1, 0) (Empty Deck) | throws `IllegalStateException` with message `"rule.bury.invalidIndex"` | yes          | 
 | TC9         | chosenDepth = 1, currentDeckSize = 1, requireValidInsertIndex(1, 1) (Empty Deck) | returns normally                                                       | no           | 
 
 ---
