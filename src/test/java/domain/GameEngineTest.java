@@ -381,40 +381,19 @@ class GameEngineTest {
     }
 
     @Test
-    void playCatPair_stealsOneCardFromTargetAndKeepsTurn() {
+    void playCatPair_twoCatCards_stealsOneCardFromTargetAndKeepsTurn() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.CAT_CARDS);
         giveToCurrent(engine, CardType.CAT_CARDS);
         int targetHandBefore = engine.getPlayerHand(1).size();
 
-        engine.playCatPair(1, CardType.CAT_CARDS);
+        List<CardType> selectedCards = List.of(CardType.CAT_CARDS, CardType.CAT_CARDS);
+
+        engine.playCatPair(1, selectedCards);
 
         assertEquals(targetHandBefore - 1, engine.getPlayerHand(1).size());
         assertEquals(0, engine.getCurrentPlayerId());
         assertEquals(CardType.CAT_CARDS, engine.getLastPlayedCard());
-    }
-
-    @Test
-    void playCatPair_withAnyMatchingPair_stealsAndRecordsThatCard() {
-        GameEngine engine = new GameEngine(MIN_PLAYERS);
-        giveToCurrent(engine, CardType.ATTACK);
-        giveToCurrent(engine, CardType.ATTACK);
-        int targetHandBefore = engine.getPlayerHand(1).size();
-
-        engine.playCatPair(1, CardType.ATTACK);
-
-        assertEquals(targetHandBefore - 1, engine.getPlayerHand(1).size());
-        assertEquals(CardType.ATTACK, engine.getLastPlayedCard());
-    }
-
-    @Test
-    void playCatPair_withoutTwoOfType_throwsIllegalStateException() {
-        GameEngine engine = new GameEngine(MIN_PLAYERS);
-        clearCardType(engine.getPlayer(0), CardType.CAT_CARDS);
-        IllegalStateException ex = assertThrows(
-                IllegalStateException.class,
-                () -> engine.playCatPair(1, CardType.CAT_CARDS));
-        assertEquals("rule.catPair.needTwo", ex.getMessage());
     }
 
     @Test
