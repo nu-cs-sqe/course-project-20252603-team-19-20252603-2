@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -258,6 +260,33 @@ public class DeckTest {
 		assertEquals(numberOfReverse, counts.get(CardType.REVERSE));
 		assertEquals(numberOfTargetedAttack, counts.get(CardType.TARGETED_ATTACK));
 		assertEquals(numberOfCatCards, counts.get(CardType.CAT_CARDS));
+	}
+
+	@Test
+	void shuffle_fullDeck_changesOrder() {
+		Deck deck = new Deck();
+
+		List<CardType> before = deck.getDrawPile().stream()
+				.map(Card::getCardType)
+				.collect(Collectors.toList());
+
+		boolean changed = false;
+
+		// Try multiple shuffles to avoid random same-order chance
+		for (int i = 0; i < 10; i++) {
+			deck.shuffle();
+
+			List<CardType> after = deck.getDrawPile().stream()
+					.map(Card::getCardType)
+					.collect(Collectors.toList());
+
+			if (!before.equals(after)) {
+				changed = true;
+				break;
+			}
+		}
+
+		assertTrue(changed);
 	}
 
 	@Test

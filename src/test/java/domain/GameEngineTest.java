@@ -1,14 +1,11 @@
 package domain;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class GameEngineTest {
 
@@ -284,12 +281,72 @@ class GameEngineTest {
     }
 
     @Test
+    void playShuffle_verifyShuffleIsDiscarded() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearHand(engine.getPlayer(0));
+        giveToCurrent(engine, CardType.SHUFFLE);
+
+        final int expectedHandSize = 0;
+        final int beforeDiscardSize = engine.getDiscardPile().size();
+        final boolean hasShuffle = false;
+
+        engine.playShuffle();
+
+        assertFalse(hasShuffle);
+        assertEquals(expectedHandSize, engine.getPlayerHand(0).size());
+        assertEquals(
+                beforeDiscardSize + 1,
+                engine.getDiscardPile().size()
+        );
+    }
+
+    @Test
+    void playShuffle_verifyShuffleIsCalled() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SHUFFLE);
+
+        List<CardType> before = engine.getDrawPile().stream()
+                .map(Card::getCardType)
+                .collect(Collectors.toList());
+
+        boolean changed = false;
+
+        for (int i = 0; i < 20; i++) {
+            engine.playShuffle();
+            List<CardType> after = engine.getDrawPile().stream()
+                    .map(Card::getCardType)
+                    .collect(Collectors.toList());
+            if (!before.equals(after)) {
+                changed = true;
+                break;
+            }
+            giveToCurrent(engine, CardType.SHUFFLE);
+        }
+
+        assertTrue(changed);
+    }
+
+    @Test
     void playSeeTheFuture_returnsTopThreeAndKeepsSamePlayer() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.SEE_THE_FUTURE);
 
         assertEquals(SEE_THE_FUTURE_COUNT, engine.playSeeTheFuture().size());
         assertEquals(0, engine.getCurrentPlayerId());
+    }
+
+    @Test
+    void playSeeTheFuture_verifySeeTheFutureIsPlayed() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.SEE_THE_FUTURE);
+        giveToCurrent(engine, CardType.SEE_THE_FUTURE);
+
+        engine.playSeeTheFuture();
+
+        assertEquals(
+                -1,
+                engine.getPlayer(0).getIndexOfCard(CardType.SEE_THE_FUTURE)
+        );
     }
 
     @Test
@@ -345,6 +402,20 @@ class GameEngineTest {
                 IllegalArgumentException.class,
                 () -> engine.playTargetedAttack(0));
         assertEquals("rule.target.invalid", ex.getMessage());
+    }
+
+    @Test
+    void playTargetedAttack_verifyTargetedAttackIsPlayed() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.TARGETED_ATTACK);
+        giveToCurrent(engine, CardType.TARGETED_ATTACK);
+
+        engine.playTargetedAttack(1);
+
+        assertEquals(
+                -1,
+                engine.getPlayer(0).getIndexOfCard(CardType.TARGETED_ATTACK)
+        );
     }
 
     @Test
@@ -481,6 +552,52 @@ class GameEngineTest {
                 IllegalStateException.class,
                 () -> engine.playCatPair(1, selectedCards));
         assertEquals("rule.catPair.cloneCannotBeBaseType", ex.getMessage());
+    }
+
+    @Test
+    void playCatPair_verifyRequireValidTargetIsCalled() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+
+        List<CardType> pair = List.of(
+                CardType.CAT_CARDS,
+                CardType.CAT_CARDS
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> engine.playCatPair(
+                        engine.getCurrentPlayerId(),
+                        pair
+                )
+        );
+    }
+
+    @Test
+    void playCatPair_verifyCardDiscard() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+
+        final int beforeDiscardPileSize = engine.getDiscardPile().size();
+
+        List<CardType> pair = List.of(
+                CardType.CAT_CARDS,
+                CardType.CAT_CARDS
+        );
+
+        engine.playCatPair(
+                1,
+                pair
+        );
+
+        final int afterDiscardPileSize = engine.getDiscardPile().size();
+
+        assertNotEquals(beforeDiscardPileSize,afterDiscardPileSize);
+        assertEquals(beforeDiscardPileSize+2,afterDiscardPileSize);
     }
 
     @Test
@@ -661,6 +778,58 @@ class GameEngineTest {
     }
 
     @Test
+    void playCatTriple_verifyRequireValidTargetIsCalled() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+
+        List<CardType> triple = List.of(
+                CardType.CAT_CARDS,
+                CardType.CAT_CARDS,
+                CardType.CAT_CARDS
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> engine.playCatTriple(
+                        engine.getCurrentPlayerId(),
+                        triple,
+                        CardType.ATTACK
+                )
+        );
+    }
+
+    @Test
+    void playCatTriple_verifyCardDiscard() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.CAT_CARDS);
+
+        final int beforeDiscardPileSize = engine.getDiscardPile().size();
+
+        List<CardType> triple = List.of(
+                CardType.CAT_CARDS,
+                CardType.CAT_CARDS,
+                CardType.CAT_CARDS
+        );
+
+        engine.playCatTriple(
+                1,
+                triple,
+                CardType.ATTACK
+        );
+
+        final int afterDiscardPileSize = engine.getDiscardPile().size();
+
+        assertNotEquals(beforeDiscardPileSize,afterDiscardPileSize);
+        assertEquals(beforeDiscardPileSize+3,afterDiscardPileSize);
+    }
+
+    @Test
     void defuseDrawnKitten_survivesAndReinsertsKitten() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.EXPLODING_KITTEN);
@@ -695,6 +864,44 @@ class GameEngineTest {
     }
 
     @Test
+    void defuseDrawnKitten_kittenAtIndexZero_defusesCorrectly() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearHand(engine.getPlayer(0));
+        giveToCurrent(engine, CardType.EXPLODING_KITTEN);
+        giveToCurrent(engine, CardType.DEFUSE);
+
+        assertDoesNotThrow(
+                () -> engine.defuseDrawnKitten(0)
+        );
+    }
+
+    @Test
+    void defuseDrawnKitten_defuseAtIndexZero_defusesCorrectly() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearHand(engine.getPlayer(0));
+        giveToCurrent(engine, CardType.DEFUSE);
+        giveToCurrent(engine, CardType.EXPLODING_KITTEN);
+
+        assertDoesNotThrow(
+                () -> engine.defuseDrawnKitten(0)
+        );
+    }
+
+    @Test
+    void defuseDrawnKitten_verifyDefuseDiscard() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearHand(engine.getPlayer(0));
+        giveToCurrent(engine, CardType.DEFUSE);
+        giveToCurrent(engine, CardType.EXPLODING_KITTEN);
+
+        final int discardPileSize = engine.getDiscardPile().size() + 1;
+
+        engine.defuseDrawnKitten(0);
+
+        assertEquals(discardPileSize, engine.getDiscardPile().size());
+    }
+
+    @Test
     void explodeCurrentPlayer_killsPlayerAndPassesTurn() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.EXPLODING_KITTEN);
@@ -712,6 +919,48 @@ class GameEngineTest {
                 IllegalStateException.class,
                 () -> engine.explodeCurrentPlayer());
         assertEquals("gameEngine.defuse.noKitten", ex.getMessage());
+    }
+
+    @Test
+    void explodeCurrentPlayer_kittenAtIndexZero_explodesCorrectly() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearHand(engine.getPlayer(0));
+        giveToCurrent(engine, CardType.EXPLODING_KITTEN);
+
+        assertDoesNotThrow(
+                () -> engine.explodeCurrentPlayer()
+        );
+    }
+
+    @Test
+    void explodeCurrentPlayer_properlyRemovesExplodingKittenFromHand() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearHand(engine.getPlayer(0));
+        giveToCurrent(engine, CardType.EXPLODING_KITTEN);
+
+        engine.explodeCurrentPlayer();
+
+        final boolean hasKitten = engine.getPlayer(0).hasCard(CardType.EXPLODING_KITTEN);
+        assertFalse(hasKitten);
+    }
+
+    @Test
+    void explodeCurrentPlayer_properlyClearsHand() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearHand(engine.getPlayer(0));
+        giveToCurrent(engine, CardType.CAT_CARDS);
+        giveToCurrent(engine, CardType.SHUFFLE);
+        giveToCurrent(engine, CardType.EXPLODING_KITTEN);
+
+        final int expectedDiscardPileSize =
+                engine.getDiscardPile().size();
+
+        engine.explodeCurrentPlayer();
+
+        assertEquals(
+                expectedDiscardPileSize + 3,
+                engine.getDiscardPile().size()
+        );
     }
 
     @Test
@@ -833,6 +1082,19 @@ class GameEngineTest {
     }
 
     @Test
+    void playNope_onReverse_verifyDirectionIsReversed() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.REVERSE);
+        engine.playReverse();
+        engine.getPlayer(1).addCardToHand(new Card(CardType.NOPE));
+
+        final int afterDirection = 1;
+        engine.playNope(1);
+
+        assertEquals(afterDirection, engine.getCurrentDirection());
+    }
+
+    @Test
     void playNope_onAttack_reducesForcedTurnsAndReturnsToAttacker() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.ATTACK);
@@ -869,6 +1131,98 @@ class GameEngineTest {
 
         assertEquals(0, engine.getCurrentPlayerId());
         assertNull(engine.getLastPlayedCard());
+    }
+
+    @Test
+    void playNope_onSeeTheFuture_verifyDeckIsShuffled() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.SEE_THE_FUTURE);
+        giveToCurrent(engine, CardType.NOPE);
+
+        List<CardType> before = engine.getDrawPile().stream()
+                .map(Card::getCardType)
+                .collect(Collectors.toList());
+
+        boolean changed = false;
+
+        for (int i = 0; i < 10; i++) {
+            engine.playSeeTheFuture();
+            engine.playNope(0);
+            List<CardType> after = engine.getDrawPile().stream()
+                    .map(Card::getCardType)
+                    .collect(Collectors.toList());
+            if (!before.equals(after)) {
+                changed = true;
+                break;
+            }
+            giveToCurrent(engine, CardType.SEE_THE_FUTURE);
+            giveToCurrent(engine, CardType.NOPE);
+        }
+
+        assertTrue(changed);
+    }
+
+    @Test
+    void playNope_on_keepsTurnAndClearsLastPlayed() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.FAVOR);
+        engine.playFavor(1,0);
+        engine.getPlayer(1).addCardToHand(new Card(CardType.NOPE));
+
+        engine.playNope(1);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertNull(engine.getLastPlayedCard());
+    }
+
+    @Test
+    void playNope_nopeAtIndexZeroWithSeeTheFuture_undoSkipAction() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearHand(engine.getPlayer(0));
+        clearHand(engine.getPlayer(1));
+        giveToCurrent(engine, CardType.SEE_THE_FUTURE);
+        engine.playSeeTheFuture();
+        giveToCurrent(engine, CardType.NOPE);
+
+        engine.playNope(0);
+
+        assertEquals(0, engine.getCurrentPlayerId());
+        assertEquals(1, engine.getForcedTurns());
+    }
+
+    @Test
+    void playNope_discardsNopeCard() {
+        GameEngine engine = new GameEngine(2);
+        clearHand(engine.getPlayer(0));
+        clearCardType(engine.getPlayer(1), CardType.NOPE);
+
+        giveToCurrent(engine, CardType.SKIP);
+        engine.playSkip();
+
+        giveToCurrent(engine, CardType.NOPE);
+
+        int beforeDiscard =
+                engine.getDiscardPile().size();
+        engine.playNope(1);
+
+        List<Card> discardPile =
+                engine.getDiscardPile();
+
+        final boolean hasNope = engine.getPlayer(1).hasCard(CardType.NOPE);
+
+        assertEquals(
+                beforeDiscard + 1,
+                discardPile.size()
+        );
+
+        assertEquals(
+                CardType.NOPE,
+                discardPile
+                        .get(beforeDiscard)
+                        .getCardType()
+        );
+
+        assertFalse(hasNope);
     }
 
     @Test
@@ -1045,16 +1399,31 @@ class GameEngineTest {
     @Test
     void playClone_onShuffle_shufflesDeckAndKeepsSamePlayer() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
-        giveToCurrent(engine, CardType.SHUFFLE);
+        engine.setLastPlayedCard(CardType.SHUFFLE);
+        giveToCurrent(engine, CardType.CLONE);
 
         int pileSize = engine.getDrawPileSize();
 
-        engine.playShuffle();
-        assertEquals(pileSize, engine.getDrawPileSize());
+        List<CardType> before = engine.getDrawPile().stream()
+                .map(Card::getCardType)
+                .collect(Collectors.toList());
 
-        engine.getPlayer(0).addCardToHand(new Card(CardType.CLONE));
-        engine.playClone(0, 0);
+        boolean changed = false;
 
+        for (int i = 0; i < 10; i++) {
+            engine.playClone(0, 0);
+            List<CardType> after = engine.getDrawPile().stream()
+                    .map(Card::getCardType)
+                    .collect(Collectors.toList());
+            if (!before.equals(after)) {
+                changed = true;
+                break;
+            }
+            giveToCurrent(engine, CardType.CLONE);
+            engine.setLastPlayedCard(CardType.SHUFFLE);
+        }
+
+        assertTrue(changed);
         assertEquals(pileSize, engine.getDrawPileSize());
         assertEquals(0, engine.getCurrentPlayerId());
     }
@@ -1132,6 +1501,42 @@ class GameEngineTest {
 
         assertEquals(0, engine.getCurrentPlayerId());
         assertEquals(expectedForcedTurns, engine.getForcedTurns());
+    }
+
+    @Test
+    void playClone_onReverse_returnsMutableList() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.CLONE);
+        engine.setLastPlayedCard(CardType.REVERSE);
+
+        List<Card> result =
+                engine.playClone(0, 0);
+
+        assertEquals(
+                ArrayList.class,
+                result.getClass()
+        );
+        assertTrue(
+                result.isEmpty()
+        );
+    }
+
+    @Test
+    void playClone_onInvalidCard_returnsMutableList() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        giveToCurrent(engine, CardType.CLONE);
+        engine.setLastPlayedCard(CardType.DEFUSE);
+
+        List<Card> result =
+                engine.playClone(0, 0);
+
+        assertEquals(
+                ArrayList.class,
+                result.getClass()
+        );
+        assertTrue(
+                result.isEmpty()
+        );
     }
 
     @Test
@@ -1297,6 +1702,41 @@ class GameEngineTest {
         assertEquals("gameEngine.play.notInHand", ex.getMessage());
     }
 
+    @Test
+    void forcedTurnsAfterUndoingAttack_dropsBelowBaseline_resetsToNormal() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+
+        clearCardType(engine.getPlayer(0), CardType.ATTACK);
+        clearCardType(engine.getPlayer(1), CardType.NOPE);
+
+        giveToCurrent(engine, CardType.ATTACK);
+        engine.getPlayer(1).addCardToHand(new Card(CardType.NOPE));
+
+        engine.playAttack();
+        engine.playNope(1);
+
+        assertEquals(1, engine.getForcedTurns());
+    }
+
+    @Test
+    void forcedTurnsAfterUndoingAttack_remainsAboveBaseline_returnsReducedValue() {
+        GameEngine engine = new GameEngine(2); // Starts on Player 0
+
+        giveToCurrent(engine, CardType.ATTACK);
+
+        engine.playAttack();
+        assertEquals(1, engine.getCurrentPlayerId());
+
+        giveToCurrent(engine, CardType.ATTACK);
+        engine.playAttack();
+        assertEquals(0, engine.getCurrentPlayerId());
+
+        giveToCurrent(engine, CardType.NOPE);
+        engine.playNope(0);
+
+        assertEquals(2, engine.getForcedTurns());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
@@ -1306,6 +1746,12 @@ class GameEngineTest {
         while (index >= 0) {
             player.removeCardFromHand(index);
             index = player.getIndexOfCard(type);
+        }
+    }
+
+    private void clearHand(Player player) {
+        while (player.getHandSize() > 0) {
+            player.removeCardFromHand(0);
         }
     }
 }

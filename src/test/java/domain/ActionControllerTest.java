@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 
 class ActionControllerTest {
@@ -20,6 +21,15 @@ class ActionControllerTest {
         Deck deck = new Deck();
         actionController.shuffleDeck(deck);
         assertEquals(FULL_DECK_SIZE, deck.getSize());
+    }
+
+    @Test
+    void shuffleDeck_verifyShuffleDeckCalled() {
+        Deck deck = EasyMock.createMock(Deck.class);
+        deck.shuffle();
+        EasyMock.replay(deck);
+        actionController.shuffleDeck(deck);
+        EasyMock.verify(deck);
     }
 
     @Test
