@@ -3,9 +3,9 @@ package ui;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import domain.model.GameSetupModel;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import ui.model.GameSetupModel;
 
 class GameSetupModelTest {
 

@@ -2,9 +2,9 @@ package ui;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import domain.model.AppModel;
 import java.util.Locale;
 import org.junit.jupiter.api.Test;
-import ui.model.AppModel;
 
 class AppModelTest {
     @Test

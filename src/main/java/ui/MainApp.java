@@ -1,5 +1,6 @@
 package ui;
 
+import domain.model.AppModel;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -8,7 +9,6 @@ import ui.controller.GameSetupController;
 import ui.controller.InstructionController;
 import ui.controller.StartController;
 import ui.controller.WinnerController;
-import ui.model.AppModel;
 import ui.navigation.JavaFxScreenRouter;
 import ui.navigation.ScreenRouter;
 import ui.view.GameSetupView;

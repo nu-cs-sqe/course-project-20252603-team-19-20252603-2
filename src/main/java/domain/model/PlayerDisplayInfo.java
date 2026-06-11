@@ -1,4 +1,4 @@
-package ui.model;
+package domain.model;
 
 public final class PlayerDisplayInfo {
 	private final String name;

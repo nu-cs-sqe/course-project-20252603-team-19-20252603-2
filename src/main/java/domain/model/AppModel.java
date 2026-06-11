@@ -1,4 +1,4 @@
-package ui.model;
+package domain.model;
 
 import java.util.List;
 import java.util.Locale;

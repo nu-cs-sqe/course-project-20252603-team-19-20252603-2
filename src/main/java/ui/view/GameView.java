@@ -3,6 +3,7 @@ package ui.view;
 
 import domain.Card;
 import domain.CardType;
+import domain.model.PlayerDisplayInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,7 +31,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import ui.model.PlayerDisplayInfo;
 
 public class GameView extends StackPane {
 	private String cardCountText = "";

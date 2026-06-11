@@ -1,6 +1,6 @@
 package ui.controller;
 
-import ui.model.AppModel;
+import domain.model.AppModel;
 import ui.navigation.ScreenRouter;
 import ui.view.GameSetupView;
 

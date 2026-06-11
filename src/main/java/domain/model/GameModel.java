@@ -1,4 +1,4 @@
-package ui.model;
+package domain.model;
 
 import domain.Card;
 import domain.CardType;

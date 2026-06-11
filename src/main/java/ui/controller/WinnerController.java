@@ -1,7 +1,7 @@
 package ui.controller;
 
+import domain.model.AppModel;
 import java.util.ResourceBundle;
-import ui.model.AppModel;
 import ui.navigation.ScreenRouter;
 import ui.view.WinnerView;
 
