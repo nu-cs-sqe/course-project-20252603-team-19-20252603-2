@@ -258,8 +258,6 @@ turn-state; `ActionController` only touches the deck and players' hands.
 - `changeCurrentDirection()`
 - `turnGoesToNextPlayer()`
 - `turnSkipsNextPlayer()`
-- `turnGoesToCurrentPlayerAgain()`
-- `turnReversesDirection()`
 
 
 ---

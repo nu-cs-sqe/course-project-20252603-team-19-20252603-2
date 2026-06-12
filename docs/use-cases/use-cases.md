@@ -667,3 +667,87 @@ Alternate Flows:
 Postconditions:
 - The card is in the discard pile.
 - The active player remains the same, but their remaining turn execution counter is set to 3.
+
+---
+
+# Domain Class Contracts
+
+Binding public API for domain classes (per `docs/STANDARDS.md`). Player-facing
+use cases above describe behaviour; this section lists every public method.
+
+## GameEngine Class
+
+### Data Members
+
+- `numPlayers`: `int` — immutable; supplied at construction; must be in `[2, 5]`.
+- `players`: `List<Player>` — one `Player` per id `0..numPlayers-1`.
+- `deck`: `Deck` — draw and discard piles.
+- `turnTracker`: `TurnTracker` — tracks whose turn it is.
+
+### Methods
+
+- `GameEngine(int numPlayers)` — constructor; throws `IllegalArgumentException`
+  if `numPlayers` is outside `[2, 5]`.
+- `getNumPlayers(): int`
+- `getPlayer(int playerId): Player` — throws `IllegalArgumentException` if id is
+  outside `[0, numPlayers)`.
+- `getCurrentPlayerId(): int`
+- `getDrawPileSize(): int`
+- `isDeckEmpty(): boolean`
+- `getPlayerHand(int playerId): List<Card>` — defensive copy.
+- `drawCardForCurrentPlayer(): Card` — throws `IllegalStateException`
+  (`deck.emptyType`) if the draw pile is empty.
+- `advanceToNextPlayer()` — hands the turn to the next living player.
+- `endTurnByDrawing()` — consumes one owed turn; advances when none remain.
+- `getDiscardPile(): List<Card>` — defensive copy.
+- `getDrawPile(): List<Card>`
+- `getForcedTurns(): int`
+- `getLastPlayedCard(): CardType` — `null` before any card is played.
+- `getCurrentDirection(): int`
+- `setLastPlayedCard(CardType cardType)`
+- `setForcedTurns(int forcedTurns)`
+- `playFromHand(CardType type)` — validates playability, discards from the
+  current hand, records the play; throws `IllegalStateException`
+  (`gameEngine.play.notInHand`) when absent.
+- `playSkip()`
+- `playShuffle()`
+- `playSeeTheFuture(): List<Card>`
+- `playReverse()`
+- `playAttack()`
+- `playTargetedAttack(int targetId)`
+- `playFavor(int targetId, int cardIndex)`
+- `playCatPair(int targetId, List<CardType> selectedCards)`
+- `playCatTriple(int targetId, List<CardType> selectedCards, CardType desiredCard)`
+- `playClone(int targetId, int cardIndex): List<Card>`
+- `playSuperSkip()`
+- `playBury(int index)`
+- `playPersonalAttack3X()`
+- `playNope(int noperId)`
+- `defuseDrawnKitten(int reinsertIndex)`
+- `explodeCurrentPlayer()`
+- `forcedTurnsAfterUndoingAttack(): int`
+- `isGameOver(): boolean`
+- `countAlive(): int` — number of living players; used by `isGameOver()`.
+- `getWinnerId(): int` — throws `IllegalStateException` (`gameEngine.notOver`)
+  if the game is not over.
+
+---
+
+## TurnTracker Class
+
+### Data Members
+
+- `numTotalPlayers`: `int`
+- `currentPlayer`: `int`
+- `currentDirection`: `int`
+
+### Methods
+
+- `getNumTotalPlayers(): int`
+- `setNumTotalPlayers(int numTotalPlayers)` — throws `IllegalArgumentException`
+  (`turnTracker.numPlayers.tooSmall`) when fewer than 2.
+- `getCurrentPlayer(): int`
+- `getCurrentDirection(): int`
+- `changeCurrentDirection()` — multiplies direction by −1.
+- `turnGoesToNextPlayer()` — advances one seat in the current direction.
+- `turnSkipsNextPlayer()` — advances two seats in the current direction.
