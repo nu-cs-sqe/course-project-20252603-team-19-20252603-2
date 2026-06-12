@@ -58,9 +58,23 @@ based on the rules for the card as it violates playing a clone card on top of an
 You cannot play it alone or use it for a special combo of 2 or 3. You must play it with cat cards as that's
 our understanding of the card.
 
-## Acknowledgements
+## Acknowledgements / Exceptions
 Deepseek API for the pull request check, Google Gemini for the UI prototype design, Cursor, Exploding Kittens Wiki
-for the card images
+for the card images. 
+
+For the mutation test there is one mutant that can't be killed. The mutant for forcedTurnsAfterUndoingAttack where
+we switch the < to <= cannot be killed due to the normal forced turns and the turns added by attack being 1 as the lowest
+which is also the normal forced turns. This causes the turns returned to be identical regardless of using < or <=. 
+For example, if reduce is 1 then both using < and <= would give us 1. If it's not less than the normal forced turn so
+we return 1. If it's equal to the normal forced turns then we also return 1. This causes it to be impossible to truly 
+kill the mutant. Using < or <= will always return the same value causing it to be impossible to kill.
+
+The advanceToNextLivingPlayer_skipsDeadPlayer test kills the mutation for advanceToNextLivingPlayer specifically 
+the negating the condition. However, there is a test or some test in GameEngineTest that causes a timed_out which
+won't allow the mutant to be killed unless you only keep the advanceToNextLivingPlayer_skipsDeadPlayer test.
+
+Due to many methods in the model classes are setter, getter, or calling methods from already fully tested classes. 
+We decided to not do more mutant test for those and focus more on the classes that actually handle the game logic.
 
 ## Notes
 When playing the favor card there is a chance that the cards won't show up properly. We tried fixing it

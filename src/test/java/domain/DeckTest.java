@@ -261,6 +261,34 @@ public class DeckTest {
 	}
 
 	@Test
+	void shuffle_fullDeck_changesOrder() {
+		Deck deck = new Deck();
+
+		List<CardType> before = deck.getDrawPile().stream()
+				.map(Card::getCardType)
+				.collect(Collectors.toList());
+
+		boolean changed = false;
+
+		final int timesPlayed = 10;
+
+		for (int i = 0; i < timesPlayed; i++) {
+			deck.shuffle();
+
+			List<CardType> after = deck.getDrawPile().stream()
+					.map(Card::getCardType)
+					.collect(Collectors.toList());
+
+			if (!before.equals(after)) {
+				changed = true;
+				break;
+			}
+		}
+
+		assertTrue(changed);
+	}
+
+	@Test
 	void peekTop_negativeN_throwsIllegalArgumentException() {
 		Deck deck = new Deck(new ArrayList<>());
 
@@ -596,5 +624,4 @@ public class DeckTest {
 
 		assertEquals("card.nullType", exception.getMessage());
 	}
-
 }

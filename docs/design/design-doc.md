@@ -117,6 +117,11 @@
   passes (1 normally; raised by Attack / Targeted Attack).
 - `getLastPlayedCard(): CardType` — the most recently played card type (what a
   Nope may cancel); `null` before any card is played.
+- `playFromHand(CardType type)` — validates the card is playable from the hand
+  via `RuleManager.requirePlayable`, discards it from the current player's hand,
+  and records it as the last played card; throws `IllegalStateException`
+  (`gameEngine.play.notInHand`) when the card is absent; exposed publicly so
+  unit tests can cover discard / playability paths used by every `play*` method.
 - `playSkip()` — discards a SKIP from the current hand and ends one owed turn
   without drawing.
 - `playShuffle()` — discards a SHUFFLE and shuffles the draw pile; same player
@@ -166,6 +171,8 @@
   turn (advancing to the next living player).
 - `isGameOver(): boolean` — true when only one player is alive or the draw pile
   is exhausted.
+- `countAlive(): int` — returns how many players are still alive; used by
+  `isGameOver()`; exposed publicly so unit tests can assert the count directly.
 - `getWinnerId(): int` — the winner's id; throws `IllegalStateException`
   (`gameEngine.notOver`) if the game is not over. Last player standing, or — on
   an exhausted pile — the living player with the most cards (ties: lowest id).
@@ -251,8 +258,6 @@ turn-state; `ActionController` only touches the deck and players' hands.
 - `changeCurrentDirection()`
 - `turnGoesToNextPlayer()`
 - `turnSkipsNextPlayer()`
-- `turnGoesToCurrentPlayerAgain()`
-- `turnReversesDirection()`
 
 
 ---

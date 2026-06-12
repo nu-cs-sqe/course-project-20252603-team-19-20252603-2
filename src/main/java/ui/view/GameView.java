@@ -1300,7 +1300,6 @@ public class GameView extends StackPane {
 
 	private Button createTargetPlayerButton(
 			PlayerDisplayInfo player,
-			CardType desiredCard,
 			BiConsumer<Integer, CardType> onTargetSelected
 	) {
 		String playerName = player.getName();
@@ -1312,7 +1311,7 @@ public class GameView extends StackPane {
 		playerButton.getStyleClass().add("btn-three-target");
 		playerButton.setMaxWidth(Double.MAX_VALUE);
 		playerButton.setOnAction(e -> {
-			onTargetSelected.accept(playerId, desiredCard);
+			onTargetSelected.accept(playerId, cardGuessComboBox.getValue());
 		});
 		return playerButton;
 	}
@@ -1336,10 +1335,8 @@ public class GameView extends StackPane {
 
 		tripleTargetButtons.getChildren().clear();
 		for (PlayerDisplayInfo player : opponents) {
-			CardType desiredCard = cardGuessComboBox.getValue();
 			Button playerButton = createTargetPlayerButton(
 					player,
-					desiredCard,
 					onTargetSelected
 			);
 			tripleTargetButtons.getChildren().add(playerButton);

@@ -45,9 +45,9 @@ public class TurnTracker {
 
     public void turnGoesToNextPlayer() {
         setCurrentPlayer((getCurrentPlayer()
-                            + getCurrentDirection()
-                            + getNumTotalPlayers())
-                        % getNumTotalPlayers());
+                + getCurrentDirection()
+                + getNumTotalPlayers())
+                % getNumTotalPlayers());
     }
 
     public void turnSkipsNextPlayer() {
@@ -56,11 +56,4 @@ public class TurnTracker {
                 + getNumTotalPlayers())
                 % getNumTotalPlayers());
     }
-
-    public void turnGoesToCurrentPlayerAgain() {
-        setCurrentPlayer(getCurrentPlayer());
-    }
-
-
-
 }
