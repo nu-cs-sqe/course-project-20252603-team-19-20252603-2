@@ -665,6 +665,55 @@ This file holds the BVA analysis for every public method of the `GameEngine` cla
 
 ---
 
+## Method 19: ```public int countAlive()```
+
+Promoted from private to public for direct unit testing; same logic used by
+`isGameOver()`.
+
+### Step 1-3 Results
+
+| Step   | Input                           | Output                        |
+|--------|---------------------------------|-------------------------------|
+| Step 1 | none (instance query)           | Number of players still alive |
+| Step 2 | n/a                             | `int`                         |
+| Step 3 | all alive (5 players), one dead | `5` / `4`                     |
+
+### Step 4:
+
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test                                     | Expected output | Implemented? |
+|-------------|-------------------------------------------------------|-----------------|--------------|
+| TC1         | 5 players, current player marked dead, `countAlive()` | `4`             | no           |
+| TC2         | 2 players at game start, `countAlive()`               | `2`             | no           |
+
+---
+
+## Method 20: ```public void playFromHand(CardType type)```
+
+Promoted from private to public for direct unit testing and for killing mutant as you cannot directly play defuse or
+exploding kitten; called by every
+`play*` method after playability checks.
+
+### Step 1-3 Results
+
+| Step   | Input                                                         | Output                                                       |
+|--------|---------------------------------------------------------------|--------------------------------------------------------------|
+| Step 1 | Card type the current player attempts to play from their hand | Card discarded and play recorded, or exception               |
+| Step 2 | `CardType`                                                    | void / `IllegalArgumentException` / `IllegalStateException`  |
+| Step 3 | unplayable type in hand (DEFUSE), playable type absent (SKIP) | `rule.play.cannotPlayDirectly` / `gameEngine.play.notInHand` |
+
+### Step 4:
+
+##### All-combination or each-choice: each-choice
+
+| Test Case # | System under test                            | Expected output                                                                 | Implemented? |
+|-------------|----------------------------------------------|---------------------------------------------------------------------------------|--------------|
+| TC1         | current holds DEFUSE, `playFromHand(DEFUSE)` | throws `IllegalArgumentException` with message `"rule.play.cannotPlayDirectly"` | no           |
+| TC2         | current has no SKIP, `playFromHand(SKIP)`    | throws `IllegalStateException` with message `"gameEngine.play.notInHand"`       | no           |
+
+---
+
 ## Recall the 4 steps of BVA
 
 ### Step 1: Describe the input and output in terms of the domain.
