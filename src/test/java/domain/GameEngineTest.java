@@ -1,7 +1,9 @@
 package domain;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
@@ -1735,6 +1737,116 @@ class GameEngineTest {
         engine.playNope(0);
 
         assertEquals(2, engine.getForcedTurns());
+    }
+
+    @Test
+    void countAlive_atGameStart_minPlayers_returnsTwo() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        assertEquals(MIN_PLAYERS, engine.countAlive());
+    }
+
+    @Test
+    void countAlive_fivePlayersFourAlive_returnsFourAlive() {
+        GameEngine engine = new GameEngine(MAX_PLAYERS);
+
+        // kill current player
+        Player current =
+                engine.getPlayer(
+                        engine.getCurrentPlayerId());
+
+        current.markDead();
+
+        final int expectedAlive = 4;
+
+        assertEquals(
+                expectedAlive,
+                engine.countAlive()
+        );
+    }
+
+    @Test
+    void playFromHand_unplayableCard_throwsException() {
+        GameEngine engine = new GameEngine(2);
+        Player current =
+                engine.getPlayer(
+                        engine.getCurrentPlayerId());
+
+        current.addCardToHand(
+                new Card(CardType.DEFUSE));
+
+        IllegalArgumentException ex = assertThrows(
+                IllegalArgumentException.class,
+                () -> engine.playFromHand(CardType.DEFUSE));
+
+        assertEquals(
+                "rule.play.cannotPlayDirectly",
+                ex.getMessage()
+        );
+    }
+
+    @Test
+    void playFromHand_skipNotInHand_throwsIllegalStateException() {
+        GameEngine engine = new GameEngine(MIN_PLAYERS);
+        clearCardType(engine.getPlayer(0), CardType.SKIP);
+        IllegalStateException ex = assertThrows(
+                IllegalStateException.class,
+                () -> engine.playFromHand(CardType.SKIP));
+        assertEquals("gameEngine.play.notInHand", ex.getMessage());
+    }
+
+    @Test
+    void buildShuffledNonSpecialPool_isRandomized() {
+        List<Card> result1 = GameEngine.buildShuffledNonSpecialPool();
+        List<Card> result2 = GameEngine.buildShuffledNonSpecialPool();
+
+        List<CardType> order1 = result1.stream()
+                .map(Card::getCardType)
+                .collect(Collectors.toList());
+
+        List<CardType> order2 = result2.stream()
+                .map(Card::getCardType)
+                .collect(Collectors.toList());
+
+        assertNotEquals(order1, order2);
+    }
+
+    @Test
+    void buildShuffledNonSpecialPool_hasMultiplePossibleOrders() {
+        Set<List<CardType>> seenOrders = new HashSet<>();
+
+        for (int i = 0; i < 10; i++) {
+            List<Card> result = GameEngine.buildShuffledNonSpecialPool();
+
+            List<CardType> order = result.stream()
+                    .map(Card::getCardType)
+                    .collect(Collectors.toList());
+
+            seenOrders.add(order);
+        }
+
+        assertTrue(seenOrders.size() > 1);
+    }
+
+    @Test
+    void buildRiggedDeck_isActuallyShuffled() {
+        List<Card> base = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            base.add(new Card(CardType.CAT_CARDS));
+        }
+
+        Deck d1 = GameEngine.buildRiggedDeck(2, base);
+        Deck d2 = GameEngine.buildRiggedDeck(2, base);
+
+        List<CardType> order1 = d1.getDrawPile().stream()
+                .map(Card::getCardType)
+                .collect(Collectors.toList());
+
+        List<CardType> order2 = d2.getDrawPile().stream()
+                .map(Card::getCardType)
+                .collect(Collectors.toList());
+
+        assertNotEquals(order1, order2);
     }
 
     private void giveToCurrent(GameEngine engine, CardType type) {
