@@ -1,5 +1,14 @@
 package domain;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -7,7 +16,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 class GameEngineTest {
 
@@ -312,8 +320,9 @@ class GameEngineTest {
                 .collect(Collectors.toList());
 
         boolean changed = false;
+        final int playTimes = 20;
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < playTimes; i++) {
             engine.playShuffle();
             List<CardType> after = engine.getDrawPile().stream()
                     .map(Card::getCardType)
@@ -598,8 +607,8 @@ class GameEngineTest {
 
         final int afterDiscardPileSize = engine.getDiscardPile().size();
 
-        assertNotEquals(beforeDiscardPileSize,afterDiscardPileSize);
-        assertEquals(beforeDiscardPileSize+2,afterDiscardPileSize);
+        assertNotEquals(beforeDiscardPileSize, afterDiscardPileSize);
+        assertEquals(beforeDiscardPileSize + 2, afterDiscardPileSize);
     }
 
     @Test
@@ -826,9 +835,10 @@ class GameEngineTest {
         );
 
         final int afterDiscardPileSize = engine.getDiscardPile().size();
+        final int cardsPlayed = 3;
 
-        assertNotEquals(beforeDiscardPileSize,afterDiscardPileSize);
-        assertEquals(beforeDiscardPileSize+3,afterDiscardPileSize);
+        assertNotEquals(beforeDiscardPileSize, afterDiscardPileSize);
+        assertEquals(beforeDiscardPileSize + cardsPlayed, afterDiscardPileSize);
     }
 
     @Test
@@ -959,8 +969,10 @@ class GameEngineTest {
 
         engine.explodeCurrentPlayer();
 
+        final int cardsPlayed = 3;
+
         assertEquals(
-                expectedDiscardPileSize + 3,
+                expectedDiscardPileSize + cardsPlayed,
                 engine.getDiscardPile().size()
         );
     }
@@ -1147,7 +1159,9 @@ class GameEngineTest {
 
         boolean changed = false;
 
-        for (int i = 0; i < 10; i++) {
+        final int timesPlayed = 10;
+
+        for (int i = 0; i < timesPlayed; i++) {
             engine.playSeeTheFuture();
             engine.playNope(0);
             List<CardType> after = engine.getDrawPile().stream()
@@ -1168,7 +1182,7 @@ class GameEngineTest {
     void playNope_on_keepsTurnAndClearsLastPlayed() {
         GameEngine engine = new GameEngine(MIN_PLAYERS);
         giveToCurrent(engine, CardType.FAVOR);
-        engine.playFavor(1,0);
+        engine.playFavor(1, 0);
         engine.getPlayer(1).addCardToHand(new Card(CardType.NOPE));
 
         engine.playNope(1);
@@ -1411,8 +1425,9 @@ class GameEngineTest {
                 .collect(Collectors.toList());
 
         boolean changed = false;
+        final int timesPlayed = 10;
 
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < timesPlayed; i++) {
             engine.playClone(0, 0);
             List<CardType> after = engine.getDrawPile().stream()
                     .map(Card::getCardType)
@@ -1814,7 +1829,9 @@ class GameEngineTest {
     void buildShuffledNonSpecialPool_hasMultiplePossibleOrders() {
         Set<List<CardType>> seenOrders = new HashSet<>();
 
-        for (int i = 0; i < 10; i++) {
+        final int timesPlayed = 10;
+
+        for (int i = 0; i < timesPlayed; i++) {
             List<Card> result = GameEngine.buildShuffledNonSpecialPool();
 
             List<CardType> order = result.stream()
@@ -1831,7 +1848,9 @@ class GameEngineTest {
     void buildRiggedDeck_isActuallyShuffled() {
         List<Card> base = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++) {
+        final int timesPlayed = 10;
+
+        for (int i = 0; i < timesPlayed; i++) {
             base.add(new Card(CardType.CAT_CARDS));
         }
 

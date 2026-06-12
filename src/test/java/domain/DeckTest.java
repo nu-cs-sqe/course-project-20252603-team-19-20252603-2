@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.easymock.EasyMock;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -272,8 +270,9 @@ public class DeckTest {
 
 		boolean changed = false;
 
-		// Try multiple shuffles to avoid random same-order chance
-		for (int i = 0; i < 10; i++) {
+		final int timesPlayed = 10;
+
+		for (int i = 0; i < timesPlayed; i++) {
 			deck.shuffle();
 
 			List<CardType> after = deck.getDrawPile().stream()
@@ -625,5 +624,4 @@ public class DeckTest {
 
 		assertEquals("card.nullType", exception.getMessage());
 	}
-
 }
