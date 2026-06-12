@@ -1868,6 +1868,17 @@ class GameEngineTest {
         assertNotEquals(order1, order2);
     }
 
+    @Test
+    public void advanceToNextLivingPlayer_skipsDeadPlayer() {
+        final int numPlayers = 3;
+        GameEngine engine = new GameEngine(numPlayers);
+
+        engine.getPlayer(1).markDead();
+        engine.advanceToNextPlayer();
+
+        assertEquals(2, engine.getCurrentPlayerId());
+    }
+
     private void giveToCurrent(GameEngine engine, CardType type) {
         engine.getPlayer(engine.getCurrentPlayerId()).addCardToHand(new Card(type));
     }
