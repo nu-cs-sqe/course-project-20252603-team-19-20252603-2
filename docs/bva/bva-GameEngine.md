@@ -684,8 +684,8 @@ Promoted from private to public for direct unit testing; same logic used by
 
 | Test Case # | System under test                                     | Expected output | Implemented? |
 |-------------|-------------------------------------------------------|-----------------|--------------|
-| TC1         | 5 players, current player marked dead, `countAlive()` | `4`             | no           |
-| TC2         | 2 players at game start, `countAlive()`               | `2`             | no           |
+| TC1         | 5 players, current player marked dead, `countAlive()` | `4`             | yes          |
+| TC2         | 2 players at game start, `countAlive()`               | `2`             | yes          |
 
 ---
 
@@ -709,8 +709,8 @@ exploding kitten; called by every
 
 | Test Case # | System under test                            | Expected output                                                                 | Implemented? |
 |-------------|----------------------------------------------|---------------------------------------------------------------------------------|--------------|
-| TC1         | current holds DEFUSE, `playFromHand(DEFUSE)` | throws `IllegalArgumentException` with message `"rule.play.cannotPlayDirectly"` | no           |
-| TC2         | current has no SKIP, `playFromHand(SKIP)`    | throws `IllegalStateException` with message `"gameEngine.play.notInHand"`       | no           |
+| TC1         | current holds DEFUSE, `playFromHand(DEFUSE)` | throws `IllegalArgumentException` with message `"rule.play.cannotPlayDirectly"` | yes          |
+| TC2         | current has no SKIP, `playFromHand(SKIP)`    | throws `IllegalStateException` with message `"gameEngine.play.notInHand"`       | yes          |
 
 ---
 

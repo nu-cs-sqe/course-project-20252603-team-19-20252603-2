@@ -361,7 +361,7 @@ public final class GameEngine {
         return winnerId;
     }
 
-    private int countAlive() {
+    public int countAlive() {
         int alive = 0;
         for (Player player : players) {
             if (player.isAlive()) {
@@ -376,7 +376,7 @@ public final class GameEngine {
         deck.discard(current.removeCardFromHand(current.getIndexOfCard(type)));
     }
 
-    private void playFromHand(CardType type) {
+    public void playFromHand(CardType type) {
         ruleManager.requirePlayable(type);
         Player current = getPlayer(getCurrentPlayerId());
         int index = current.getIndexOfCard(type);
@@ -406,7 +406,7 @@ public final class GameEngine {
         } while (!getPlayer(getCurrentPlayerId()).isAlive());
     }
 
-    private static List<Card> buildShuffledNonSpecialPool() {
+    static List<Card> buildShuffledNonSpecialPool() {
         List<Card> pool = new ArrayList<>();
         for (Card card : new Deck().getDrawPile()) {
             CardType type = card.getCardType();
@@ -427,7 +427,7 @@ public final class GameEngine {
         }
     }
 
-    private static Deck buildRiggedDeck(int numPlayers, List<Card> remainingNonSpecial) {
+    static Deck buildRiggedDeck(int numPlayers, List<Card> remainingNonSpecial) {
         List<Card> drawPile = new ArrayList<>(remainingNonSpecial);
         int defusesLeft = TOTAL_DEFUSES - numPlayers;
         for (int i = 0; i < defusesLeft; i++) {
