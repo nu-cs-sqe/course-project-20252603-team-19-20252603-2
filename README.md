@@ -73,6 +73,9 @@ The advanceToNextLivingPlayer_skipsDeadPlayer test kills the mutation for advanc
 the negating the condition. However, there is a test or some test in GameEngineTest that causes a timed_out which
 won't allow the mutant to be killed unless you only keep the advanceToNextLivingPlayer_skipsDeadPlayer test.
 
+Due to many methods in the model classes are setter, getter, or calling methods from already fully tested classes. 
+We decided to not do more mutant test for those and focus more on the classes that actually handle the game logic.
+
 ## Notes
 When playing the favor card there is a chance that the cards won't show up properly. We tried fixing it
 but recreating the bug is almost impossible and completely random. There isn't a series of step that we 
